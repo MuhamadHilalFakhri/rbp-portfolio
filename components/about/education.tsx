@@ -1,35 +1,72 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { GraduationCap, School } from "lucide-react";
+import { useEffect, useRef, type ReactNode } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type Entry = {
   school: string;
   degree: string;
   period: string;
-  slug?: string;
+  icon: "school" | "university";
 };
 
 const ENTRIES: Entry[] = [
   {
-    school: "Rhode Island School of Design",
-    degree: "BFA, Graphic Design",
-    period: "2013 – 2017",
+    school: "SMAN 1 Kawali",
+    degree: "IPA",
+    period: "2019 – 2022",
+    icon: "school",
   },
   {
-    school: "Stanford University",
-    degree: "HCI Certificate, d.school",
-    period: "2018",
-  },
-  {
-    school: "Bruno Simon's Three.js Journey",
-    degree: "WebGL & Shaders",
-    period: "2022",
+    school: "Universitas Muhammadiyah Yogyakarta",
+    degree: "S1 Teknologi Informasi",
+    period: "2022 – 2026",
+    icon: "university",
   },
 ];
 
 const ROW_HEIGHT = 64;
 
 export function Education(): ReactNode {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const items = containerRef.current?.querySelectorAll("li");
+    if (!items) return;
+
+    items.forEach((item, index) => {
+      gsap.fromTo(
+        item,
+        {
+          opacity: 0,
+          y: 30,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          delay: index * 0.1,
+          scrollTrigger: {
+            trigger: item,
+            start: "top 85%",
+            end: "top 50%",
+            scrub: false,
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" ref={containerRef}>
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         Education
       </h3>
@@ -61,27 +98,14 @@ export function Education(): ReactNode {
 }
 
 function SchoolLogo({ entry }: { entry: Entry }): ReactNode {
-  const initials = entry.school.charAt(0);
+  const Icon = entry.icon === "school" ? School : GraduationCap;
   return (
     <span
       className="border-foreground/15 inline-flex h-12 w-12 shrink-0 items-center justify-center border"
       aria-hidden="true"
       style={{ borderRadius: 14 }}
     >
-      {entry.slug ? (
-        <img
-          src={`https://cdn.simpleicons.org/${entry.slug}`}
-          alt=""
-          width={24}
-          height={24}
-          className="h-6 w-6"
-          draggable={false}
-        />
-      ) : (
-        <span className="text-foreground/60 text-[18px] font-semibold tracking-tight">
-          {initials}
-        </span>
-      )}
+      <Icon className="h-6 w-6 text-foreground/60" />
     </span>
   );
 }

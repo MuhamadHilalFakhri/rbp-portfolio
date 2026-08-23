@@ -2,7 +2,6 @@
 
 import { ArrowRight } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { ContactButton } from "@/components/contact/contact-button";
@@ -23,16 +22,18 @@ export function HeroCtas(): ReactNode {
           layout
           transition={{ layout: { duration: 0.55, ease: EASE } }}
         >
-          <Link
-            href="/projects"
+          <a
+            href="/cv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="border border-foreground/5 focus-ring group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-background px-5 py-2.5 text-sm font-medium text-foreground shadow-2xl transition-colors hover:bg-foreground/4"
           >
-            View My Work
+            View CV
             <ArrowRight
               className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
               aria-hidden="true"
             />
-          </Link>
+          </a>
         </motion.div>
       </motion.div>
     </LayoutGroup>
