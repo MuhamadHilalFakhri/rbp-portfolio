@@ -1,17 +1,18 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useRef, type ReactNode } from "react";
 
 import { HeroCtas } from "./hero-ctas";
 import { BlurReveal } from "@/components/ui/blur-reveal";
-import { FadeIn, ScaleUnblur } from "@/components/ui/motion-primitives";
-import { PortraitMorph } from "./portrait-morph";
-
-const PORTRAIT_SRC = "/josh.webp";
-const PORTRAIT_HOVER_SRC = "/josh_wave.webp";
+import { FadeIn } from "@/components/ui/motion-primitives";
+import { HeroLanyard } from "./hero-lanyard";
 
 export function Hero(): ReactNode {
+  const heroRef = useRef<HTMLElement>(null);
+
   return (
-    <section className="relative w-full">
-      <div className="mx-auto w-full max-w-275 px-4 pt-32 pb-16 min-[360px]:px-6 sm:px-10 sm:pt-48 sm:pb-24 md:pt-56 md:pb-32">
+    <section ref={heroRef} className="relative isolate w-full overflow-visible">
+      <div className="relative z-20 mx-auto w-full max-w-275 px-4 pt-32 pb-16 min-[360px]:px-6 sm:px-10 sm:pt-48 sm:pb-24 md:pt-56 md:pb-32">
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-8">
           <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
             <h1 className="text-foreground text-[clamp(2.15rem,11vw,2.75rem)] leading-[1.05] font-medium tracking-tight md:text-[2.5rem] lg:text-[3.65rem]">
@@ -38,19 +39,14 @@ export function Hero(): ReactNode {
             </FadeIn>
           </div>
 
-          <ScaleUnblur className="flex justify-center md:justify-end">
-            <div className="border-foreground/8 bg-background relative aspect-square w-full max-w-105 overflow-hidden rounded-3xl border p-1.5 shadow-sm sm:rounded-4xl">
-              <div className="relative h-full w-full overflow-hidden rounded-[1.6rem]">
-                <PortraitMorph
-                  srcA={PORTRAIT_SRC}
-                  srcB={PORTRAIT_HOVER_SRC}
-                  alt="Josh portrait"
-                />
-              </div>
-            </div>
-          </ScaleUnblur>
+          <div
+            aria-hidden="true"
+            className="h-[32rem] min-w-0 touch-none sm:h-[36rem] md:h-[40rem] lg:h-[44rem]"
+          />
         </div>
       </div>
+
+      <HeroLanyard eventSource={heroRef} />
     </section>
   );
 }
