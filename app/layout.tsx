@@ -2,6 +2,7 @@ import { Nav } from "@/components/layout/nav";
 import { PageBackdrop } from "@/components/layout/page-backdrop";
 import { Providers } from "@/components/layout/providers";
 import { SkipToContent } from "@/components/layout/skip-to-content";
+import { SplashScreen } from "@/components/splash-screen";
 import { baseMetadata } from "@/lib/metadata";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
@@ -49,6 +50,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{sessionStorage.getItem('splash-shown')==='1'?document.documentElement.dataset.splash='done':document.documentElement.dataset.splash='pending'}catch(e){document.documentElement.dataset.splash='pending'}",
+          }}
+        />
+        <SplashScreen />
         <Providers>
           <div className="site-frame site-frame--top" aria-hidden="true" />
           <div className="site-frame site-frame--left" aria-hidden="true" />

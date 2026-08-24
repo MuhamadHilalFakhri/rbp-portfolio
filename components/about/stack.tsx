@@ -214,7 +214,7 @@ export function Stack(): ReactNode {
         </h3>
       </div>
 
-      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative h-40 overflow-hidden rounded-4xl border sm:h-64">
+      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative h-96 overflow-hidden rounded-4xl border sm:h-72">
         <button
           type="button"
           onClick={() => setResetKey((k) => k + 1)}
@@ -278,7 +278,7 @@ function ChipPill({ chip }: { chip: Chip }): ReactNode {
         aria-hidden="true"
       >
         <img
-          src={chip.iconUrl ?? `https://cdn.simpleicons.org/${chip.slug}`}
+          src={`/icons/${chip.slug}.svg`}
           alt=""
           width={18}
           height={18}

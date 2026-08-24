@@ -1,10 +1,15 @@
+"use client";
+
 import {
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   Compass,
   LineChart,
   Sparkles,
 } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -81,6 +86,40 @@ export function Projects({
   viewMoreVisible = false,
 }: ProjectsProps): ReactNode {
   const items = viewMoreVisible ? PROJECTS.slice(0, 4) : PROJECTS;
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+
+  const updateArrows = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    setCanPrev(track.scrollLeft > 4);
+    setCanNext(track.scrollLeft < track.scrollWidth - track.clientWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateArrows();
+    const track = trackRef.current;
+    if (!track) return;
+    track.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      track.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows]);
+
+  const scrollToCard = (direction: 1 | -1): void => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector<HTMLElement>("[data-card]");
+    if (!card) return;
+    const gap = 24;
+    track.scrollBy({
+      left: direction * (card.offsetWidth + gap),
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section className="relative w-full">
@@ -97,11 +136,48 @@ export function Projects({
           </FadeIn>
         ) : null}
 
-        <div className="columns-1 gap-6 md:columns-2 md:gap-7">
-          {items.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
-        </div>
+        <FadeIn className="relative">
+          <div className="flex items-center justify-between pb-4">
+            <span className="text-sm font-medium tracking-tight text-foreground/50">
+              {items.length} projects
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => scrollToCard(-1)}
+                disabled={!canPrev}
+                aria-label="Previous project"
+                className="border-foreground/10 focus-ring inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border bg-background text-foreground transition-colors hover:bg-foreground/5 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToCard(1)}
+                disabled={!canNext}
+                aria-label="Next project"
+                className="border-foreground/10 focus-ring inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border bg-background text-foreground transition-colors hover:bg-foreground/5 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={trackRef}
+            className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-10 sm:px-10"
+          >
+            {items.map((project) => (
+              <div
+                key={project.id}
+                data-card
+                className="w-full shrink-0 snap-start sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
+              >
+                <ProjectCard project={project} />
+              </div>
+            ))}
+          </div>
+        </FadeIn>
 
         {viewMoreVisible ? (
           <div className="mt-12 flex justify-center sm:mt-16">
@@ -122,58 +198,46 @@ export function Projects({
   );
 }
 
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}): ReactNode {
+function ProjectCard({ project }: { project: Project }): ReactNode {
   const Icon = project.icon;
   return (
-    <FadeIn
-      delay={Math.min(index * 0.06, 0.3)}
-      className="mb-6 break-inside-avoid md:mb-7"
-    >
-      <article className="project-card flex cursor-pointer flex-col gap-4 rounded-3xl border border-foreground/8 bg-background p-3 sm:p-3.5">
-        <header className="flex items-center gap-2.5 px-1 pt-2">
-          <span className="border-foreground/10 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border bg-background">
-            <Icon className="h-3.5 w-3.5 text-foreground" aria-hidden="true" />
-          </span>
-          <span className="text-sm font-medium tracking-tight text-foreground">
-            {project.iconLabel}
-          </span>
-        </header>
+    <article className="project-card flex h-full cursor-pointer flex-col gap-4 rounded-3xl border border-foreground/8 bg-background p-3 sm:p-3.5">
+      <header className="flex items-center gap-2.5 px-1 pt-2">
+        <span className="border-foreground/10 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border bg-background">
+          <Icon className="h-3.5 w-3.5 text-foreground" aria-hidden="true" />
+        </span>
+        <span className="text-sm font-medium tracking-tight text-foreground">
+          {project.iconLabel}
+        </span>
+      </header>
 
-        <div
-          className="project-card__image ring-foreground/5 relative w-full overflow-hidden rounded-2xl bg-foreground/5 ring-1"
-          style={{ aspectRatio: project.imageRatio }}
-        >
-          <div className="project-card__image-inner">
-            <Image
-              src={project.image}
-              alt={project.imageAlt}
-              fill
-              sizes="(min-width: 1024px) 540px, (min-width: 768px) 45vw, 100vw"
-              className="object-cover"
-              priority={index < 2}
-            />
-          </div>
+      <div
+        className="project-card__image ring-foreground/5 relative w-full overflow-hidden rounded-2xl bg-foreground/5 ring-1"
+        style={{ aspectRatio: project.imageRatio }}
+      >
+        <div className="project-card__image-inner">
+          <Image
+            src={project.image}
+            alt={project.imageAlt}
+            fill
+            sizes="(min-width: 1024px) 400px, (min-width: 640px) 45vw, 100vw"
+            className="object-cover"
+          />
         </div>
+      </div>
 
-        <div className="flex flex-col gap-2.5 px-1 pb-1">
-          <h3 className="text-[20px] font-medium leading-[1.2] tracking-tight text-foreground sm:text-[22px]">
-            {project.title}
-          </h3>
-          <p className="text-[14px] leading-normal tracking-tight text-foreground/65 sm:text-[15px]">
-            {project.description}
-          </p>
-        </div>
-
-        <p className="px-1 pb-2 text-[12px] tracking-tight text-foreground/50">
-          {project.meta}
+      <div className="flex flex-col gap-2.5 px-1 pb-1">
+        <h3 className="text-[20px] font-medium leading-[1.2] tracking-tight text-foreground sm:text-[22px]">
+          {project.title}
+        </h3>
+        <p className="text-[14px] leading-normal tracking-tight text-foreground/65 sm:text-[15px]">
+          {project.description}
         </p>
-      </article>
-    </FadeIn>
+      </div>
+
+      <p className="mt-auto px-1 pb-2 text-[12px] tracking-tight text-foreground/50">
+        {project.meta}
+      </p>
+    </article>
   );
 }
