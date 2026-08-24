@@ -144,6 +144,14 @@ html[data-theme-anim="1"]::view-transition-new(root) {
   left: 0;
   bottom: 0;
   width: 10px;
+  background-color: transparent;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 56.25rem,
+    var(--frame) 56.25rem,
+    var(--frame) 100%
+  );
 }
 
 .site-frame--right {
@@ -151,6 +159,14 @@ html[data-theme-anim="1"]::view-transition-new(root) {
   right: 0;
   bottom: 0;
   width: 10px;
+  background-color: transparent;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 56.25rem,
+    var(--frame) 56.25rem,
+    var(--frame) 100%
+  );
 }
 
 .site-corner {
