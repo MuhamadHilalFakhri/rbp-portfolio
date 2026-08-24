@@ -138,7 +138,7 @@ const PROJECTS: Project[] = [
     title: "E-Learning SMPN 2 Merapi Barat",
     description:
       "Platform pembelajaran daring berbasis web dengan 3 role pengguna (Admin, Guru, Siswa) yang memfasilitasi pembelajaran interaktif, pengelolaan materi, kuis dengan AI, dan manajemen data master sekolah.",
-    meta: "Full Stack Developer, 2024",
+    meta: "Full Stack Developer, 2025 - 2026",
     overview:
       "Platform e-learning komprehensif untuk SMPN 2 Merapi Barat yang memungkinkan digitalisasi penuh proses pembelajaran. Admin mengelola data master (guru, siswa, kelas, mata pelajaran) dengan fitur import/export Excel untuk efisiensi. Guru dapat mengupload berbagai format materi (PDF, Word, PowerPoint, Video) dan membuat kuis interaktif dengan AI serta pengaturan timer otomatis. Siswa mengakses materi dengan sistem pencarian yang intuitif, mengerjakan kuis dengan timer countdown, dan melihat statistik performa mereka per mata pelajaran. Dashboard setiap role menampilkan informasi relevan dan statistik real-time untuk monitoring progres pembelajaran.",
     highlights: [
@@ -153,114 +153,190 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195811.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195811.png",
         alt: "Dashboard Admin E-Learning",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195826.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195826.png",
         alt: "Manajemen Data Guru",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195835.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195835.png",
         alt: "Import/Export Data Excel",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195845.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195845.png",
         alt: "Manajemen Data Siswa",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195856.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195856.png",
         alt: "Manajemen Kelas dan Wali Kelas",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195905.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195905.png",
         alt: "Manajemen Mata Pelajaran",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 195914.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 195914.png",
         alt: "Dashboard Guru",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200251.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200251.png",
         alt: "Upload dan Kelola Materi Pembelajaran",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200302.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200302.png",
         alt: "Form Upload Materi Multi-Format",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200313.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200313.png",
         alt: "Buat Kuis dengan AI Interaktif",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200322.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200322.png",
         alt: "Pengaturan Timer dan Jadwal Kuis",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200336.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200336.png",
         alt: "Statistik Materi dan Kuis Guru",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200439.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200439.png",
         alt: "Dashboard Siswa dan Progres Belajar",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200449.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200449.png",
         alt: "Akses Materi dengan Filter Pencarian",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200459.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200459.png",
         alt: "Interface Kuis dengan Timer",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200508.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200508.png",
         alt: "Hasil dan Riwayat Nilai Siswa",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200519.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200519.png",
         alt: "Statistik Performa Per Mata Pelajaran",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200530.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200530.png",
         alt: "Detail Progres Pembelajaran",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 200538.png",
+        src: "/project/Capstone/Screenshot 2026-08-24 200538.png",
         alt: "Profile dan Pengaturan Akun",
       },
     ],
     imageRatio: 16 / 9,
   },
   {
-    id: "rhythm",
+    id: "skripsi",
     icon: LineChart,
-    iconLabel: "Rhythm",
-    title: "Calm analytics for indie founders.",
+    iconLabel: "Skripsi",
+    title: "HRIS - Human Resource Information System Berbasis AI",
     description:
-      "A weekly digest that turns raw product data into a simple narrative. Built so you can read it on a Sunday with coffee.",
-    meta: "Founder & Designer, 2024",
+      "Sistem manajemen SDM berbasis web dengan AI-powered CV screening menggunakan Groq LLM. Pengembangan lanjutan dari proyek Internship dengan tech stack modern (Go, Next.js) dan fitur tambahan seperti AI screening, audit log, dan template surat.",
+    meta: "Full Stack Developer, 2026",
     overview:
-      "Rhythm turns raw product analytics into a calm Sunday-morning read. Instead of endless dashboards, founders get one weekly narrative email backed by a minimal web view. Charts are intentionally sparse, thresholds are written in plain language, and everything degrades gracefully on mobile.",
+      "Proyek ini merupakan pengembangan lanjutan dari proyek Internship dengan perubahan signifikan pada tech stack dan penambahan fitur berbasis AI. Dibangun dengan Go (Golang) + Gin Framework untuk backend dan Next.js + TypeScript untuk frontend, sistem ini mengelola seluruh siklus kepegawaian dari rekrutmen hingga offboarding. Fitur unggulan adalah AI CV Screening otomatis menggunakan Groq API yang dapat melakukan scoring dan auto-shortlist pelamar berdasarkan kriteria yang ditentukan. Sistem juga dilengkapi dengan Audit Log untuk tracking seluruh aktivitas, template surat dengan preview PDF, pipeline rekrutmen visual (Applied → Screening → Interview → Offering → Hired/Rejected), serta autentikasi ganda melalui email/password dan Google OAuth 2.0. Bug-bug dari proyek sebelumnya telah diperbaiki dan performa ditingkatkan dengan Redis caching.",
     highlights: [
-      "Weekly narrative digest engine",
-      "Zero-config event ingestion",
-      "Dark-mode-first reading experience",
+      "AI CV Screening otomatis menggunakan Groq LLM untuk scoring dan auto-shortlist pelamar",
+      "Tech Stack Modern: Go + Gin Framework (backend), Next.js + TypeScript (frontend), MySQL, Redis",
+      "Pipeline rekrutmen visual: Applied → Screening → Interview → Offering → Hired/Rejected",
+      "Audit Log lengkap untuk tracking seluruh aktivitas sistem",
+      "Template surat dinamis dengan preview PDF dan export Word/PDF",
+      "Dual Authentication: Email/Password + Google OAuth 2.0",
+      "Export laporan rekrutmen dalam format Excel & PDF",
+      "Pengaduan karyawan dengan 6 kategori: Lingkungan Kerja, Kompensasi, Fasilitas, Relasi Kerja, Kebijakan, Lainnya",
+      "Autocomplete data pendidikan dari BAN-PT untuk akurasi data",
+      "Dark mode & Light mode support",
+      "Deploy: Railway (backend) + Vercel (frontend)",
     ],
     images: [
       {
-        src: "https://cdn.dribbble.com/userupload/47357856/file/75841fa59f32f05ca6c5ddf02d08dfe6.png?resize=1024x768&vertical=center",
-        alt: "Rhythm calm analytics mockup",
+        src: "/project/Skripsi/Screenshot 2026-08-24 193422.png",
+        alt: "Dashboard Super Admin HRIS",
       },
       {
-        src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop",
-        alt: "Analytics dashboard on a laptop",
+        src: "/project/Skripsi/Screenshot 2026-08-24 193456.png",
+        alt: "AI CV Screening dengan Groq",
       },
       {
-        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1600&auto=format&fit=crop",
-        alt: "Charts and graphs on a screen",
+        src: "/project/Skripsi/Screenshot 2026-08-24 193510.png",
+        alt: "Pipeline Rekrutmen Visual",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193713.png",
+        alt: "Scoring dan Shortlist Pelamar",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193737.png",
+        alt: "Jadwal Interview Online/Offline",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193753.png",
+        alt: "Export Laporan Rekrutmen",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193809.png",
+        alt: "Kelola Template Surat",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193847.png",
+        alt: "Preview PDF Template Surat",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193857.png",
+        alt: "Disposisi Surat Digital",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193921.png",
+        alt: "Kelola Staff dan Divisi",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 193931.png",
+        alt: "Audit Log Tracking Aktivitas",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194256.png",
+        alt: "Dashboard Pelamar",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194311.png",
+        alt: "Profil Pelamar dengan Autocomplete",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194321.png",
+        alt: "Kirim Lamaran dengan Upload CV",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194330.png",
+        alt: "Tracking Status Lamaran",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194451.png",
+        alt: "Dashboard Staff Karyawan",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194500.png",
+        alt: "Pengaduan Karyawan Multi Kategori",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194537.png",
+        alt: "Pengajuan Resign Digital",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194550.png",
+        alt: "Google OAuth 2.0 Login",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 194601.png",
+        alt: "Dark Mode Interface",
       },
     ],
-    imageRatio: 1024 / 768,
+    imageRatio: 16 / 9,
   },
 ];
 
