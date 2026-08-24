@@ -336,12 +336,12 @@ export function ProjectModal({
                 onPointerDown={(e) => e.stopPropagation()}
                 aria-label="Exit fullscreen"
                 autoFocus
-                className="focus-ring pointer-events-auto absolute top-3 right-3 z-20 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/25 sm:h-11 sm:w-11"
+                className="focus-ring pointer-events-auto absolute top-3 right-3 z-20 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-black/70 text-white shadow-[0_4px_14px_rgba(0,0,0,0.65)] backdrop-blur transition-colors hover:bg-black/85 sm:h-11 sm:w-11"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
 
-              <span className="absolute top-4 left-4 z-20 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white tabular-nums sm:top-5 sm:left-5">
+              <span className="absolute top-4 left-4 z-20 rounded-full border border-white/30 bg-black/70 px-2.5 py-1 text-[11px] font-medium text-white tabular-nums shadow-[0_4px_14px_rgba(0,0,0,0.65)] sm:top-5 sm:left-5">
                 {slide + 1} / {total}
               </span>
 
@@ -352,7 +352,7 @@ export function ProjectModal({
                     onClick={goToPrev}
                     onPointerDown={(e) => e.stopPropagation()}
                     aria-label="Previous image"
-                    className="focus-ring pointer-events-auto absolute top-1/2 left-2 z-20 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/25 sm:left-4 sm:h-12 sm:w-12"
+                    className="focus-ring pointer-events-auto absolute top-1/2 left-2 z-20 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-black/70 text-white shadow-[0_4px_14px_rgba(0,0,0,0.65)] backdrop-blur transition-colors hover:bg-black/85 sm:left-4 sm:h-12 sm:w-12"
                   >
                     <ChevronLeft
                       className="h-5 w-5 sm:h-6 sm:w-6"
@@ -364,7 +364,7 @@ export function ProjectModal({
                     onClick={goToNext}
                     onPointerDown={(e) => e.stopPropagation()}
                     aria-label="Next image"
-                    className="focus-ring pointer-events-auto absolute top-1/2 right-2 z-20 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/25 sm:right-4 sm:h-12 sm:w-12"
+                    className="focus-ring pointer-events-auto absolute top-1/2 right-2 z-20 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-black/70 text-white shadow-[0_4px_14px_rgba(0,0,0,0.65)] backdrop-blur transition-colors hover:bg-black/85 sm:right-4 sm:h-12 sm:w-12"
                   >
                     <ChevronRight
                       className="h-5 w-5 sm:h-6 sm:w-6"

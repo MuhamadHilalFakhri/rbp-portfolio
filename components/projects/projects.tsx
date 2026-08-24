@@ -132,35 +132,104 @@ const PROJECTS: Project[] = [
     imageRatio: 16 / 9,
   },
   {
-    id: "atlas",
+    id: "capstone",
     icon: Compass,
-    iconLabel: "Atlas Studio",
-    title: "A two week brand and product sprint for a creative studio.",
+    iconLabel: "Capstone",
+    title: "E-Learning SMPN 2 Merapi Barat",
     description:
-      "End to end identity, marketing site, and a small product surface designed to feel quietly confident across every touchpoint.",
-    meta: "Product & Brand Designer, 2025",
+      "Platform pembelajaran daring berbasis web dengan 3 role pengguna (Admin, Guru, Siswa) yang memfasilitasi pembelajaran interaktif, pengelolaan materi, kuis dengan AI, dan manajemen data master sekolah.",
+    meta: "Full Stack Developer, 2024",
     overview:
-      "A two week sprint covering both identity and product: logo system, color, typography, and a marketing site paired with a lightweight client dashboard. Every touchpoint was designed to feel quietly confident — muted palettes, strong grids, and photography treated as texture rather than decoration.",
+      "Platform e-learning komprehensif untuk SMPN 2 Merapi Barat yang memungkinkan digitalisasi penuh proses pembelajaran. Admin mengelola data master (guru, siswa, kelas, mata pelajaran) dengan fitur import/export Excel untuk efisiensi. Guru dapat mengupload berbagai format materi (PDF, Word, PowerPoint, Video) dan membuat kuis interaktif dengan AI serta pengaturan timer otomatis. Siswa mengakses materi dengan sistem pencarian yang intuitif, mengerjakan kuis dengan timer countdown, dan melihat statistik performa mereka per mata pelajaran. Dashboard setiap role menampilkan informasi relevan dan statistik real-time untuk monitoring progres pembelajaran.",
     highlights: [
-      "Full identity kit delivered in Figma",
-      "Marketing site shipped on Next.js",
-      "Dashboard prototype tested with five users",
+      "3 role pengguna: Admin (manajemen data master), Guru (kelola materi & kuis), Siswa (akses pembelajaran)",
+      "Manajemen data guru dan siswa dengan import/export Excel untuk efisiensi administrasi",
+      "Upload materi pembelajaran multi-format: PDF, Word, PowerPoint, dan Video",
+      "Sistem kuis interaktif dengan AI, timer otomatis, dan penjadwalan ketersediaan",
+      "Dashboard statistik real-time untuk monitoring aktivitas dan progres pembelajaran",
+      "Filter dan pencarian materi untuk navigasi yang mudah",
+      "Riwayat nilai dan statistik performa per mata pelajaran untuk siswa",
+      "Tech Stack: Laravel 12, React 18, TypeScript, Inertia.js, TailwindCSS, Radix UI, MySQL",
     ],
     images: [
       {
-        src: "https://cdn.dribbble.com/userupload/24599416/file/original-1ae5075dcd129aebb16bdbca24b41ac7.png?resize=1024x768&vertical=center",
-        alt: "Atlas Studio brand and product sprint mockup",
+        src: "/project/Skripsi/Screenshot 2026-08-24 195811.png",
+        alt: "Dashboard Admin E-Learning",
       },
       {
-        src: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1600&auto=format&fit=crop",
-        alt: "Graphic design stationery flat lay",
+        src: "/project/Skripsi/Screenshot 2026-08-24 195826.png",
+        alt: "Manajemen Data Guru",
       },
       {
-        src: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1600&auto=format&fit=crop",
-        alt: "Interface design work on a screen",
+        src: "/project/Skripsi/Screenshot 2026-08-24 195835.png",
+        alt: "Import/Export Data Excel",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 195845.png",
+        alt: "Manajemen Data Siswa",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 195856.png",
+        alt: "Manajemen Kelas dan Wali Kelas",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 195905.png",
+        alt: "Manajemen Mata Pelajaran",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 195914.png",
+        alt: "Dashboard Guru",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200251.png",
+        alt: "Upload dan Kelola Materi Pembelajaran",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200302.png",
+        alt: "Form Upload Materi Multi-Format",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200313.png",
+        alt: "Buat Kuis dengan AI Interaktif",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200322.png",
+        alt: "Pengaturan Timer dan Jadwal Kuis",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200336.png",
+        alt: "Statistik Materi dan Kuis Guru",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200439.png",
+        alt: "Dashboard Siswa dan Progres Belajar",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200449.png",
+        alt: "Akses Materi dengan Filter Pencarian",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200459.png",
+        alt: "Interface Kuis dengan Timer",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200508.png",
+        alt: "Hasil dan Riwayat Nilai Siswa",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200519.png",
+        alt: "Statistik Performa Per Mata Pelajaran",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200530.png",
+        alt: "Detail Progres Pembelajaran",
+      },
+      {
+        src: "/project/Skripsi/Screenshot 2026-08-24 200538.png",
+        alt: "Profile dan Pengaturan Akun",
       },
     ],
-    imageRatio: 1024 / 768,
+    imageRatio: 16 / 9,
   },
   {
     id: "rhythm",
