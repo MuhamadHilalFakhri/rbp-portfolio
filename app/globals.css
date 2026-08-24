@@ -42,6 +42,12 @@ html {
   max-width: 100%;
   overflow-x: hidden;
   overflow-x: clip;
+  /* Scrollbar hidden so opening/closing overlays never shifts the layout */
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 html.dark {

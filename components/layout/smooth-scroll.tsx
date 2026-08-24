@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 import { features } from "@/lib/config";
+import { registerLenis } from "@/lib/smooth-scroll";
 
 const LENIS_OPTIONS = {
   duration: 1.6,
@@ -29,6 +30,7 @@ export function SmoothScroll({
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis(LENIS_OPTIONS);
+    registerLenis(lenis);
 
     function raf(time: number): void {
       lenis.raf(time);
@@ -57,6 +59,7 @@ export function SmoothScroll({
     return () => {
       document.removeEventListener("click", handleAnchorClick);
       cancelAnimationFrame(rafId);
+      registerLenis(null);
       lenis.destroy();
     };
   }, []);
