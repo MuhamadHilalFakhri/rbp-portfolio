@@ -223,18 +223,25 @@ function Band({
           .copy(nextPosition)
           .sub(previousDragPosition)
           .divideScalar(Math.max(frameDelta, 0.001))
-          .multiplyScalar(0.32)
-          .clampLength(0, 12);
+          .multiplyScalar(0.55)
+          .clampLength(0, 18);
         cardPosition.copy(nextPosition);
         previousDragPosition.copy(nextPosition);
       }
     } else {
+      // Apply gravity with realistic weight
       cardVelocity.set(
         cardVelocity.x,
-        cardVelocity.y + gravityY * 0.18 * frameDelta,
+        cardVelocity.y + gravityY * 0.65 * frameDelta,
         cardVelocity.z
       );
-      cardVelocity.multiplyScalar(Math.exp(-1.45 * frameDelta));
+
+      // Gentle air resistance — allows smooth swinging
+      cardVelocity.multiplyScalar(Math.exp(-0.6 * frameDelta));
+
+      // Dampen z-axis to slowly return card to plane
+      cardVelocity.setZ(cardVelocity.z * Math.exp(-2.5 * frameDelta));
+
       cardPosition.addScaledVector(cardVelocity, frameDelta);
 
       attachment.copy(cardPosition);
@@ -248,17 +255,37 @@ function Band({
 
       if (distance > ROPE_LENGTH) {
         constraintDirection.multiplyScalar(1 / distance);
-        attachment.copy(anchor).addScaledVector(constraintDirection, ROPE_LENGTH);
-        cardPosition.copy(attachment);
-        cardPosition.set(
-          cardPosition.x,
-          cardPosition.y - ATTACHMENT_HEIGHT,
-          cardPosition.z
+        const excess = distance - ROPE_LENGTH;
+
+        // Calculate the constrained position (reuse nextPosition as temp)
+        nextPosition
+          .copy(anchor)
+          .addScaledVector(constraintDirection, ROPE_LENGTH);
+        nextPosition.set(
+          nextPosition.x,
+          nextPosition.y - ATTACHMENT_HEIGHT,
+          nextPosition.z
         );
 
+        // Smooth spring correction — speed scales with how far past the rope
+        // Small excess → gentle pull, large excess → stronger pull, never instant
+        const correctionRate = Math.min(excess * 5, 20);
+        const t = 1 - Math.exp(-correctionRate * frameDelta);
+        cardPosition.lerp(nextPosition, t);
+
+        // Apply inward spring force on velocity for natural acceleration back
+        cardVelocity.addScaledVector(
+          constraintDirection,
+          -excess * 45 * frameDelta
+        );
+
+        // Dampen outward velocity component (absorb energy, don't hard-stop)
         const outwardSpeed = cardVelocity.dot(constraintDirection);
         if (outwardSpeed > 0) {
-          cardVelocity.addScaledVector(constraintDirection, -outwardSpeed);
+          cardVelocity.addScaledVector(
+            constraintDirection,
+            -outwardSpeed * 0.8
+          );
         }
       }
     }
@@ -267,13 +294,13 @@ function Band({
       card.current.position.copy(cardPosition);
       card.current.rotation.z = THREE.MathUtils.lerp(
         card.current.rotation.z,
-        THREE.MathUtils.clamp(-cardVelocity.x * 0.035, -0.45, 0.45),
-        1 - Math.exp(-8 * frameDelta)
+        THREE.MathUtils.clamp(-cardVelocity.x * 0.055, -0.6, 0.6),
+        1 - Math.exp(-5 * frameDelta)
       );
       card.current.rotation.y = THREE.MathUtils.lerp(
         card.current.rotation.y,
-        THREE.MathUtils.clamp(cardVelocity.x * 0.025, -0.3, 0.3),
-        1 - Math.exp(-6 * frameDelta)
+        THREE.MathUtils.clamp(cardVelocity.x * 0.035, -0.4, 0.4),
+        1 - Math.exp(-4 * frameDelta)
       );
     }
 
