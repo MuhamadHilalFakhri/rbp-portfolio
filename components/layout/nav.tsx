@@ -5,14 +5,7 @@ import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type ReactNode,
-} from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 type NavItem = {
   label: string;
@@ -89,21 +82,21 @@ function NavThemeToggle(): ReactNode {
           : "Toggle theme"
       }
       aria-pressed={mounted ? isDark : undefined}
-      className="focus-ring relative inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-background ring-1 ring-foreground/8 transition-colors"
+      className="focus-ring relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/70 bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_3px_10px_rgba(15,23,42,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-white/65 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_5px_14px_rgba(15,23,42,0.12)] sm:h-8 sm:w-8 dark:border-white/12 dark:bg-white/8 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_3px_10px_rgba(0,0,0,0.24)] dark:hover:bg-white/14"
     >
       <span aria-hidden="true" className="relative h-4 w-4">
         <Sun
-          className={`absolute inset-0 h-4 w-4 text-foreground transition-all duration-300 ${
+          className={`text-foreground absolute inset-0 h-4 w-4 transition-all duration-300 ${
             mounted && isDark
-              ? "rotate-0 scale-100 opacity-100"
-              : "-rotate-90 scale-0 opacity-0"
+              ? "scale-100 rotate-0 opacity-100"
+              : "scale-0 -rotate-90 opacity-0"
           }`}
         />
         <Moon
-          className={`absolute inset-0 h-4 w-4 text-foreground transition-all duration-300 ${
+          className={`text-foreground absolute inset-0 h-4 w-4 transition-all duration-300 ${
             mounted && !isDark
-              ? "rotate-0 scale-100 opacity-100"
-              : "rotate-90 scale-0 opacity-0"
+              ? "scale-100 rotate-0 opacity-100"
+              : "scale-0 rotate-90 opacity-0"
           }`}
         />
       </span>
@@ -113,13 +106,6 @@ function NavThemeToggle(): ReactNode {
 
 export function Nav(): ReactNode {
   const pathname = usePathname();
-  const listRef = useRef<HTMLUListElement>(null);
-  const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
-  const [pillRect, setPillRect] = useState<{
-    x: number;
-    width: number;
-  } | null>(null);
-  const [hasMeasured, setHasMeasured] = useState(false);
 
   const activeIndex = NAV_ITEMS.findIndex((item) =>
     item.href === "/"
@@ -127,69 +113,35 @@ export function Nav(): ReactNode {
       : pathname === item.href || pathname.startsWith(`${item.href}/`)
   );
 
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    const activeEl =
-      activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
-    if (!list || !activeEl) {
-      setPillRect(null);
-      return;
-    }
-    const listRect = list.getBoundingClientRect();
-    const itemRect = activeEl.getBoundingClientRect();
-    setPillRect({
-      x: itemRect.left - listRect.left,
-      width: itemRect.width,
-    });
-  }, [activeIndex, pathname]);
-
-  useEffect(() => {
-    if (!pillRect) return;
-    const id = requestAnimationFrame(() => setHasMeasured(true));
-    return () => cancelAnimationFrame(id);
-  }, [pillRect]);
-
   return (
     <nav
       aria-label="Primary"
-      className="fixed left-1/2 top-6 z-50 -translate-x-1/2"
+      className="fixed top-3 left-1/2 z-50 w-max max-w-[calc(100vw-1rem)] -translate-x-1/2 sm:top-6"
     >
-      <div className="flex items-center gap-1 rounded-full bg-background p-1.5 shadow-sm border border-foreground/8">
-        <ul ref={listRef} className="relative flex items-center gap-1">
-          {pillRect && (
-            <motion.span
-              aria-hidden="true"
-              initial={false}
-              animate={{ x: pillRect.x, width: pillRect.width }}
-              transition={
-                hasMeasured
-                  ? { type: "spring", stiffness: 380, damping: 32 }
-                  : { duration: 0 }
-              }
-              style={{ left: 0, top: 0, bottom: 0 }}
-              className="absolute rounded-full bg-foreground/5 ring-1 ring-foreground/8"
-            />
-          )}
+      <div className="relative isolate flex w-full items-center gap-1 overflow-hidden rounded-full border border-white/70 bg-white/45 p-1 shadow-[0_10px_35px_rgba(15,23,42,0.14),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(255,255,255,0.28)] backdrop-blur-2xl backdrop-saturate-200 transition-all duration-500 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white before:to-transparent after:pointer-events-none after:absolute after:-top-8 after:-left-8 after:h-20 after:w-36 after:rounded-full after:bg-white/25 after:blur-2xl hover:bg-white/55 hover:shadow-[0_14px_42px_rgba(15,23,42,0.18),inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(255,255,255,0.32)] sm:p-1.5 dark:border-white/14 dark:bg-neutral-950/45 dark:shadow-[0_12px_40px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.16),inset_0_-1px_0_rgba(255,255,255,0.04)] dark:before:via-white/35 dark:after:bg-white/8 dark:hover:bg-neutral-950/55">
+        <ul className="relative z-10 flex items-center gap-1">
           {NAV_ITEMS.map((item, index) => {
             const isActive = index === activeIndex;
             return (
-              <li
-                key={item.href}
-                ref={(el) => {
-                  itemRefs.current[index] = el;
-                }}
-                className="relative"
-              >
+              <li key={item.href} className="relative">
+                {isActive && (
+                  <motion.span
+                    layoutId="active-nav-pill"
+                    aria-hidden="true"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    className="absolute inset-0 rounded-full border border-white/80 bg-gradient-to-b from-white/80 to-white/35 shadow-[0_5px_16px_rgba(15,23,42,0.11),inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(255,255,255,0.3)] backdrop-blur-md dark:border-white/15 dark:from-white/16 dark:to-white/5 dark:shadow-[0_5px_18px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.18)]"
+                  />
+                )}
                 <Link
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className="focus-ring relative inline-flex cursor-pointer items-center justify-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-300"
+                  className="focus-ring group relative inline-flex cursor-pointer items-center justify-center rounded-full px-2.5 py-2 text-[13px] font-medium transition-colors duration-300 min-[360px]:px-3 sm:px-4 sm:py-1.5 sm:text-sm"
                 >
                   <span
                     className={
                       isActive
-                        ? "relative z-10 text-foreground"
-                        : "relative z-10 text-foreground/60 hover:text-foreground"
+                        ? "text-foreground relative z-10"
+                        : "text-foreground/60 group-hover:text-foreground relative z-10 transition-colors"
                     }
                   >
                     {item.label}

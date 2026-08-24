@@ -214,7 +214,7 @@ export function Stack(): ReactNode {
         </h3>
       </div>
 
-      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative h-96 overflow-hidden rounded-4xl border sm:h-72">
+      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative h-80 overflow-hidden rounded-3xl border sm:h-72 sm:rounded-4xl">
         <button
           type="button"
           onClick={() => setResetKey((k) => k + 1)}
@@ -241,7 +241,7 @@ export function Stack(): ReactNode {
         <div
           ref={containerRef}
           className="absolute inset-0 cursor-grab select-none"
-          style={{ touchAction: "none" }}
+          style={{ touchAction: "pan-y" }}
         >
           {CHIPS.map((chip, i) => (
             <div
@@ -265,7 +265,7 @@ export function Stack(): ReactNode {
 function ChipPill({ chip }: { chip: Chip }): ReactNode {
   return (
     <div
-      className="dark:ring-1 dark:ring-white/15 inline-flex items-center gap-2 p-1 pr-2 text-[15px] font-medium tracking-tight sm:text-[16px]"
+      className="inline-flex items-center gap-1.5 p-1 pr-2 text-[13px] font-medium tracking-tight sm:gap-2 sm:text-[16px] dark:ring-1 dark:ring-white/15"
       style={{
         backgroundColor: chip.bg,
         color: chip.fg,
@@ -273,7 +273,7 @@ function ChipPill({ chip }: { chip: Chip }): ReactNode {
       }}
     >
       <span
-        className="inline-flex h-8 w-8 items-center justify-center bg-white/95"
+        className="inline-flex h-7 w-7 items-center justify-center bg-white/95 sm:h-8 sm:w-8"
         style={{ borderRadius: `${ICON_RADIUS}px` }}
         aria-hidden="true"
       >
@@ -282,7 +282,7 @@ function ChipPill({ chip }: { chip: Chip }): ReactNode {
           alt=""
           width={18}
           height={18}
-          className="h-5 w-5"
+          className="h-4 w-4 sm:h-5 sm:w-5"
           draggable={false}
         />
       </span>

@@ -47,7 +47,7 @@ export function ContactButton(): ReactNode {
       }
       transition={{ layout: { duration: 0.55, ease: EASE } }}
       style={{ borderRadius: 12 }}
-      className="focus-ring relative inline-flex h-11 cursor-pointer items-center justify-center bg-foreground px-5 text-sm font-medium text-background"
+      className="focus-ring bg-foreground text-background relative inline-flex h-11 max-w-full cursor-pointer items-center justify-center px-4 text-sm font-medium sm:px-5"
     >
       <motion.span
         layout="position"
@@ -91,7 +91,10 @@ export function ContactButton(): ReactNode {
                   )}
                 </AnimatePresence>
               </span>
-              <span className="tabular-nums">{EMAIL}</span>
+              <span className="sm:hidden">
+                {copied ? "Copied" : "Copy email"}
+              </span>
+              <span className="hidden tabular-nums sm:inline">{EMAIL}</span>
             </motion.span>
           ) : (
             <motion.span

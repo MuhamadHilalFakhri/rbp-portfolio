@@ -123,22 +123,22 @@ export function Projects({
 
   return (
     <section className="relative w-full">
-      <div className="mx-auto w-full max-w-275 px-6 sm:px-10">
+      <div className="mx-auto w-full max-w-275 px-4 min-[360px]:px-6 sm:px-10">
         {withHeadline ? (
-          <FadeIn className="flex flex-col items-center gap-5 pt-12 pb-10 text-center sm:pt-20 sm:pb-14">
-            <h2 className="font-serif text-[2.5rem] font-medium leading-[1.05] tracking-tight text-foreground md:text-[3rem] lg:text-[3.5rem]">
+          <FadeIn className="flex flex-col items-center gap-4 pt-8 pb-8 text-center sm:gap-5 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+            <h2 className="text-foreground font-serif text-[2.2rem] leading-[1.05] font-medium tracking-tight min-[360px]:text-[2.5rem] md:text-[3rem] lg:text-[3.5rem]">
               My projects
             </h2>
-            <p className="max-w-[33ch] text-[18px] leading-[1.45] tracking-tight text-foreground/65 sm:text-[20px]">
-              From playful experiments to thoughtful systems, a look at the
-              work I&rsquo;m proud to have shipped.
+            <p className="text-foreground/65 max-w-[33ch] text-[18px] leading-[1.45] tracking-tight sm:text-[20px]">
+              From playful experiments to thoughtful systems, a look at the work
+              I&rsquo;m proud to have shipped.
             </p>
           </FadeIn>
         ) : null}
 
         <FadeIn className="relative">
           <div className="flex items-center justify-between pb-4">
-            <span className="text-sm font-medium tracking-tight text-foreground/50">
+            <span className="text-foreground/50 text-sm font-medium tracking-tight">
               {items.length} projects
             </span>
             <div className="flex gap-2">
@@ -147,7 +147,7 @@ export function Projects({
                 onClick={() => scrollToCard(-1)}
                 disabled={!canPrev}
                 aria-label="Previous project"
-                className="border-foreground/10 focus-ring inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border bg-background text-foreground transition-colors hover:bg-foreground/5 disabled:cursor-not-allowed disabled:opacity-30"
+                className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:h-9 sm:w-9"
               >
                 <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -156,7 +156,7 @@ export function Projects({
                 onClick={() => scrollToCard(1)}
                 disabled={!canNext}
                 aria-label="Next project"
-                className="border-foreground/10 focus-ring inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border bg-background text-foreground transition-colors hover:bg-foreground/5 disabled:cursor-not-allowed disabled:opacity-30"
+                className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:h-9 sm:w-9"
               >
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -165,7 +165,7 @@ export function Projects({
 
           <div
             ref={trackRef}
-            className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-10 sm:px-10"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:gap-6 min-[360px]:px-6 sm:-mx-10 sm:px-10 [&::-webkit-scrollbar]:hidden"
           >
             {items.map((project) => (
               <div
@@ -183,7 +183,7 @@ export function Projects({
           <div className="mt-12 flex justify-center sm:mt-16">
             <Link
               href="/projects"
-              className="border border-foreground/8 focus-ring group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-foreground/5"
+              className="border-foreground/8 focus-ring group bg-background text-foreground hover:bg-foreground/5 inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition-colors"
             >
               View all projects
               <ArrowRight
@@ -201,18 +201,18 @@ export function Projects({
 function ProjectCard({ project }: { project: Project }): ReactNode {
   const Icon = project.icon;
   return (
-    <article className="project-card flex h-full cursor-pointer flex-col gap-4 rounded-3xl border border-foreground/8 bg-background p-3 sm:p-3.5">
+    <article className="project-card border-foreground/8 bg-background flex h-full cursor-pointer flex-col gap-4 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5">
       <header className="flex items-center gap-2.5 px-1 pt-2">
-        <span className="border-foreground/10 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border bg-background">
-          <Icon className="h-3.5 w-3.5 text-foreground" aria-hidden="true" />
+        <span className="border-foreground/10 bg-background inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border">
+          <Icon className="text-foreground h-3.5 w-3.5" aria-hidden="true" />
         </span>
-        <span className="text-sm font-medium tracking-tight text-foreground">
+        <span className="text-foreground text-sm font-medium tracking-tight">
           {project.iconLabel}
         </span>
       </header>
 
       <div
-        className="project-card__image ring-foreground/5 relative w-full overflow-hidden rounded-2xl bg-foreground/5 ring-1"
+        className="project-card__image ring-foreground/5 bg-foreground/5 relative w-full overflow-hidden rounded-2xl ring-1"
         style={{ aspectRatio: project.imageRatio }}
       >
         <div className="project-card__image-inner">
@@ -227,15 +227,15 @@ function ProjectCard({ project }: { project: Project }): ReactNode {
       </div>
 
       <div className="flex flex-col gap-2.5 px-1 pb-1">
-        <h3 className="text-[20px] font-medium leading-[1.2] tracking-tight text-foreground sm:text-[22px]">
+        <h3 className="text-foreground text-[18px] leading-[1.25] font-medium tracking-tight min-[360px]:text-[20px] sm:text-[22px]">
           {project.title}
         </h3>
-        <p className="text-[14px] leading-normal tracking-tight text-foreground/65 sm:text-[15px]">
+        <p className="text-foreground/65 text-[14px] leading-normal tracking-tight sm:text-[15px]">
           {project.description}
         </p>
       </div>
 
-      <p className="mt-auto px-1 pb-2 text-[12px] tracking-tight text-foreground/50">
+      <p className="text-foreground/50 mt-auto px-1 pb-2 text-[12px] tracking-tight">
         {project.meta}
       </p>
     </article>

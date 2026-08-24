@@ -19,12 +19,15 @@ export const metadata: Metadata = createMetadata({
 
 export default function HomePage(): ReactNode {
   return (
-    <main id="main-content" className="flex flex-1 flex-col gap-20 sm:gap-28">
+    <main
+      id="main-content"
+      className="flex flex-1 flex-col gap-16 sm:gap-24 lg:gap-28"
+    >
       <Hero />
-      <AnimatedSection className="mx-auto w-full max-w-160 px-6 sm:px-10">
+      <AnimatedSection className="mx-auto w-full max-w-160 px-4 min-[360px]:px-6 sm:px-10">
         <Bio />
       </AnimatedSection>
-      <section className="mx-auto w-full max-w-[40rem] px-6 sm:px-10">
+      <section className="mx-auto w-full max-w-[40rem] px-4 min-[360px]:px-6 sm:px-10">
         <div className="flex flex-col gap-10">
           <Education />
           <Experience />

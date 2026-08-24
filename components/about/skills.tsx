@@ -52,15 +52,15 @@ export function Skills(): ReactNode {
 
   return (
     <div className="flex flex-col gap-3" ref={containerRef}>
-      <h3 className="text-[15px] font-semibold tracking-tight text-foreground">
+      <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         What I do
       </h3>
-      <div className="rounded-4xl border border-foreground/5 bg-foreground/2 p-2 sm:p-4 dark:bg-foreground/5">
-        <div className="flex flex-wrap gap-3">
+      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 rounded-3xl border p-2 sm:rounded-4xl sm:p-4">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {SKILLS.map((skill) => (
             <span
               key={skill}
-              className="rounded-full border border-foreground/8 bg-background px-4 py-2 text-[14px] tracking-tight text-foreground/85 sm:text-[15px]"
+              className="border-foreground/8 bg-background text-foreground/85 max-w-full rounded-full border px-3 py-2 text-center text-[13px] tracking-tight break-words min-[360px]:text-[14px] sm:px-4 sm:text-[15px]"
             >
               {skill}
             </span>

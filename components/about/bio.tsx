@@ -8,20 +8,20 @@ export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
   const Heading = heading;
 
   return (
-    <div className="rounded-4xl border border-foreground/5 bg-foreground/1.5 p-8 sm:p-12 dark:bg-foreground/3">
-      <Heading className="font-serif text-[1.75rem] font-medium tracking-tight text-foreground sm:text-[2rem]">
+    <div className="border-foreground/5 bg-foreground/1.5 dark:bg-foreground/3 rounded-3xl border p-5 min-[360px]:p-6 sm:rounded-4xl sm:p-12">
+      <Heading className="text-foreground font-serif text-[1.6rem] font-medium tracking-tight min-[360px]:text-[1.75rem] sm:text-[2rem]">
         Hello! I&rsquo;m{" "}
-        <span className="border-b border-foreground/30 pb-0.5">
+        <span className="border-foreground/30 border-b pb-0.5">
           Muhamad Hilal Fakhri
         </span>
         .
       </Heading>
-      <div className="mt-8 space-y-6 text-[17px] leading-[1.7] tracking-tight text-foreground/75 sm:text-[18px]">
+      <div className="text-foreground/75 mt-6 space-y-5 text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:space-y-6 sm:text-[18px]">
         <p>
           Saya merupakan lulusan Program Studi S1 Teknologi Informasi
           Universitas Muhammadiyah Yogyakarta dengan minat dan pengalaman di
           bidang{" "}
-          <strong className="font-semibold text-foreground">
+          <strong className="text-foreground font-semibold">
             pengembangan web, baik frontend maupun backend
           </strong>
           . Selama menempuh pendidikan, saya mempelajari dan mengembangkan
@@ -30,15 +30,14 @@ export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
           hingga integrasi antara frontend dan backend. Saya memiliki kemampuan
           dalam memahami kebutuhan pengguna, merancang struktur sistem, serta
           mengimplementasikan solusi yang{" "}
-          <strong className="font-semibold text-foreground">
+          <strong className="text-foreground font-semibold">
             terstruktur, efisien, dan mudah dikembangkan
           </strong>
           .
         </p>
         <p>
-          Saya memiliki ketertarikan untuk terus memperdalam kemampuan di
-          bidang{" "}
-          <strong className="font-semibold text-foreground">
+          Saya memiliki ketertarikan untuk terus memperdalam kemampuan di bidang{" "}
+          <strong className="text-foreground font-semibold">
             software development
           </strong>
           , khususnya dalam membangun aplikasi web yang fungsional, responsif,

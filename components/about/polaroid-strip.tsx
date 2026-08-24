@@ -60,7 +60,12 @@ function PolaroidCard({
       ref={ref}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      initial={{ opacity: 0, y: -120, filter: "blur(18px)", rotate: photo.rotate }}
+      initial={{
+        opacity: 0,
+        y: -120,
+        filter: "blur(18px)",
+        rotate: photo.rotate,
+      }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)", rotate: photo.rotate }}
       transition={{
         duration: 0.9,
@@ -72,7 +77,7 @@ function PolaroidCard({
         y: ty,
         rotate: photo.rotate,
       }}
-      className="relative aspect-[3/4] w-[clamp(6rem,11vw,9rem)] shrink-0 overflow-hidden rounded-2xl border-6 border-neutral-300/40 bg-white p-1.5 dark:border-white/15 dark:bg-neutral-900"
+      className="relative aspect-[3/4] w-[clamp(4.75rem,13vw,9rem)] shrink-0 overflow-hidden rounded-xl border-4 border-neutral-300/40 bg-white p-1 sm:rounded-2xl sm:border-6 sm:p-1.5 dark:border-white/15 dark:bg-neutral-900"
     >
       <DottedPattern className="relative h-full w-full overflow-hidden rounded-xl" />
     </motion.div>
@@ -87,11 +92,16 @@ export function PolaroidStrip(): ReactNode {
   );
 
   if (!mounted) {
-    return <div aria-hidden="true" className="h-[clamp(8rem,15vw,12rem)] w-full" />;
+    return (
+      <div
+        aria-hidden="true"
+        className="h-56 w-full sm:h-[clamp(8rem,15vw,12rem)]"
+      />
+    );
   }
 
   return (
-    <div className="flex flex-wrap w-full items-start justify-center gap-1 px-4 sm:gap-1.5 sm:px-8">
+    <div className="flex w-full flex-wrap items-start justify-center gap-1 px-2 min-[360px]:px-4 sm:gap-1.5 sm:px-8">
       {PHOTOS.map((photo, i) => (
         <PolaroidCard key={photo.id} photo={photo} index={i} />
       ))}

@@ -26,7 +26,7 @@ export function HeroCtas(): ReactNode {
             href="/cv.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="border border-foreground/5 focus-ring group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-background px-5 py-2.5 text-sm font-medium text-foreground shadow-2xl transition-colors hover:bg-foreground/4"
+            className="focus-ring group border-foreground/5 bg-background text-foreground hover:bg-foreground/4 inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-3 text-sm font-medium shadow-2xl transition-colors sm:py-2.5"
           >
             View CV
             <ArrowRight

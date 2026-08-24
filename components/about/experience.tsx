@@ -142,16 +142,16 @@ export function Experience(): ReactNode {
 
   return (
     <div className="flex flex-col gap-3" ref={containerRef}>
-      <div className="flex gap-2 border-b border-foreground/10">
+      <div className="border-foreground/10 grid grid-cols-3 border-b">
         <button
           type="button"
           onClick={() => {
             setActiveSection("experience");
             setExpandedIndex(null);
           }}
-          className={`px-3 py-2 text-[14px] font-medium tracking-tight transition-colors ${
+          className={`focus-ring min-w-0 cursor-pointer px-1 py-2 text-[11px] font-medium tracking-tight transition-colors min-[360px]:px-1.5 min-[360px]:text-[12px] sm:px-3 sm:text-[14px] ${
             activeSection === "experience"
-              ? "text-foreground border-b-2 border-foreground"
+              ? "text-foreground border-foreground border-b-2"
               : "text-foreground/50 hover:text-foreground/75"
           }`}
         >
@@ -163,9 +163,9 @@ export function Experience(): ReactNode {
             setActiveSection("organization");
             setExpandedIndex(null);
           }}
-          className={`px-3 py-2 text-[14px] font-medium tracking-tight transition-colors ${
+          className={`focus-ring min-w-0 cursor-pointer px-1 py-2 text-[11px] font-medium tracking-tight transition-colors min-[360px]:px-1.5 min-[360px]:text-[12px] sm:px-3 sm:text-[14px] ${
             activeSection === "organization"
-              ? "text-foreground border-b-2 border-foreground"
+              ? "text-foreground border-foreground border-b-2"
               : "text-foreground/50 hover:text-foreground/75"
           }`}
         >
@@ -177,9 +177,9 @@ export function Experience(): ReactNode {
             setActiveSection("certificate");
             setExpandedIndex(null);
           }}
-          className={`px-3 py-2 text-[14px] font-medium tracking-tight transition-colors ${
+          className={`focus-ring min-w-0 cursor-pointer px-1 py-2 text-[11px] font-medium tracking-tight transition-colors min-[360px]:px-1.5 min-[360px]:text-[12px] sm:px-3 sm:text-[14px] ${
             activeSection === "certificate"
-              ? "text-foreground border-b-2 border-foreground"
+              ? "text-foreground border-foreground border-b-2"
               : "text-foreground/50 hover:text-foreground/75"
           }`}
         >
@@ -187,24 +187,27 @@ export function Experience(): ReactNode {
         </button>
       </div>
 
-      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative rounded-4xl border p-2 sm:p-4">
+      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative rounded-3xl border p-2 sm:rounded-4xl sm:p-4">
         <ul className="flex flex-col gap-2">
           {entries.map((entry, index) => (
-            <li key={`${entry.company}-${entry.period}`} className="flex flex-col">
+            <li
+              key={`${entry.company}-${entry.period}`}
+              className="flex flex-col"
+            >
               {entry.pdfUrl ? (
                 <a
                   href={entry.pdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group bg-background border-foreground/5 focus-ring flex items-center gap-4 rounded-3xl border p-2 text-left transition-colors hover:bg-foreground/2"
+                  className="group focus-ring border-foreground/5 bg-background hover:bg-foreground/2 flex items-center gap-3 rounded-2xl border p-2 text-left transition-colors sm:gap-4 sm:rounded-3xl"
                   style={{ minHeight: ROW_HEIGHT }}
                 >
                   <CompanyLogo entry={entry} />
                   <div className="flex min-w-0 flex-1 flex-col">
-                    <span className="text-foreground text-[17px] font-semibold tracking-tight sm:text-[18px]">
+                    <span className="text-foreground text-[15px] leading-snug font-semibold tracking-tight break-words min-[360px]:text-[16px] sm:text-[18px]">
                       {entry.company}
                     </span>
-                    <span className="text-foreground/65 mt-0.5 text-[14px] tracking-tight sm:text-[15px]">
+                    <span className="text-foreground/65 mt-0.5 text-[12px] leading-snug tracking-tight break-words min-[360px]:text-[13px] sm:text-[15px]">
                       {entry.role}
                       {entry.role && (
                         <span className="text-foreground/30 mx-2">•</span>
@@ -213,11 +216,11 @@ export function Experience(): ReactNode {
                     </span>
                   </div>
                   <span className="flex shrink-0 items-center gap-2">
-                    <span className="hidden text-[12px] tracking-tight text-foreground/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block">
+                    <span className="text-foreground/40 hidden text-[12px] tracking-tight opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block">
                       Klik untuk melihat sertifikat
                     </span>
                     <FileText
-                      className="h-4 w-4 shrink-0 text-foreground/50"
+                      className="text-foreground/50 h-4 w-4 shrink-0"
                       aria-hidden="true"
                     />
                   </span>
@@ -228,15 +231,15 @@ export function Experience(): ReactNode {
                   onClick={() =>
                     setExpandedIndex(expandedIndex === index ? null : index)
                   }
-                  className="bg-background border-foreground/5 focus-ring flex items-center gap-4 rounded-3xl border p-2 text-left transition-colors hover:bg-foreground/2"
+                  className="focus-ring border-foreground/5 bg-background hover:bg-foreground/2 flex items-center gap-3 rounded-2xl border p-2 text-left transition-colors sm:gap-4 sm:rounded-3xl"
                   style={{ minHeight: ROW_HEIGHT }}
                 >
                   <CompanyLogo entry={entry} />
                   <div className="flex min-w-0 flex-1 flex-col">
-                    <span className="text-foreground text-[17px] font-semibold tracking-tight sm:text-[18px]">
+                    <span className="text-foreground text-[15px] leading-snug font-semibold tracking-tight break-words min-[360px]:text-[16px] sm:text-[18px]">
                       {entry.company}
                     </span>
-                    <span className="text-foreground/65 mt-0.5 text-[14px] tracking-tight sm:text-[15px]">
+                    <span className="text-foreground/65 mt-0.5 text-[12px] leading-snug tracking-tight break-words min-[360px]:text-[13px] sm:text-[15px]">
                       {entry.role}
                       <span className="text-foreground/30 mx-2">•</span>
                       <span className="text-foreground/55">{entry.period}</span>
@@ -249,7 +252,7 @@ export function Experience(): ReactNode {
                       className="inline-flex shrink-0"
                     >
                       <ChevronDown
-                        className="h-4 w-4 text-foreground/50"
+                        className="text-foreground/50 h-4 w-4"
                         aria-hidden="true"
                       />
                     </motion.span>
@@ -266,12 +269,12 @@ export function Experience(): ReactNode {
                     transition={{ duration: 0.25 }}
                     className="mt-2 overflow-hidden"
                   >
-                    <div className="bg-background border-foreground/5 rounded-3xl border p-3 sm:p-4">
+                    <div className="border-foreground/5 bg-background rounded-2xl border p-3 sm:rounded-3xl sm:p-4">
                       <ul className="flex flex-col gap-2">
                         {entry.description.map((desc, idx) => (
                           <li
                             key={idx}
-                            className="text-foreground/70 text-[14px] leading-relaxed sm:text-[15px]"
+                            className="text-foreground/70 text-[13px] leading-relaxed sm:text-[15px]"
                           >
                             <span className="mr-2">•</span>
                             {desc}
@@ -299,11 +302,11 @@ function CompanyLogo({ entry }: { entry: Entry }): ReactNode {
         : Award;
   return (
     <span
-      className="border-foreground/15 inline-flex h-12 w-12 shrink-0 items-center justify-center border"
+      className="border-foreground/15 inline-flex h-10 w-10 shrink-0 items-center justify-center border sm:h-12 sm:w-12"
       aria-hidden="true"
       style={{ borderRadius: 14 }}
     >
-      <Icon className="h-6 w-6 text-foreground/60" />
+      <Icon className="text-foreground/60 h-5 w-5 sm:h-6 sm:w-6" />
     </span>
   );
 }
