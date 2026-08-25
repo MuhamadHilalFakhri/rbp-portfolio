@@ -129,7 +129,6 @@ export function Stack(): ReactNode {
         mousewheel?: EventListener;
       };
       
-      // Remove wheel listener to prevent blocking page scroll on desktop
       if (mouseElement.mousewheel) {
         mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
         mouseElement.removeEventListener(
@@ -148,58 +147,102 @@ export function Stack(): ReactNode {
       });
       World.add(world, mouseConstraint);
 
-      let isDraggingChip = false;
-      const dragStart = { x: 0, y: 0 };
+      const isMobile = 
+        typeof window !== "undefined" &&
+        window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
-      // Override Matter's touch handlers to be smarter about scroll vs drag
-      const touchStartHandler = (e: TouchEvent): void => {
-        const touch = e.touches[0];
-        if (!touch) return;
-        isDraggingChip = false;
-        dragStart.x = touch.clientX;
-        dragStart.y = touch.clientY;
-      };
-
-      const touchMoveHandler = (e: TouchEvent): void => {
-        const touch = e.touches[0];
-        if (!touch) return;
+      if (isMobile) {
+        const internalMouse = mouse as typeof mouse & {
+          mousemove: EventListener;
+          mousedown: EventListener;
+          mouseup: EventListener;
+        };
         
-        const dx = Math.abs(touch.clientX - dragStart.x);
-        const dy = Math.abs(touch.clientY - dragStart.y);
-        
-        // If horizontal movement dominates, treat as drag
-        if (dx > 10 && dx > dy * 1.5) {
-          isDraggingChip = true;
-          e.preventDefault();
-        }
-        // If vertical movement dominates, let browser scroll
-        else if (dy > 10 && dy > dx * 1.5) {
-          isDraggingChip = false;
-        }
-        // If still ambiguous, don't block
-      };
+        mouseElement.removeEventListener("touchmove", internalMouse.mousemove);
+        mouseElement.removeEventListener("touchstart", internalMouse.mousedown);
+        mouseElement.removeEventListener("touchend", internalMouse.mouseup);
 
-      const touchEndHandler = (e: TouchEvent): void => {
-        if (isDraggingChip) {
-          e.preventDefault();
-        }
-        isDraggingChip = false;
-      };
+        let draggedBody: Matter.Body | null = null;
+        let dragOffset = { x: 0, y: 0 };
+        let gestureIsVertical = false;
+        let gestureDecided = false;
+        const touchStart = { x: 0, y: 0 };
 
-      // Replace Matter's default touch handlers with gesture-aware handlers.
-      const internalMouse = mouse as typeof mouse & {
-        mousemove: EventListener;
-        mousedown: EventListener;
-        mouseup: EventListener;
-      };
-      mouseElement.removeEventListener("touchmove", internalMouse.mousemove);
-      mouseElement.removeEventListener("touchstart", internalMouse.mousedown);
-      mouseElement.removeEventListener("touchend", internalMouse.mouseup);
+        const handleTouchStart = (e: TouchEvent): void => {
+          const touch = e.touches[0];
+          if (!touch) return;
 
-      // Add our smarter touch handlers
-      mouseElement.addEventListener("touchstart", touchStartHandler as EventListener, { passive: true });
-      mouseElement.addEventListener("touchmove", touchMoveHandler as EventListener, { passive: false });
-      mouseElement.addEventListener("touchend", touchEndHandler as EventListener, { passive: false });
+          touchStart.x = touch.clientX;
+          touchStart.y = touch.clientY;
+          gestureDecided = false;
+          gestureIsVertical = false;
+
+          const rect = container.getBoundingClientRect();
+          const x = touch.clientX - rect.left;
+          const y = touch.clientY - rect.top;
+
+          const bodies = states.map(s => s.body);
+          for (const body of bodies) {
+            const bounds = body.bounds;
+            
+            if (x >= bounds.min.x && x <= bounds.max.x &&
+                y >= bounds.min.y && y <= bounds.max.y) {
+              draggedBody = body;
+              dragOffset.x = body.position.x - x;
+              dragOffset.y = body.position.y - y;
+              Body.setStatic(body, true);
+              break;
+            }
+          }
+        };
+
+        const handleTouchMove = (e: TouchEvent): void => {
+          const touch = e.touches[0];
+          if (!touch) return;
+
+          if (!draggedBody) return;
+
+          if (!gestureDecided) {
+            const dx = Math.abs(touch.clientX - touchStart.x);
+            const dy = Math.abs(touch.clientY - touchStart.y);
+            
+            if (dx > 8 || dy > 8) {
+              gestureDecided = true;
+              gestureIsVertical = dy > dx * 1.2;
+            }
+          }
+
+          if (gestureIsVertical) {
+            if (draggedBody) {
+              Body.setStatic(draggedBody, false);
+              draggedBody = null;
+            }
+            return;
+          }
+
+          const rect = container.getBoundingClientRect();
+          const x = touch.clientX - rect.left + dragOffset.x;
+          const y = touch.clientY - rect.top + dragOffset.y;
+          
+          Body.setPosition(draggedBody, { x, y });
+          Body.setVelocity(draggedBody, { x: 0, y: 0 });
+          Body.setAngularVelocity(draggedBody, 0);
+        };
+
+        const handleTouchEnd = (): void => {
+          if (draggedBody) {
+            Body.setStatic(draggedBody, false);
+            draggedBody = null;
+          }
+          gestureDecided = false;
+          gestureIsVertical = false;
+        };
+
+        container.addEventListener("touchstart", handleTouchStart, { passive: true });
+        container.addEventListener("touchmove", handleTouchMove, { passive: true });
+        container.addEventListener("touchend", handleTouchEnd, { passive: true });
+        container.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+      }
 
       Events.on(mouseConstraint, "startdrag", () => {
         container.style.cursor = "grabbing";
