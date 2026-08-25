@@ -70,67 +70,67 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194725.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194725-converted.webp",
         alt: "Dashboard Super Admin HRIS",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194759.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194759-converted.webp",
         alt: "Modul Rekrutmen",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194808.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194808-converted.webp",
         alt: "Kalender Penjadwalan Interview",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194816.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194816-converted.webp",
         alt: "Detail Proses Onboarding",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194825.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194825-converted.webp",
         alt: "Kelola Divisi dan Lowongan",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194833.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194833-converted.webp",
         alt: "Sistem Disposisi Surat",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194841.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194841-converted.webp",
         alt: "Template dan Export Surat",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 194850.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 194850-converted.webp",
         alt: "Modul Offboarding",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195114.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195114-converted.webp",
         alt: "Pengelolaan Pengaduan Karyawan",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195124.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195124-converted.webp",
         alt: "Dashboard Pelamar",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195227.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195227-converted.webp",
         alt: "Form Lamaran Kerja",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195237.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195237-converted.webp",
         alt: "Profil dan CV Pelamar",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195244.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195244-converted.webp",
         alt: "Status Tracking Lamaran",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195433.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195433-converted.webp",
         alt: "Kelola Akun Pengguna",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195445.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195445-converted.webp",
         alt: "Sistem Notifikasi Real-time",
       },
       {
-        src: "/project/Internship/Screenshot 2026-08-24 195454.png",
+        src: "/project/InternshipWebp/Screenshot 2026-08-24 195454-converted.webp",
         alt: "Landing Page Lowongan Kerja",
       },
     ],
@@ -158,79 +158,79 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195811.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195811-converted.webp",
         alt: "Dashboard Admin E-Learning",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195826.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195826-converted.webp",
         alt: "Manajemen Data Guru",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195835.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195835-converted.webp",
         alt: "Import/Export Data Excel",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195845.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195845-converted.webp",
         alt: "Manajemen Data Siswa",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195856.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195856-converted.webp",
         alt: "Manajemen Kelas dan Wali Kelas",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195905.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195905-converted.webp",
         alt: "Manajemen Mata Pelajaran",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 195914.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195914-converted.webp",
         alt: "Dashboard Guru",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200251.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200251-converted.webp",
         alt: "Upload dan Kelola Materi Pembelajaran",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200302.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200302-converted.webp",
         alt: "Form Upload Materi Multi-Format",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200313.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200313-converted.webp",
         alt: "Buat Kuis dengan AI Interaktif",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200322.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200322-converted.webp",
         alt: "Pengaturan Timer dan Jadwal Kuis",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200336.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200336-converted.webp",
         alt: "Statistik Materi dan Kuis Guru",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200439.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200439-converted.webp",
         alt: "Dashboard Siswa dan Progres Belajar",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200449.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200449-converted.webp",
         alt: "Akses Materi dengan Filter Pencarian",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200459.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200459-converted.webp",
         alt: "Interface Kuis dengan Timer",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200508.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200508-converted.webp",
         alt: "Hasil dan Riwayat Nilai Siswa",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200519.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200519-converted.webp",
         alt: "Statistik Performa Per Mata Pelajaran",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200530.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200530-converted.webp",
         alt: "Detail Progres Pembelajaran",
       },
       {
-        src: "/project/Capstone/Screenshot 2026-08-24 200538.png",
+        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200538-converted.webp",
         alt: "Profile dan Pengaturan Akun",
       },
     ],
@@ -261,83 +261,83 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193422.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193422-converted.webp",
         alt: "Dashboard Super Admin HRIS",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193456.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193456-converted.webp",
         alt: "AI CV Screening dengan Groq",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193510.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193510-converted.webp",
         alt: "Pipeline Rekrutmen Visual",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193713.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193713-converted.webp",
         alt: "Scoring dan Shortlist Pelamar",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193737.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193737-converted.webp",
         alt: "Jadwal Interview Online/Offline",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193753.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193753-converted.webp",
         alt: "Export Laporan Rekrutmen",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193809.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193809-converted.webp",
         alt: "Kelola Template Surat",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193847.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193847-converted.webp",
         alt: "Preview PDF Template Surat",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193857.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193857-converted.webp",
         alt: "Disposisi Surat Digital",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193921.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193921-converted.webp",
         alt: "Kelola Staff dan Divisi",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 193931.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193931-converted.webp",
         alt: "Audit Log Tracking Aktivitas",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194256.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194256-converted.webp",
         alt: "Dashboard Pelamar",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194311.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194311-converted.webp",
         alt: "Profil Pelamar dengan Autocomplete",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194321.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194321-converted.webp",
         alt: "Kirim Lamaran dengan Upload CV",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194330.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194330-converted.webp",
         alt: "Tracking Status Lamaran",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194451.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194451-converted.webp",
         alt: "Dashboard Staff Karyawan",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194500.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194500-converted.webp",
         alt: "Pengaduan Karyawan Multi Kategori",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194537.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194537-converted.webp",
         alt: "Pengajuan Resign Digital",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194550.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194550-converted.webp",
         alt: "Google OAuth 2.0 Login",
       },
       {
-        src: "/project/Skripsi/Screenshot 2026-08-24 194601.png",
+        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194601-converted.webp",
         alt: "Dark Mode Interface",
       },
     ],

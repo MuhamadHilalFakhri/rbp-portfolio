@@ -1,32 +1,31 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useSyncExternalStore, type ReactNode } from "react";
 
 import { HeroCtas } from "./hero-ctas";
 import { BlurReveal } from "@/components/ui/blur-reveal";
 import { FadeIn } from "@/components/ui/motion-primitives";
 import { HeroLanyard } from "./hero-lanyard";
 
+function subscribeToSplash(onChange: () => void): () => void {
+  window.addEventListener("splash-complete", onChange);
+  return () => window.removeEventListener("splash-complete", onChange);
+}
+
+function getSplashSnapshot(): boolean {
+  return (
+    document.documentElement.dataset.splash === "done" ||
+    window.sessionStorage.getItem("splash-shown") === "1"
+  );
+}
+
 export function Hero(): ReactNode {
   const heroRef = useRef<HTMLElement>(null);
-  const [splashComplete, setSplashComplete] = useState(false);
-
-  useEffect(() => {
-    const isComplete =
-      document.documentElement.dataset.splash === "done" ||
-      window.sessionStorage.getItem("splash-shown") === "1";
-
-    if (isComplete) {
-      setSplashComplete(true);
-      return;
-    }
-
-    const handleSplashComplete = (): void => setSplashComplete(true);
-    window.addEventListener("splash-complete", handleSplashComplete, {
-      once: true,
-    });
-    return () => window.removeEventListener("splash-complete", handleSplashComplete);
-  }, []);
+  const splashComplete = useSyncExternalStore(
+    subscribeToSplash,
+    getSplashSnapshot,
+    () => false
+  );
 
   return (
     <section ref={heroRef} className="relative isolate w-full overflow-visible">
