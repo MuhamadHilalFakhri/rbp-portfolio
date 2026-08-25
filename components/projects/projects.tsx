@@ -8,7 +8,12 @@ import {
   LineChart,
   Sparkles,
 } from "lucide-react";
-import type { ComponentType, ReactNode } from "react";
+import type {
+  ComponentType,
+  MouseEvent as ReactMouseEvent,
+  PointerEvent as ReactPointerEvent,
+  ReactNode,
+} from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -430,7 +435,7 @@ export function Projects({
 
           <div
             ref={trackRef}
-            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:gap-6 min-[360px]:px-6 sm:-mx-10 sm:px-10 [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 touch-pan-y [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:gap-6 min-[360px]:px-6 sm:snap-mandatory sm:-mx-10 sm:px-10 sm:touch-auto [&::-webkit-scrollbar]:hidden"
           >
             {items.map((project) => (
               <div
@@ -480,13 +485,35 @@ function ProjectCard({
 }): ReactNode {
   const Icon = project.icon;
   const cover = project.images[0];
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const TAP_THRESHOLD = 8;
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLElement>): void => {
+    pointerStart.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handleClick = (event: ReactMouseEvent<HTMLElement>): void => {
+    const start = pointerStart.current;
+    pointerStart.current = null;
+    if (start) {
+      const dx = Math.abs(event.clientX - start.x);
+      const dy = Math.abs(event.clientY - start.y);
+      if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) {
+        // Treat as a swipe/scroll gesture, not a tap.
+        return;
+      }
+    }
+    onSelect();
+  };
+
   return (
     <article
       role="button"
       tabIndex={0}
       aria-haspopup="dialog"
       aria-label={`View details for ${project.iconLabel}`}
-      onClick={onSelect}
+      onPointerDown={handlePointerDown}
+      onClick={handleClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();

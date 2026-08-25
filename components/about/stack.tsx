@@ -125,15 +125,43 @@ export function Stack(): ReactNode {
 
       const mouse = Mouse.create(container);
 
-      const wheelTarget = mouse.element as HTMLElement & {
+      const mouseElement = mouse.element as HTMLElement & {
         mousewheel?: EventListener;
+        mousemove?: EventListener;
+        mousedown?: EventListener;
+        mouseup?: EventListener;
       };
-      if (wheelTarget.mousewheel) {
-        wheelTarget.removeEventListener("wheel", wheelTarget.mousewheel);
-        wheelTarget.removeEventListener(
+      if (mouseElement.mousewheel) {
+        mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
+        mouseElement.removeEventListener(
           "DOMMouseScroll",
-          wheelTarget.mousewheel
+          mouseElement.mousewheel
         );
+      }
+
+      // Matter.js attaches non-passive touch listeners that call
+      // preventDefault() on every touchstart/end, which blocks the browser's
+      // vertical scroll gesture on mobile. Detach them on coarse pointers so
+      // the page can scroll normally through the physics area.
+      const isCoarsePointer =
+        typeof window !== "undefined" &&
+        window.matchMedia("(hover: none), (pointer: coarse)").matches;
+      if (isCoarsePointer) {
+        if (mouseElement.mousemove) {
+          mouseElement.removeEventListener(
+            "touchmove",
+            mouseElement.mousemove
+          );
+        }
+        if (mouseElement.mousedown) {
+          mouseElement.removeEventListener(
+            "touchstart",
+            mouseElement.mousedown
+          );
+        }
+        if (mouseElement.mouseup) {
+          mouseElement.removeEventListener("touchend", mouseElement.mouseup);
+        }
       }
 
       const mouseConstraint = MouseConstraint.create(engine, {
