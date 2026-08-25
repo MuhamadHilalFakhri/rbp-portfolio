@@ -123,46 +123,91 @@ export function Stack(): ReactNode {
         return { chip, body, width: w, height: h };
       });
 
-      // Matter.js attaches non-passive touch listeners that call
-      // preventDefault() on every touchstart/end, which blocks the browser's
-      // vertical scroll gesture on mobile. Skip the mouse/touch constraint
-      // entirely on coarse pointers so the page can scroll normally through
-      // the physics area.
-      const isCoarsePointer =
-        typeof window !== "undefined" &&
-        window.matchMedia("(hover: none), (pointer: coarse)").matches;
+      const mouse = Mouse.create(container);
 
-      if (!isCoarsePointer) {
-        const mouse = Mouse.create(container);
-
-        const mouseElement = mouse.element as HTMLElement & {
-          mousewheel?: EventListener;
-        };
-        if (mouseElement.mousewheel) {
-          mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
-          mouseElement.removeEventListener(
-            "DOMMouseScroll",
-            mouseElement.mousewheel
-          );
-        }
-
-        const mouseConstraint = MouseConstraint.create(engine, {
-          mouse,
-          constraint: {
-            stiffness: 0.2,
-            damping: 0.2,
-            render: { visible: false },
-          },
-        });
-        World.add(world, mouseConstraint);
-
-        Events.on(mouseConstraint, "startdrag", () => {
-          container.style.cursor = "grabbing";
-        });
-        Events.on(mouseConstraint, "enddrag", () => {
-          container.style.cursor = "grab";
-        });
+      const mouseElement = mouse.element as HTMLElement & {
+        mousewheel?: EventListener;
+      };
+      
+      // Remove wheel listener to prevent blocking page scroll on desktop
+      if (mouseElement.mousewheel) {
+        mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
+        mouseElement.removeEventListener(
+          "DOMMouseScroll",
+          mouseElement.mousewheel
+        );
       }
+
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse,
+        constraint: {
+          stiffness: 0.2,
+          damping: 0.2,
+          render: { visible: false },
+        },
+      });
+      World.add(world, mouseConstraint);
+
+      let isDraggingChip = false;
+      const dragStart = { x: 0, y: 0 };
+
+      // Override Matter's touch handlers to be smarter about scroll vs drag
+      const touchStartHandler = (e: TouchEvent): void => {
+        const touch = e.touches[0];
+        if (!touch) return;
+        isDraggingChip = false;
+        dragStart.x = touch.clientX;
+        dragStart.y = touch.clientY;
+      };
+
+      const touchMoveHandler = (e: TouchEvent): void => {
+        const touch = e.touches[0];
+        if (!touch) return;
+        
+        const dx = Math.abs(touch.clientX - dragStart.x);
+        const dy = Math.abs(touch.clientY - dragStart.y);
+        
+        // If horizontal movement dominates, treat as drag
+        if (dx > 10 && dx > dy * 1.5) {
+          isDraggingChip = true;
+          e.preventDefault();
+        }
+        // If vertical movement dominates, let browser scroll
+        else if (dy > 10 && dy > dx * 1.5) {
+          isDraggingChip = false;
+        }
+        // If still ambiguous, don't block
+      };
+
+      const touchEndHandler = (e: TouchEvent): void => {
+        if (isDraggingChip) {
+          e.preventDefault();
+        }
+        isDraggingChip = false;
+      };
+
+      // Replace Matter's default touch handlers with gesture-aware handlers.
+      const internalMouse = mouse as typeof mouse & {
+        mousemove: EventListener;
+        mousedown: EventListener;
+        mouseup: EventListener;
+      };
+      mouseElement.removeEventListener("touchmove", internalMouse.mousemove);
+      mouseElement.removeEventListener("touchstart", internalMouse.mousedown);
+      mouseElement.removeEventListener("touchend", internalMouse.mouseup);
+
+      // Add our smarter touch handlers
+      mouseElement.addEventListener("touchstart", touchStartHandler as EventListener, { passive: true });
+      mouseElement.addEventListener("touchmove", touchMoveHandler as EventListener, { passive: false });
+      mouseElement.addEventListener("touchend", touchEndHandler as EventListener, { passive: false });
+
+      Events.on(mouseConstraint, "startdrag", () => {
+        container.style.cursor = "grabbing";
+      });
+
+      Events.on(mouseConstraint, "enddrag", () => {
+        container.style.cursor = "grab";
+      });
 
       const runner = Runner.create();
       Runner.run(runner, engine);

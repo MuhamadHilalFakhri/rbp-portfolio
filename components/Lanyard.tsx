@@ -65,7 +65,8 @@ export default function Lanyard({
 
   return (
     <div
-      className={`relative z-0 flex h-full w-full items-center justify-center select-none ${isMobile ? "" : "touch-none"} ${className}`}
+      className={`relative z-0 flex h-full w-full items-center justify-center select-none ${className}`}
+      style={{ touchAction: "pan-y" }}
     >
       <Canvas
         camera={{ position, fov }}
@@ -98,7 +99,7 @@ export default function Lanyard({
           antialias: false,
           powerPreference: "high-performance",
         }}
-        style={{ touchAction: isMobile ? "pan-y" : "none" }}
+        style={{ touchAction: "pan-y" }}
         fallback={<div className="h-full w-full bg-transparent" />}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
@@ -183,7 +184,6 @@ function Band({
   });
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
-
   useEffect(() => () => bandTexture.dispose(), [bandTexture]);
 
   useEffect(() => {
@@ -197,19 +197,6 @@ function Band({
       document.body.style.cursor = "auto";
     };
   }, [hovered, dragged]);
-
-  useEffect(() => {
-    if (!dragged) return;
-
-    const stopDragging = () => drag(false);
-    window.addEventListener("pointerup", stopDragging, { once: true });
-    window.addEventListener("pointercancel", stopDragging, { once: true });
-
-    return () => {
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
-    };
-  }, [dragged]);
 
   useFrame((state, delta) => {
     const frameDelta = Math.min(delta, 1 / 30);
@@ -341,7 +328,6 @@ function Band({
           onPointerOver={() => hover(true)}
           onPointerOut={() => hover(false)}
           onPointerUp={(e: ThreeEvent<PointerEvent>) => {
-            if (isMobile) return;
             e.stopPropagation();
             const captureTarget = e.nativeEvent.currentTarget;
             if (
@@ -353,10 +339,6 @@ function Band({
             drag(false);
           }}
           onPointerDown={(e: ThreeEvent<PointerEvent>) => {
-            // Never intercept touch/pen on mobile — vertical page scroll must
-            // always win over card drag on coarse pointers.
-            if (isMobile || e.pointerType !== "mouse") return;
-
             const nativeTarget = e.nativeEvent.target;
             if (
               nativeTarget instanceof Element &&
