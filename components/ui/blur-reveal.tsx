@@ -10,6 +10,7 @@ interface BlurRevealProps {
   children: React.ReactNode;
   delay?: number;
   duration?: number;
+  enabled?: boolean;
 }
 
 export function BlurReveal({
@@ -17,6 +18,7 @@ export function BlurReveal({
   children,
   delay = 0,
   duration = 1,
+  enabled = true,
 }: BlurRevealProps) {
   const spanRef = React.useRef<HTMLSpanElement | null>(null);
   const isInView: boolean = useInView(spanRef, { once: true });
@@ -25,7 +27,7 @@ export function BlurReveal({
     <motion.span
       ref={spanRef}
       initial={{ opacity: 0, filter: "blur(10px)", y: "20%" }}
-      animate={isInView ? { opacity: 1, filter: "blur(0px)", y: "0%" } : {}}
+      animate={enabled && isInView ? { opacity: 1, filter: "blur(0px)", y: "0%" } : {}}
       transition={{ duration: duration, delay: delay }}
       className={cn("inline-block", className)}
     >

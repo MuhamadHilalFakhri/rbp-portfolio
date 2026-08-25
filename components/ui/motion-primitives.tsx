@@ -10,16 +10,18 @@ export function FadeIn({
   delay = 0,
   duration = 0.8,
   className,
+  enabled = true,
 }: {
   children: ReactNode;
   delay?: number;
   duration?: number;
   className?: string;
+  enabled?: boolean;
 }): ReactNode {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={enabled ? { opacity: 1, y: 0 } : {}}
       transition={{ duration, delay, ease: EASE }}
       className={className}
     >

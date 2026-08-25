@@ -16,6 +16,7 @@ function markSplashDone(): void {
     window.sessionStorage.setItem("splash-shown", "1");
   } catch {}
   document.documentElement.dataset.splash = "done";
+  window.dispatchEvent(new Event("splash-complete"));
 }
 
 export function SplashScreen(): ReactNode {
