@@ -41,7 +41,7 @@ export function Hero(): ReactNode {
 
           <div
             aria-hidden="true"
-            className="h-[32rem] min-w-0 touch-none sm:h-[36rem] md:h-[40rem] lg:h-[44rem]"
+            className="h-[32rem] min-w-0 sm:h-[36rem] md:h-[40rem] lg:h-[44rem]"
           />
         </div>
       </div>

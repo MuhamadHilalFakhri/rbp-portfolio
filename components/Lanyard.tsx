@@ -65,7 +65,7 @@ export default function Lanyard({
 
   return (
     <div
-      className={`relative z-0 flex h-full w-full touch-none items-center justify-center select-none ${className}`}
+      className={`relative z-0 flex h-full w-full items-center justify-center select-none ${isMobile ? "" : "touch-none"} ${className}`}
     >
       <Canvas
         camera={{ position, fov }}
@@ -98,7 +98,7 @@ export default function Lanyard({
           antialias: false,
           powerPreference: "high-performance",
         }}
-        style={{ touchAction: "none" }}
+        style={{ touchAction: isMobile ? "pan-y" : "none" }}
         fallback={<div className="h-full w-full bg-transparent" />}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
@@ -341,6 +341,7 @@ function Band({
           onPointerOver={() => hover(true)}
           onPointerOut={() => hover(false)}
           onPointerUp={(e: ThreeEvent<PointerEvent>) => {
+            if (isMobile) return;
             e.stopPropagation();
             const captureTarget = e.nativeEvent.currentTarget;
             if (
@@ -352,6 +353,10 @@ function Band({
             drag(false);
           }}
           onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+            // Never intercept touch/pen on mobile — vertical page scroll must
+            // always win over card drag on coarse pointers.
+            if (isMobile || e.pointerType !== "mouse") return;
+
             const nativeTarget = e.nativeEvent.target;
             if (
               nativeTarget instanceof Element &&

@@ -123,63 +123,46 @@ export function Stack(): ReactNode {
         return { chip, body, width: w, height: h };
       });
 
-      const mouse = Mouse.create(container);
-
-      const mouseElement = mouse.element as HTMLElement & {
-        mousewheel?: EventListener;
-        mousemove?: EventListener;
-        mousedown?: EventListener;
-        mouseup?: EventListener;
-      };
-      if (mouseElement.mousewheel) {
-        mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
-        mouseElement.removeEventListener(
-          "DOMMouseScroll",
-          mouseElement.mousewheel
-        );
-      }
-
       // Matter.js attaches non-passive touch listeners that call
       // preventDefault() on every touchstart/end, which blocks the browser's
-      // vertical scroll gesture on mobile. Detach them on coarse pointers so
-      // the page can scroll normally through the physics area.
+      // vertical scroll gesture on mobile. Skip the mouse/touch constraint
+      // entirely on coarse pointers so the page can scroll normally through
+      // the physics area.
       const isCoarsePointer =
         typeof window !== "undefined" &&
         window.matchMedia("(hover: none), (pointer: coarse)").matches;
-      if (isCoarsePointer) {
-        if (mouseElement.mousemove) {
+
+      if (!isCoarsePointer) {
+        const mouse = Mouse.create(container);
+
+        const mouseElement = mouse.element as HTMLElement & {
+          mousewheel?: EventListener;
+        };
+        if (mouseElement.mousewheel) {
+          mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
           mouseElement.removeEventListener(
-            "touchmove",
-            mouseElement.mousemove
+            "DOMMouseScroll",
+            mouseElement.mousewheel
           );
         }
-        if (mouseElement.mousedown) {
-          mouseElement.removeEventListener(
-            "touchstart",
-            mouseElement.mousedown
-          );
-        }
-        if (mouseElement.mouseup) {
-          mouseElement.removeEventListener("touchend", mouseElement.mouseup);
-        }
+
+        const mouseConstraint = MouseConstraint.create(engine, {
+          mouse,
+          constraint: {
+            stiffness: 0.2,
+            damping: 0.2,
+            render: { visible: false },
+          },
+        });
+        World.add(world, mouseConstraint);
+
+        Events.on(mouseConstraint, "startdrag", () => {
+          container.style.cursor = "grabbing";
+        });
+        Events.on(mouseConstraint, "enddrag", () => {
+          container.style.cursor = "grab";
+        });
       }
-
-      const mouseConstraint = MouseConstraint.create(engine, {
-        mouse,
-        constraint: {
-          stiffness: 0.2,
-          damping: 0.2,
-          render: { visible: false },
-        },
-      });
-      World.add(world, mouseConstraint);
-
-      Events.on(mouseConstraint, "startdrag", () => {
-        container.style.cursor = "grabbing";
-      });
-      Events.on(mouseConstraint, "enddrag", () => {
-        container.style.cursor = "grab";
-      });
 
       const runner = Runner.create();
       Runner.run(runner, engine);
