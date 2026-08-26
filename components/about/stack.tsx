@@ -130,16 +130,16 @@ export function Stack(): ReactNode {
 
         const mouse = Mouse.create(container);
 
-        const mouseElement = mouse.element as HTMLElement & {
-          mousewheel?: EventListener;
+        const mouseElement = mouse.element;
+        const internalMouse = mouse as typeof mouse & {
+          mousewheel: ((event: Event) => void) | null;
         };
 
-        if (mouseElement.mousewheel) {
-          mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
-          mouseElement.removeEventListener(
-            "DOMMouseScroll",
-            mouseElement.mousewheel
-          );
+        if (internalMouse.mousewheel) {
+          const wheelHandler = internalMouse.mousewheel;
+          mouseElement.removeEventListener("wheel", wheelHandler);
+          mouseElement.removeEventListener("DOMMouseScroll", wheelHandler);
+          internalMouse.mousewheel = null;
         }
 
         const mouseConstraint = MouseConstraint.create(engine, {
