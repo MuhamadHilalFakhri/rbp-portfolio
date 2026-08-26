@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 
 export const siteConfig = {
-  name: "Portfolio",
+  name: "Muhamad Hilal Fakhri",
   description:
-    "A modern, accessible portfolio template built with Next.js, Tailwind CSS, and TypeScript.",
-  url: "https://example.com",
-  ogImage: "/og-image.png",
-  creator: "@yourhandle",
+    "Portfolio of Muhamad Hilal Fakhri, a Software Developer & AI enthusiast focused on building structured, efficient, responsive, and user-centered applications.",
+  url: "https://www.muhamadhilalf.my.id",
+  creator: "Muhamad Hilal Fakhri",
   authors: [
     {
-      name: "Your Name",
-      url: "https://example.com",
+      name: "Muhamad Hilal Fakhri",
+      url: "https://www.muhamadhilalf.my.id",
     },
   ],
   keywords: [
     "portfolio",
     "personal site",
+    "Muhamad Hilal Fakhri",
     "Next.js",
     "React",
     "Tailwind CSS",
@@ -26,7 +26,7 @@ export const siteConfig = {
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: siteConfig.name,
+    default: `${siteConfig.name} | Software Developer`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -52,23 +52,14 @@ export const baseMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteConfig.url,
-    title: siteConfig.name,
+    title: `${siteConfig.name} | Software Developer`,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: `${siteConfig.name} | Software Developer`,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
     creator: siteConfig.creator,
   },
   icons: {
@@ -83,17 +74,14 @@ export function createMetadata({
   title,
   description,
   path = "/",
-  image,
   noIndex = false,
 }: {
   title?: string;
   description?: string;
   path?: string;
-  image?: string;
   noIndex?: boolean;
 }): Metadata {
   const url = `${siteConfig.url}${path}`;
-  const ogImage = image ?? siteConfig.ogImage;
 
   return {
     title,
@@ -105,19 +93,10 @@ export function createMetadata({
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,
       url,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: title ?? siteConfig.name,
-        },
-      ],
     },
     twitter: {
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,
-      images: [ogImage],
     },
     ...(noIndex && {
       robots: {
