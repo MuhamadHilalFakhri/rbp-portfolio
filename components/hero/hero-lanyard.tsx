@@ -33,7 +33,7 @@ export function HeroLanyard(): ReactNode {
   return (
     <div
       aria-label="Interactive lanyard card"
-      className="pointer-events-auto absolute inset-0 z-10 overflow-visible"
+      className="pointer-events-auto absolute inset-0 z-10 translate-y-7 overflow-visible"
     >
       <Lanyard
         horizontalOffset={3.15}

@@ -5,7 +5,7 @@ import { HeroLanyard } from "./hero-lanyard";
 
 export function Hero(): ReactNode {
   return (
-    <section className="relative isolate w-full overflow-visible">
+    <section className="relative isolate w-full overflow-visible md:-mt-48 lg:-mt-66">
       <div className="relative z-20 mx-auto w-full max-w-275 px-4 pt-32 pb-16 min-[360px]:px-6 sm:px-10 sm:pt-48 sm:pb-24 md:pt-56 md:pb-32">
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-8">
           <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
