@@ -56,12 +56,14 @@ function StaticLanyard(): ReactNode {
         <Image
           src="/hilal-navy.webp"
           alt="Muhamad Hilal Fakhri"
-          fill
+          width={768}
+          height={1152}
           preload
           fetchPriority="high"
           decoding="sync"
-          sizes="(max-width: 767px) min(54vw, 14rem), 0px"
-          className="object-cover"
+          unoptimized
+          draggable={false}
+          className="h-full w-full object-cover"
         />
         <span className="absolute top-0 left-1/2 h-10 w-4 -translate-x-1/2 rounded-b-lg bg-neutral-950 shadow-sm" />
       </div>
