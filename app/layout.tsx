@@ -48,7 +48,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(()=>{const d=document.documentElement;try{if(sessionStorage.getItem('splash-shown')==='1'){d.dataset.splash='skip';return}d.dataset.splash='pending';const t=matchMedia('(prefers-reduced-motion: reduce)').matches?0:650;setTimeout(()=>{d.dataset.splash='done';sessionStorage.setItem('splash-shown','1')},t)}catch{d.dataset.splash='skip'}})()",
+              "(()=>{const d=document.documentElement,f=()=>{d.dataset.splash='done';try{sessionStorage.setItem('splash-shown','1')}catch{}};try{if(sessionStorage.getItem('splash-shown')==='1'){d.dataset.splash='skip';return}d.dataset.splash='pending'}catch{d.dataset.splash='pending'}if(matchMedia('(prefers-reduced-motion: reduce)').matches){f();return}const h=e=>{if(e.animationName==='splash-screen-exit'&&e.target.classList.contains('splash-screen')){document.removeEventListener('animationend',h);clearTimeout(t);f()}},t=setTimeout(()=>{document.removeEventListener('animationend',h);f()},5000);document.addEventListener('animationend',h)})()",
           }}
         />
         <SplashScreen />

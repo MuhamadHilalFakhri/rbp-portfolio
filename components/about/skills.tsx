@@ -12,7 +12,7 @@ const SKILLS = [
 
 export function Skills(): ReactNode {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" data-scroll-reveal-item>
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         What I do
       </h3>

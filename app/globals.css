@@ -13,7 +13,7 @@
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
-  --splash-duration: 650ms;
+  --splash-duration: 3600ms;
 }
 
 .dark {
@@ -97,15 +97,23 @@ html[data-splash="pending"] .splash-screen {
 }
 
 .splash-screen__content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  animation: splash-content-exit var(--splash-duration)
-    cubic-bezier(0.22, 1, 0.36, 1) both;
+  position: relative;
+  width: min(100%, 24rem);
+  min-height: 12rem;
 }
 
-.splash-screen__content p {
+.splash-screen__loader-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  animation: splash-loader-stage 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splash-screen__loader-stage p {
   color: color-mix(in srgb, var(--foreground) 55%, transparent);
   font-size: 0.875rem;
   font-weight: 500;
@@ -133,6 +141,42 @@ html[data-splash="pending"] .splash-screen {
 
 .splash-screen__loader span:nth-child(3) {
   animation-delay: 200ms;
+}
+
+.dynamic-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dynamic-text__viewport {
+  position: relative;
+  width: 100%;
+  height: 4rem;
+}
+
+.dynamic-text__item {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--foreground);
+  font-size: 1.25rem;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  animation: dynamic-text-item 360ms ease-out both;
+}
+
+.dynamic-text__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--foreground);
 }
 
 html[data-splash="pending"] .hero-reveal {
@@ -173,9 +217,9 @@ html[data-splash="done"] .hero-reveal {
   }
 }
 
-@keyframes splash-content-exit {
+@keyframes splash-loader-stage {
   0%,
-  62% {
+  68% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -187,12 +231,28 @@ html[data-splash="done"] .hero-reveal {
 
 @keyframes splash-screen-exit {
   0%,
-  68% {
+  86% {
     opacity: 1;
   }
   100% {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+@keyframes dynamic-text-item {
+  0% {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  24%,
+  68% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-0.75rem);
   }
 }
 

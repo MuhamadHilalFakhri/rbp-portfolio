@@ -104,7 +104,7 @@ export function Experience(): ReactNode {
         : CERTIFICATE;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" data-scroll-reveal-item>
       <div className="border-foreground/10 grid grid-cols-3 border-b">
         <button
           type="button"

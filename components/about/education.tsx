@@ -27,7 +27,7 @@ const ROW_HEIGHT = 64;
 
 export function Education(): ReactNode {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" data-scroll-reveal-item>
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         Education
       </h3>

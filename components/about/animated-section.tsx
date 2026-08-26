@@ -9,5 +9,9 @@ export function AnimatedSection({
   children,
   className = "",
 }: AnimatedSectionProps): ReactNode {
-  return <div className={className}>{children}</div>;
+  return (
+    <div className={className} data-scroll-reveal>
+      {children}
+    </div>
+  );
 }

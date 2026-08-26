@@ -341,7 +341,7 @@ export function Stack(): ReactNode {
   }, [resetKey]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" data-scroll-reveal-item>
       <div className="flex items-center gap-3">
         <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
           Stack

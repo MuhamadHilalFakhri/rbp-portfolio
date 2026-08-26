@@ -401,10 +401,17 @@ export function Projects({
   };
 
   return (
-    <section className="relative w-full [contain-intrinsic-size:auto_48rem] [content-visibility:auto]">
+    <section
+      className="relative w-full [contain-intrinsic-size:auto_48rem] [content-visibility:auto]"
+      data-scroll-reveal
+      data-scroll-stagger
+    >
       <div className="mx-auto w-full max-w-275 px-4 min-[360px]:px-6 sm:px-10">
         {withHeadline ? (
-          <div className="flex flex-col items-center gap-4 pt-8 pb-8 text-center sm:gap-5 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+          <div
+            className="flex flex-col items-center gap-4 pt-8 pb-8 text-center sm:gap-5 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14"
+            data-scroll-reveal-item
+          >
             <h2 className="text-foreground font-serif text-[2.2rem] leading-[1.05] font-medium tracking-tight min-[360px]:text-[2.5rem] md:text-[3rem] lg:text-[3.5rem]">
               My projects
             </h2>
@@ -450,6 +457,7 @@ export function Projects({
               <div
                 key={project.id}
                 data-card
+                data-scroll-reveal-item
                 className="w-full shrink-0 snap-start sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
               >
                 <ProjectCard
@@ -462,7 +470,10 @@ export function Projects({
         </div>
 
         {viewMoreVisible ? (
-          <div className="mt-12 flex justify-center sm:mt-16">
+          <div
+            className="mt-12 flex justify-center sm:mt-16"
+            data-scroll-reveal-item
+          >
             <Link
               href="/projects"
               className="border-foreground/8 focus-ring group bg-background text-foreground hover:bg-foreground/5 inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition-colors"
