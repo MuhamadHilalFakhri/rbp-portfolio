@@ -20,8 +20,8 @@ import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 
 const CARD_MODEL_URL = "/lanyard/card.glb";
-const CARD_TEXTURE_URL = "/hilal.jpg";
-const CARD_IMAGE_ASPECT = 2163 / 3245;
+const CARD_TEXTURE_URL = "/hilal-navy.png";
+const CARD_IMAGE_ASPECT = 2 / 3;
 const CARD_MODEL_ASPECT = 0.7164179;
 const CARD_WIDTH_SCALE = CARD_IMAGE_ASPECT / CARD_MODEL_ASPECT;
 const CARD_TEXTURE_VERTICAL_OFFSET = -0.015;
