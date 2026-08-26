@@ -1,8 +1,4 @@
-"use client";
-
-import { useEffect, useRef, type ReactNode } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { ReactNode } from "react";
 
 const SKILLS = [
   "Frontend Development",
@@ -15,43 +11,8 @@ const SKILLS = [
 ];
 
 export function Skills(): ReactNode {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const chips = containerRef.current?.querySelectorAll("span");
-    if (!chips) return;
-
-    chips.forEach((chip, index) => {
-      gsap.fromTo(
-        chip,
-        {
-          opacity: 0,
-          scale: 0.8,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.5,
-          delay: index * 0.08,
-          scrollTrigger: {
-            trigger: chip,
-            start: "top 85%",
-            end: "top 50%",
-            scrub: false,
-          },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
-
   return (
-    <div className="flex flex-col gap-3" ref={containerRef}>
+    <div className="flex flex-col gap-3">
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         What I do
       </h3>

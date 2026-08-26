@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
 import {
   Canvas,
@@ -19,8 +13,8 @@ import {
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 
-const CARD_MODEL_URL = "/lanyard/card.glb";
-const CARD_TEXTURE_URL = "/hilal-navy.png";
+const CARD_MODEL_URL = "/lanyard/card-optimized.glb";
+const CARD_TEXTURE_URL = "/hilal-navy.webp";
 const CARD_IMAGE_ASPECT = 2 / 3;
 const CARD_MODEL_ASPECT = 0.7164179;
 const CARD_WIDTH_SCALE = CARD_IMAGE_ASPECT / CARD_MODEL_ASPECT;

@@ -49,258 +49,293 @@ export function Stack(): ReactNode {
     if (!container || !measure) return;
 
     let cancelled = false;
+    let started = false;
     let cleanup: (() => void) | undefined;
 
-    void (async () => {
-      const Matter = await import("matter-js");
-      if (cancelled) return;
+    const startPhysics = (): void => {
+      if (started) return;
+      started = true;
 
-      const {
-        Engine,
-        Runner,
-        World,
-        Bodies,
-        Body,
-        Mouse,
-        MouseConstraint,
-        Events,
-      } = Matter;
+      void (async () => {
+        const Matter = await import("matter-js");
+        if (cancelled) return;
 
-      const measureChildren = Array.from(measure.children) as HTMLElement[];
-      const dims = measureChildren.map((el) => {
-        const r = el.getBoundingClientRect();
-        return { w: Math.max(80, r.width), h: Math.max(28, r.height) };
-      });
+        const {
+          Engine,
+          Runner,
+          World,
+          Bodies,
+          Body,
+          Mouse,
+          MouseConstraint,
+          Events,
+        } = Matter;
 
-      let width = container.clientWidth;
-      let height = container.clientHeight;
-
-      const engine = Engine.create();
-      engine.gravity.y = 1;
-      const world = engine.world;
-
-      const wallThickness = 400;
-      const floor = Bodies.rectangle(
-        width / 2,
-        height - WALL_PAD + wallThickness / 2,
-        width * 3,
-        wallThickness,
-        { isStatic: true }
-      );
-      const leftWall = Bodies.rectangle(
-        WALL_PAD - wallThickness / 2,
-        height / 2,
-        wallThickness,
-        height * 4,
-        { isStatic: true }
-      );
-      const rightWall = Bodies.rectangle(
-        width - WALL_PAD + wallThickness / 2,
-        height / 2,
-        wallThickness,
-        height * 4,
-        { isStatic: true }
-      );
-      World.add(world, [floor, leftWall, rightWall]);
-
-      const states: ChipState[] = CHIPS.map((chip, i) => {
-        const dim = dims[i] ?? { w: 120, h: 36 };
-        const { w, h } = dim;
-        const halfW = w / 2;
-        const minX = WALL_PAD + halfW + 4;
-        const maxX = width - WALL_PAD - halfW - 4;
-        const x = minX + Math.random() * Math.max(1, maxX - minX);
-        const y = -80 - i * 60 - Math.random() * 120;
-        const body = Bodies.rectangle(x, y, w, h, {
-          chamfer: { radius: CHIP_RADIUS },
-          restitution: 0.35,
-          friction: 0.5,
-          frictionAir: 0.025,
-          density: 0.0018,
-          angle: (Math.random() - 0.5) * 0.4,
+        const measureChildren = Array.from(measure.children) as HTMLElement[];
+        const dims = measureChildren.map((el) => {
+          const r = el.getBoundingClientRect();
+          return { w: Math.max(80, r.width), h: Math.max(28, r.height) };
         });
-        World.add(world, body);
-        return { chip, body, width: w, height: h };
-      });
 
-      const mouse = Mouse.create(container);
+        let width = container.clientWidth;
+        let height = container.clientHeight;
 
-      const mouseElement = mouse.element as HTMLElement & {
-        mousewheel?: EventListener;
-      };
-      
-      if (mouseElement.mousewheel) {
-        mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
-        mouseElement.removeEventListener(
-          "DOMMouseScroll",
-          mouseElement.mousewheel
+        const engine = Engine.create();
+        engine.gravity.y = 1;
+        const world = engine.world;
+
+        const wallThickness = 400;
+        const floor = Bodies.rectangle(
+          width / 2,
+          height - WALL_PAD + wallThickness / 2,
+          width * 3,
+          wallThickness,
+          { isStatic: true }
         );
-      }
+        const leftWall = Bodies.rectangle(
+          WALL_PAD - wallThickness / 2,
+          height / 2,
+          wallThickness,
+          height * 4,
+          { isStatic: true }
+        );
+        const rightWall = Bodies.rectangle(
+          width - WALL_PAD + wallThickness / 2,
+          height / 2,
+          wallThickness,
+          height * 4,
+          { isStatic: true }
+        );
+        World.add(world, [floor, leftWall, rightWall]);
 
-      const mouseConstraint = MouseConstraint.create(engine, {
-        mouse,
-        constraint: {
-          stiffness: 0.2,
-          damping: 0.2,
-          render: { visible: false },
-        },
-      });
-      World.add(world, mouseConstraint);
+        const states: ChipState[] = CHIPS.map((chip, i) => {
+          const dim = dims[i] ?? { w: 120, h: 36 };
+          const { w, h } = dim;
+          const halfW = w / 2;
+          const minX = WALL_PAD + halfW + 4;
+          const maxX = width - WALL_PAD - halfW - 4;
+          const x = minX + Math.random() * Math.max(1, maxX - minX);
+          const y = -80 - i * 60 - Math.random() * 120;
+          const body = Bodies.rectangle(x, y, w, h, {
+            chamfer: { radius: CHIP_RADIUS },
+            restitution: 0.35,
+            friction: 0.5,
+            frictionAir: 0.025,
+            density: 0.0018,
+            angle: (Math.random() - 0.5) * 0.4,
+          });
+          World.add(world, body);
+          return { chip, body, width: w, height: h };
+        });
 
-      const isMobile = 
-        typeof window !== "undefined" &&
-        window.matchMedia("(hover: none), (pointer: coarse)").matches;
+        const mouse = Mouse.create(container);
 
-      if (isMobile) {
-        const internalMouse = mouse as typeof mouse & {
-          mousemove: EventListener;
-          mousedown: EventListener;
-          mouseup: EventListener;
-        };
-        
-        mouseElement.removeEventListener("touchmove", internalMouse.mousemove);
-        mouseElement.removeEventListener("touchstart", internalMouse.mousedown);
-        mouseElement.removeEventListener("touchend", internalMouse.mouseup);
-
-        let draggedBody: Matter.Body | null = null;
-        let dragOffset = { x: 0, y: 0 };
-        let gestureIsVertical = false;
-        let gestureDecided = false;
-        const touchStart = { x: 0, y: 0 };
-
-        const handleTouchStart = (e: TouchEvent): void => {
-          const touch = e.touches[0];
-          if (!touch) return;
-
-          touchStart.x = touch.clientX;
-          touchStart.y = touch.clientY;
-          gestureDecided = false;
-          gestureIsVertical = false;
-
-          const rect = container.getBoundingClientRect();
-          const x = touch.clientX - rect.left;
-          const y = touch.clientY - rect.top;
-
-          const bodies = states.map(s => s.body);
-          for (const body of bodies) {
-            const bounds = body.bounds;
-            
-            if (x >= bounds.min.x && x <= bounds.max.x &&
-                y >= bounds.min.y && y <= bounds.max.y) {
-              draggedBody = body;
-              dragOffset.x = body.position.x - x;
-              dragOffset.y = body.position.y - y;
-              Body.setStatic(body, true);
-              break;
-            }
-          }
+        const mouseElement = mouse.element as HTMLElement & {
+          mousewheel?: EventListener;
         };
 
-        const handleTouchMove = (e: TouchEvent): void => {
-          const touch = e.touches[0];
-          if (!touch) return;
+        if (mouseElement.mousewheel) {
+          mouseElement.removeEventListener("wheel", mouseElement.mousewheel);
+          mouseElement.removeEventListener(
+            "DOMMouseScroll",
+            mouseElement.mousewheel
+          );
+        }
 
-          if (!draggedBody) return;
+        const mouseConstraint = MouseConstraint.create(engine, {
+          mouse,
+          constraint: {
+            stiffness: 0.2,
+            damping: 0.2,
+            render: { visible: false },
+          },
+        });
+        World.add(world, mouseConstraint);
 
-          if (!gestureDecided) {
-            const dx = Math.abs(touch.clientX - touchStart.x);
-            const dy = Math.abs(touch.clientY - touchStart.y);
-            
-            if (dx > 8 || dy > 8) {
-              gestureDecided = true;
-              gestureIsVertical = dy > dx * 1.2;
+        const isMobile =
+          typeof window !== "undefined" &&
+          window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
+        if (isMobile) {
+          const internalMouse = mouse as typeof mouse & {
+            mousemove: EventListener;
+            mousedown: EventListener;
+            mouseup: EventListener;
+          };
+
+          mouseElement.removeEventListener(
+            "touchmove",
+            internalMouse.mousemove
+          );
+          mouseElement.removeEventListener(
+            "touchstart",
+            internalMouse.mousedown
+          );
+          mouseElement.removeEventListener("touchend", internalMouse.mouseup);
+
+          let draggedBody: Matter.Body | null = null;
+          const dragOffset = { x: 0, y: 0 };
+          let gestureIsVertical = false;
+          let gestureDecided = false;
+          const touchStart = { x: 0, y: 0 };
+
+          const handleTouchStart = (e: TouchEvent): void => {
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            touchStart.x = touch.clientX;
+            touchStart.y = touch.clientY;
+            gestureDecided = false;
+            gestureIsVertical = false;
+
+            const rect = container.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+
+            const bodies = states.map((s) => s.body);
+            for (const body of bodies) {
+              const bounds = body.bounds;
+
+              if (
+                x >= bounds.min.x &&
+                x <= bounds.max.x &&
+                y >= bounds.min.y &&
+                y <= bounds.max.y
+              ) {
+                draggedBody = body;
+                dragOffset.x = body.position.x - x;
+                dragOffset.y = body.position.y - y;
+                Body.setStatic(body, true);
+                break;
+              }
             }
-          }
+          };
 
-          if (gestureIsVertical) {
+          const handleTouchMove = (e: TouchEvent): void => {
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            if (!draggedBody) return;
+
+            if (!gestureDecided) {
+              const dx = Math.abs(touch.clientX - touchStart.x);
+              const dy = Math.abs(touch.clientY - touchStart.y);
+
+              if (dx > 8 || dy > 8) {
+                gestureDecided = true;
+                gestureIsVertical = dy > dx * 1.2;
+              }
+            }
+
+            if (gestureIsVertical) {
+              if (draggedBody) {
+                Body.setStatic(draggedBody, false);
+                draggedBody = null;
+              }
+              return;
+            }
+
+            const rect = container.getBoundingClientRect();
+            const x = touch.clientX - rect.left + dragOffset.x;
+            const y = touch.clientY - rect.top + dragOffset.y;
+
+            Body.setPosition(draggedBody, { x, y });
+            Body.setVelocity(draggedBody, { x: 0, y: 0 });
+            Body.setAngularVelocity(draggedBody, 0);
+          };
+
+          const handleTouchEnd = (): void => {
             if (draggedBody) {
               Body.setStatic(draggedBody, false);
               draggedBody = null;
             }
-            return;
-          }
+            gestureDecided = false;
+            gestureIsVertical = false;
+          };
 
-          const rect = container.getBoundingClientRect();
-          const x = touch.clientX - rect.left + dragOffset.x;
-          const y = touch.clientY - rect.top + dragOffset.y;
-          
-          Body.setPosition(draggedBody, { x, y });
-          Body.setVelocity(draggedBody, { x: 0, y: 0 });
-          Body.setAngularVelocity(draggedBody, 0);
-        };
-
-        const handleTouchEnd = (): void => {
-          if (draggedBody) {
-            Body.setStatic(draggedBody, false);
-            draggedBody = null;
-          }
-          gestureDecided = false;
-          gestureIsVertical = false;
-        };
-
-        container.addEventListener("touchstart", handleTouchStart, { passive: true });
-        container.addEventListener("touchmove", handleTouchMove, { passive: true });
-        container.addEventListener("touchend", handleTouchEnd, { passive: true });
-        container.addEventListener("touchcancel", handleTouchEnd, { passive: true });
-      }
-
-      Events.on(mouseConstraint, "startdrag", () => {
-        container.style.cursor = "grabbing";
-      });
-
-      Events.on(mouseConstraint, "enddrag", () => {
-        container.style.cursor = "grab";
-      });
-
-      const runner = Runner.create();
-      Runner.run(runner, engine);
-
-      let raf = 0;
-      const tick = (): void => {
-        for (let i = 0; i < states.length; i++) {
-          const s = states[i];
-          const el = chipRefs.current[i];
-          if (!s || !el) continue;
-          const { x, y } = s.body.position;
-          el.style.transform = `translate3d(${x - s.width / 2}px, ${y - s.height / 2}px, 0) rotate(${s.body.angle}rad)`;
+          container.addEventListener("touchstart", handleTouchStart, {
+            passive: true,
+          });
+          container.addEventListener("touchmove", handleTouchMove, {
+            passive: true,
+          });
+          container.addEventListener("touchend", handleTouchEnd, {
+            passive: true,
+          });
+          container.addEventListener("touchcancel", handleTouchEnd, {
+            passive: true,
+          });
         }
+
+        Events.on(mouseConstraint, "startdrag", () => {
+          container.style.cursor = "grabbing";
+        });
+
+        Events.on(mouseConstraint, "enddrag", () => {
+          container.style.cursor = "grab";
+        });
+
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        let raf = 0;
+        const tick = (): void => {
+          for (let i = 0; i < states.length; i++) {
+            const s = states[i];
+            const el = chipRefs.current[i];
+            if (!s || !el) continue;
+            const { x, y } = s.body.position;
+            el.style.transform = `translate3d(${x - s.width / 2}px, ${y - s.height / 2}px, 0) rotate(${s.body.angle}rad)`;
+          }
+          raf = requestAnimationFrame(tick);
+        };
         raf = requestAnimationFrame(tick);
-      };
-      raf = requestAnimationFrame(tick);
 
-      const onResize = (): void => {
-        const newW = container.clientWidth;
-        const newH = container.clientHeight;
-        if (newW === width && newH === height) return;
-        Body.setPosition(floor, {
-          x: newW / 2,
-          y: newH - WALL_PAD + wallThickness / 2,
-        });
-        Body.setPosition(leftWall, {
-          x: WALL_PAD - wallThickness / 2,
-          y: newH / 2,
-        });
-        Body.setPosition(rightWall, {
-          x: newW - WALL_PAD + wallThickness / 2,
-          y: newH / 2,
-        });
-        width = newW;
-        height = newH;
-      };
-      const ro = new ResizeObserver(onResize);
-      ro.observe(container);
+        const onResize = (): void => {
+          const newW = container.clientWidth;
+          const newH = container.clientHeight;
+          if (newW === width && newH === height) return;
+          Body.setPosition(floor, {
+            x: newW / 2,
+            y: newH - WALL_PAD + wallThickness / 2,
+          });
+          Body.setPosition(leftWall, {
+            x: WALL_PAD - wallThickness / 2,
+            y: newH / 2,
+          });
+          Body.setPosition(rightWall, {
+            x: newW - WALL_PAD + wallThickness / 2,
+            y: newH / 2,
+          });
+          width = newW;
+          height = newH;
+        };
+        const ro = new ResizeObserver(onResize);
+        ro.observe(container);
 
-      cleanup = () => {
-        cancelAnimationFrame(raf);
-        ro.disconnect();
-        Runner.stop(runner);
-        World.clear(world, false);
-        Engine.clear(engine);
-      };
-    })();
+        cleanup = () => {
+          cancelAnimationFrame(raf);
+          ro.disconnect();
+          Runner.stop(runner);
+          World.clear(world, false);
+          Engine.clear(engine);
+        };
+      })();
+    };
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        startPhysics();
+        visibilityObserver.disconnect();
+      },
+      { rootMargin: "200px" }
+    );
+    visibilityObserver.observe(container);
 
     return () => {
       cancelled = true;
+      visibilityObserver.disconnect();
       cleanup?.();
     };
   }, [resetKey]);
@@ -381,6 +416,8 @@ function ChipPill({ chip }: { chip: Chip }): ReactNode {
           alt=""
           width={18}
           height={18}
+          loading="lazy"
+          decoding="async"
           className="h-4 w-4 sm:h-5 sm:w-5"
           draggable={false}
         />

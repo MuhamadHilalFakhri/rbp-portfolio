@@ -14,12 +14,22 @@ import type {
   PointerEvent as ReactPointerEvent,
   ReactNode,
 } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ProjectModal } from "@/components/projects/project-modal";
-import { FadeIn } from "@/components/ui/motion-primitives";
+const ProjectModal = lazy(() =>
+  import("@/components/projects/project-modal").then((module) => ({
+    default: module.ProjectModal,
+  }))
+);
 
 /**
  * Project imagery below is mockup-only. All visuals are sourced from
@@ -52,8 +62,7 @@ const PROJECTS: Project[] = [
     id: "internship",
     icon: Sparkles,
     iconLabel: "Internship",
-    title:
-      "Sistem Informasi SDM (Human Resource Information System)",
+    title: "Sistem Informasi SDM (Human Resource Information System)",
     description:
       "Aplikasi web HRIS dengan 4 role pengguna (Super Admin, Admin Staff, Staff, Pelamar) yang mengotomatisasi seluruh proses HR dari rekrutmen, onboarding, pengelolaan surat, hingga offboarding.",
     meta: "Full Stack Developer, 2025 - 2026",
@@ -392,10 +401,10 @@ export function Projects({
   };
 
   return (
-    <section className="relative w-full">
+    <section className="relative w-full [contain-intrinsic-size:auto_48rem] [content-visibility:auto]">
       <div className="mx-auto w-full max-w-275 px-4 min-[360px]:px-6 sm:px-10">
         {withHeadline ? (
-          <FadeIn className="flex flex-col items-center gap-4 pt-8 pb-8 text-center sm:gap-5 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+          <div className="flex flex-col items-center gap-4 pt-8 pb-8 text-center sm:gap-5 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
             <h2 className="text-foreground font-serif text-[2.2rem] leading-[1.05] font-medium tracking-tight min-[360px]:text-[2.5rem] md:text-[3rem] lg:text-[3.5rem]">
               My projects
             </h2>
@@ -403,10 +412,10 @@ export function Projects({
               From playful experiments to thoughtful systems, a look at the work
               I&rsquo;m proud to have shipped.
             </p>
-          </FadeIn>
+          </div>
         ) : null}
 
-        <FadeIn className="relative">
+        <div className="relative">
           <div className="flex items-center justify-between pb-4">
             <span className="text-foreground/50 text-sm font-medium tracking-tight">
               {items.length} projects
@@ -450,7 +459,7 @@ export function Projects({
               </div>
             ))}
           </div>
-        </FadeIn>
+        </div>
 
         {viewMoreVisible ? (
           <div className="mt-12 flex justify-center sm:mt-16">
@@ -468,10 +477,14 @@ export function Projects({
         ) : null}
       </div>
 
-      <ProjectModal
-        project={activeProject}
-        onClose={() => setActiveProject(null)}
-      />
+      {activeProject ? (
+        <Suspense fallback={null}>
+          <ProjectModal
+            project={activeProject}
+            onClose={() => setActiveProject(null)}
+          />
+        </Suspense>
+      ) : null}
     </section>
   );
 }

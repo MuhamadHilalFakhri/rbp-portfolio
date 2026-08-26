@@ -1,7 +1,6 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -125,10 +124,8 @@ export function Nav(): ReactNode {
             return (
               <li key={item.href} className="relative">
                 {isActive && (
-                  <motion.span
-                    layoutId="active-nav-pill"
+                  <span
                     aria-hidden="true"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     className="absolute inset-0 rounded-full border border-white/80 bg-gradient-to-b from-white/80 to-white/35 shadow-[0_5px_16px_rgba(15,23,42,0.11),inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(255,255,255,0.3)] backdrop-blur-md dark:border-white/15 dark:from-white/16 dark:to-white/5 dark:shadow-[0_5px_18px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.18)]"
                   />
                 )}

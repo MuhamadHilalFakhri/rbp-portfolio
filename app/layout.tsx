@@ -5,7 +5,7 @@ import { SkipToContent } from "@/components/layout/skip-to-content";
 import { SplashScreen } from "@/components/splash-screen";
 import { baseMetadata } from "@/lib/metadata";
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Geist } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
 
@@ -15,17 +15,12 @@ const geistSans = Geist({
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  axes: ["opsz", "SOFT"],
+  weight: "500",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = baseMetadata;
@@ -48,12 +43,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
+        className={`${geistSans.variable} ${fraunces.variable} bg-background text-foreground min-h-screen font-sans antialiased`}
       >
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{sessionStorage.getItem('splash-shown')==='1'?document.documentElement.dataset.splash='done':document.documentElement.dataset.splash='pending'}catch(e){document.documentElement.dataset.splash='pending'}",
+              "(()=>{const d=document.documentElement;try{if(sessionStorage.getItem('splash-shown')==='1'){d.dataset.splash='skip';return}d.dataset.splash='pending';const t=matchMedia('(prefers-reduced-motion: reduce)').matches?0:650;setTimeout(()=>{d.dataset.splash='done';sessionStorage.setItem('splash-shown','1')},t)}catch{d.dataset.splash='skip'}})()",
           }}
         />
         <SplashScreen />
@@ -61,11 +56,33 @@ export default function RootLayout({
           <div className="site-frame site-frame--top" aria-hidden="true" />
           <div className="site-frame site-frame--left" aria-hidden="true" />
           <div className="site-frame site-frame--right" aria-hidden="true" />
-          <svg className="site-corner site-corner--top-left" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M5.50871e-06 0C-0.00788227 37.3001 8.99616 50.0116 50 50H5.50871e-06V0Z" fill="currentColor"/>
+          <svg
+            className="site-corner site-corner--top-left"
+            width="50"
+            height="50"
+            viewBox="0 0 50 50"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M5.50871e-06 0C-0.00788227 37.3001 8.99616 50.0116 50 50H5.50871e-06V0Z"
+              fill="currentColor"
+            />
           </svg>
-          <svg className="site-corner site-corner--top-right" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M5.50871e-06 0C-0.00788227 37.3001 8.99616 50.0116 50 50H5.50871e-06V0Z" fill="currentColor"/>
+          <svg
+            className="site-corner site-corner--top-right"
+            width="50"
+            height="50"
+            viewBox="0 0 50 50"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M5.50871e-06 0C-0.00788227 37.3001 8.99616 50.0116 50 50H5.50871e-06V0Z"
+              fill="currentColor"
+            />
           </svg>
           <SkipToContent />
           <PageBackdrop />

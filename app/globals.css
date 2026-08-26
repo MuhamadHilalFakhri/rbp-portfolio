@@ -11,8 +11,9 @@
   --ring: #0066ff;
   --frame: #ffffff;
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --splash-duration: 650ms;
 }
 
 .dark {
@@ -42,6 +43,7 @@ html {
   max-width: 100%;
   overflow-x: hidden;
   overflow-x: clip;
+  scroll-behavior: smooth;
   /* Scrollbar hidden so opening/closing overlays never shifts the layout */
   scrollbar-width: none;
 }
@@ -73,6 +75,203 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.splash-screen {
+  display: none;
+}
+
+html[data-splash="pending"] .splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: none;
+  color: var(--foreground);
+  background: var(--background);
+  animation: splash-screen-exit var(--splash-duration)
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splash-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: splash-content-exit var(--splash-duration)
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splash-screen__content p {
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.splash-screen__loader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.splash-screen__loader span {
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--foreground) 68%, transparent);
+  animation: splash-dot 520ms ease-in-out infinite alternate;
+}
+
+.splash-screen__loader span:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.splash-screen__loader span:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+html[data-splash="pending"] .hero-reveal {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+html[data-splash="done"] .hero-reveal {
+  animation: hero-reveal 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-reveal--2 {
+  animation-delay: 55ms !important;
+}
+
+.hero-reveal--3 {
+  animation-delay: 110ms !important;
+}
+
+.hero-reveal--4 {
+  animation-delay: 165ms !important;
+}
+
+.hero-reveal--5 {
+  animation-delay: 235ms !important;
+}
+
+.hero-reveal--6 {
+  animation-delay: 305ms !important;
+}
+
+@keyframes splash-dot {
+  from {
+    transform: translateY(-0.3rem);
+  }
+  to {
+    transform: translateY(0.3rem);
+  }
+}
+
+@keyframes splash-content-exit {
+  0%,
+  62% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes splash-screen-exit {
+  0%,
+  68% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-backdrop-gradient {
+  background:
+    radial-gradient(
+      ellipse 90% 48% at 72% 48%,
+      rgb(10 95 230 / 18%),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 75% 42% at 18% 72%,
+      rgb(91 159 255 / 20%),
+      transparent 74%
+    ),
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #f4f8ff 34%,
+      #dceaff 72%,
+      transparent 100%
+    );
+  mask-image: linear-gradient(to bottom, black 0%, black 68%, transparent 100%);
+}
+
+.page-backdrop-gradient::before {
+  position: absolute;
+  inset: 30% -12% 5%;
+  content: "";
+  background: linear-gradient(
+    150deg,
+    transparent 20%,
+    rgb(255 255 255 / 72%) 45%,
+    rgb(60 130 230 / 16%) 70%,
+    transparent 88%
+  );
+  clip-path: polygon(0 38%, 32% 12%, 58% 42%, 100% 5%, 100% 100%, 0 100%);
+}
+
+.dark .page-backdrop-gradient {
+  background:
+    radial-gradient(
+      ellipse 90% 50% at 72% 48%,
+      rgb(38 83 137 / 48%),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 72% 40% at 18% 70%,
+      rgb(17 52 93 / 68%),
+      transparent 76%
+    ),
+    linear-gradient(
+      to bottom,
+      #070b11 0%,
+      #0b1522 34%,
+      #14273d 72%,
+      transparent 100%
+    );
+}
+
+.dark .page-backdrop-gradient::before {
+  background: linear-gradient(
+    150deg,
+    transparent 20%,
+    rgb(42 73 109 / 36%) 46%,
+    rgb(13 32 53 / 58%) 72%,
+    transparent 90%
+  );
 }
 
 .skip-to-content {
@@ -246,18 +445,4 @@ html[data-theme-anim="1"]::view-transition-new(root) {
   transform: scale(1);
   transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
-}
-
-/* Splash screen gating: visible from first paint, hidden instantly on repeat visits */
-.splash-gate {
-  display: none;
-}
-
-html[data-splash="pending"] .splash-gate {
-  display: block;
-}
-
-html[data-splash="pending"],
-html[data-splash="pending"] body {
-  overflow: hidden;
 }

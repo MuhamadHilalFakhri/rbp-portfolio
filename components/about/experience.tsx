@@ -7,10 +7,7 @@ import {
   FileText,
   UsersRound,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState, type ReactNode } from "react";
 
 type Entry = {
   company: string;
@@ -98,7 +95,6 @@ const ROW_HEIGHT = 64;
 export function Experience(): ReactNode {
   const [activeSection, setActiveSection] = useState<Section>("experience");
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const entries =
     activeSection === "experience"
@@ -107,41 +103,8 @@ export function Experience(): ReactNode {
         ? ORGANIZATION
         : CERTIFICATE;
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const items = containerRef.current?.querySelectorAll("li");
-    if (!items) return;
-
-    items.forEach((item, index) => {
-      gsap.fromTo(
-        item,
-        {
-          opacity: 0,
-          x: -30,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          delay: index * 0.15,
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            end: "top 50%",
-            scrub: false,
-          },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, [activeSection]);
-
   return (
-    <div className="flex flex-col gap-3" ref={containerRef}>
+    <div className="flex flex-col gap-3">
       <div className="border-foreground/10 grid grid-cols-3 border-b">
         <button
           type="button"
@@ -246,45 +209,37 @@ export function Experience(): ReactNode {
                     </span>
                   </div>
                   {entry.description && (
-                    <motion.span
-                      animate={{ rotate: expandedIndex === index ? 180 : 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="inline-flex shrink-0"
+                    <span
+                      className={`inline-flex shrink-0 transition-transform duration-200 ${
+                        expandedIndex === index ? "rotate-180" : ""
+                      }`}
                     >
                       <ChevronDown
                         className="text-foreground/50 h-4 w-4"
                         aria-hidden="true"
                       />
-                    </motion.span>
+                    </span>
                   )}
                 </button>
               )}
 
-              <AnimatePresence>
-                {expandedIndex === index && entry.description && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="mt-2 overflow-hidden"
-                  >
-                    <div className="border-foreground/5 bg-background rounded-2xl border p-3 sm:rounded-3xl sm:p-4">
-                      <ul className="flex flex-col gap-2">
-                        {entry.description.map((desc, idx) => (
-                          <li
-                            key={idx}
-                            className="text-foreground/70 text-[13px] leading-relaxed sm:text-[15px]"
-                          >
-                            <span className="mr-2">•</span>
-                            {desc}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {expandedIndex === index && entry.description && (
+                <div className="mt-2 overflow-hidden">
+                  <div className="border-foreground/5 bg-background rounded-2xl border p-3 sm:rounded-3xl sm:p-4">
+                    <ul className="flex flex-col gap-2">
+                      {entry.description.map((desc, idx) => (
+                        <li
+                          key={idx}
+                          className="text-foreground/70 text-[13px] leading-relaxed sm:text-[15px]"
+                        >
+                          <span className="mr-2">•</span>
+                          {desc}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>

@@ -1,9 +1,5 @@
-"use client";
-
 import { GraduationCap, School } from "lucide-react";
-import { useEffect, useRef, type ReactNode } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { ReactNode } from "react";
 
 type Entry = {
   school: string;
@@ -30,43 +26,8 @@ const ENTRIES: Entry[] = [
 const ROW_HEIGHT = 64;
 
 export function Education(): ReactNode {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const items = containerRef.current?.querySelectorAll("li");
-    if (!items) return;
-
-    items.forEach((item, index) => {
-      gsap.fromTo(
-        item,
-        {
-          opacity: 0,
-          y: 30,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          delay: index * 0.1,
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            end: "top 50%",
-            scrub: false,
-          },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
-
   return (
-    <div className="flex flex-col gap-3" ref={containerRef}>
+    <div className="flex flex-col gap-3">
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         Education
       </h3>
