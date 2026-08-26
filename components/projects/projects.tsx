@@ -435,7 +435,7 @@ export function Projects({
 
           <div
             ref={trackRef}
-            className="-mx-4 flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 touch-pan-y [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:gap-6 min-[360px]:px-6 sm:snap-mandatory sm:-mx-10 sm:px-10 sm:touch-auto [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex touch-auto snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:gap-6 min-[360px]:px-6 sm:-mx-10 sm:snap-mandatory sm:px-10 [&::-webkit-scrollbar]:hidden"
           >
             {items.map((project) => (
               <div

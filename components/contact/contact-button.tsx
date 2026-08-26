@@ -33,11 +33,29 @@ export function ContactButton(): ReactNode {
     }
   };
 
+  const handleClick = (): void => {
+    const canHover =
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    if (canHover) {
+      void handleCopy();
+      return;
+    }
+
+    if (!open) {
+      setOpen(true);
+      return;
+    }
+
+    void handleCopy();
+  };
+
   return (
     <motion.button
       type="button"
       layout
-      onClick={handleCopy}
+      onClick={handleClick}
       onHoverStart={() => setOpen(true)}
       onHoverEnd={() => setOpen(false)}
       onFocus={() => setOpen(true)}
