@@ -20,6 +20,11 @@ import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 
 const CARD_MODEL_URL = "/lanyard/card.glb";
+const CARD_TEXTURE_URL = "/hilal.jpg";
+const CARD_IMAGE_ASPECT = 2163 / 3245;
+const CARD_MODEL_ASPECT = 0.7164179;
+const CARD_WIDTH_SCALE = CARD_IMAGE_ASPECT / CARD_MODEL_ASPECT;
+const CARD_TEXTURE_VERTICAL_OFFSET = -0.015;
 const ATTACHMENT_HEIGHT = 1.72;
 const ROPE_LENGTH = 4.45;
 
@@ -70,7 +75,7 @@ export default function Lanyard({
     >
       <Canvas
         camera={{ position, fov }}
-        dpr={1}
+        dpr={[1, 2]}
         {...(eventSource
           ? { eventSource: eventSource as RefObject<HTMLElement> }
           : {})}
@@ -96,7 +101,7 @@ export default function Lanyard({
         }}
         gl={{
           alpha: transparent,
-          antialias: false,
+          antialias: true,
           powerPreference: "high-performance",
         }}
         style={{ touchAction: "pan-y" }}
@@ -157,6 +162,7 @@ function Band({
   const [curvePointOne] = useState(() => new THREE.Vector3());
   const [curvePointTwo] = useState(() => new THREE.Vector3());
   const sourceBandTexture = useTexture("/lanyard/lanyard.png");
+  const sourceCardTexture = useTexture(CARD_TEXTURE_URL);
   const bandTexture = useMemo(() => {
     const texture = sourceBandTexture.clone();
     texture.wrapS = THREE.RepeatWrapping;
@@ -172,6 +178,29 @@ function Band({
       metal: THREE.MeshStandardMaterial;
     };
   };
+  const cardTexture = useMemo(() => {
+    const texture = sourceCardTexture.clone();
+    // The GLB atlas gives each card face half the texture width and three
+    // quarters of its height. Expand that UV region so the portrait fills
+    // both faces without being stretched or cut in half.
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.repeat.set(2, 4 / 3);
+    texture.offset.set(0, CARD_TEXTURE_VERTICAL_OFFSET);
+    texture.anisotropy = 8;
+    texture.flipY = false;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    return texture;
+  }, [sourceCardTexture]);
+  const cardMaterial = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      map: cardTexture,
+      side: materials.base.side,
+      toneMapped: false,
+    });
+  }, [cardTexture, materials.base.side]);
   const [curve] = useState(() => {
     const nextCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(),
@@ -185,6 +214,13 @@ function Band({
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
   useEffect(() => () => bandTexture.dispose(), [bandTexture]);
+  useEffect(
+    () => () => {
+      cardTexture.dispose();
+      cardMaterial.dispose();
+    },
+    [cardMaterial, cardTexture]
+  );
 
   useEffect(() => {
     document.body.style.cursor = hovered
@@ -359,9 +395,8 @@ function Band({
         >
           <mesh
             geometry={nodes.card.geometry}
-            material={materials.base}
-            material-metalness={0.1}
-            material-roughness={0.55}
+            material={cardMaterial}
+            scale={[CARD_WIDTH_SCALE, 1, 1]}
           />
           <mesh
             geometry={nodes.clip.geometry}
@@ -390,3 +425,4 @@ function Band({
 
 useGLTF.preload(CARD_MODEL_URL);
 useTexture.preload("/lanyard/lanyard.png");
+useTexture.preload(CARD_TEXTURE_URL);
