@@ -21,7 +21,10 @@ const CARD_WIDTH_SCALE = CARD_IMAGE_ASPECT / CARD_MODEL_ASPECT;
 const CARD_TEXTURE_VERTICAL_OFFSET = -0.015;
 const ATTACHMENT_HEIGHT = 1.72;
 const ROPE_LENGTH = 4.45;
-const MOBILE_HORIZONTAL_DRAG_RANGE = 0.9;
+const CARD_RESTING_Y = 0.15;
+const CARD_RESTING_X_OFFSET = 0.65;
+const MOBILE_VIEWPORT_EDGE_MARGIN = 0.18;
+const CARD_ENTRANCE_DURATION = 0.75;
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -33,6 +36,7 @@ declare module "@react-three/fiber" {
 }
 
 interface LanyardProps {
+  active?: boolean;
   position?: [number, number, number];
   gravity?: [number, number, number];
   fov?: number;
@@ -44,6 +48,7 @@ interface LanyardProps {
 }
 
 export default function Lanyard({
+  active = true,
   position = [0, 0, 30],
   gravity = [0, -40, 0],
   fov = 20,
@@ -71,7 +76,7 @@ export default function Lanyard({
     >
       <Canvas
         camera={{ position, fov }}
-        dpr={[1, 2]}
+        dpr={isMobile ? [1, 1.5] : [1, 2]}
         eventSource={interactionSource as RefObject<HTMLElement>}
         events={(store) => {
           const eventManager = createPointerEvents(store);
@@ -93,7 +98,7 @@ export default function Lanyard({
         }}
         gl={{
           alpha: transparent,
-          antialias: true,
+          antialias: !isMobile,
           powerPreference: "high-performance",
         }}
         style={{ touchAction: isMobile ? "pan-y" : "none" }}
@@ -107,6 +112,7 @@ export default function Lanyard({
         <directionalLight intensity={2} position={[-4, 2, 5]} />
         <pointLight intensity={8} position={[0, -4, 6]} />
         <Band
+          active={active}
           gravityY={gravity[1]}
           horizontalOffset={isMobile ? 0 : horizontalOffset}
           isMobile={isMobile}
@@ -117,8 +123,8 @@ export default function Lanyard({
         ref={interactionRef}
         aria-hidden="true"
         data-lanyard-drag-area
-        className={`absolute top-[31%] left-[18%] z-10 h-[45%] w-[72%] cursor-grab select-none md:top-[28%] md:right-[3%] md:left-auto md:h-[48%] md:w-[36%] ${
-          eventSource ? "pointer-events-none" : "pointer-events-auto"
+        className={`absolute top-[27%] left-[5%] z-10 h-[52%] w-[90%] cursor-grab select-none md:top-[28%] md:right-[3%] md:left-auto md:h-[48%] md:w-[36%] ${
+          eventSource || !active ? "pointer-events-none" : "pointer-events-auto"
         }`}
         style={{ touchAction: isMobile ? "pan-y" : "none" }}
       />
@@ -127,6 +133,7 @@ export default function Lanyard({
 }
 
 interface BandProps {
+  active?: boolean;
   gravityY: number;
   isMobile?: boolean;
   lanyardWidth?: number;
@@ -134,6 +141,7 @@ interface BandProps {
 }
 
 function Band({
+  active = true,
   gravityY,
   isMobile = false,
   lanyardWidth = 1,
@@ -146,6 +154,15 @@ function Band({
     >
   >(null!);
   const card = useRef<THREE.Group>(null!);
+  const cardFace = useRef<
+    THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+  >(null!);
+  const cardClip = useRef<
+    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+  >(null!);
+  const cardClamp = useRef<
+    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+  >(null!);
   const [raycaster] = useState(() => new THREE.Raycaster());
   const [dragPlane] = useState(
     () => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
@@ -153,7 +170,12 @@ function Band({
   const [dragPoint] = useState(() => new THREE.Vector3());
   const [anchor] = useState(() => new THREE.Vector3(horizontalOffset, 6.3, 0));
   const [cardPosition] = useState(
-    () => new THREE.Vector3(horizontalOffset + 0.65, 0.15, 0)
+    () =>
+      new THREE.Vector3(
+        horizontalOffset + CARD_RESTING_X_OFFSET,
+        CARD_RESTING_Y,
+        0
+      )
   );
   const [cardVelocity] = useState(() => new THREE.Vector3());
   const [previousDragPosition] = useState(() => cardPosition.clone());
@@ -163,6 +185,7 @@ function Band({
   const [nextPosition] = useState(() => new THREE.Vector3());
   const [curvePointOne] = useState(() => new THREE.Vector3());
   const [curvePointTwo] = useState(() => new THREE.Vector3());
+  const entranceProgress = useRef(0);
   const sourceBandTexture = useTexture("/lanyard/lanyard.png");
   const sourceCardTexture = useTexture(CARD_TEXTURE_URL);
   const bandTexture = useMemo(() => {
@@ -199,10 +222,18 @@ function Band({
     return new THREE.MeshBasicMaterial({
       color: 0xffffff,
       map: cardTexture,
+      opacity: 0,
       side: materials.base.side,
       toneMapped: false,
+      transparent: true,
     });
   }, [cardTexture, materials.base.side]);
+  const metalMaterial = useMemo(() => {
+    const material = materials.metal.clone();
+    material.opacity = 0;
+    material.transparent = true;
+    return material;
+  }, [materials.metal]);
   const [curve] = useState(() => {
     const nextCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(),
@@ -215,14 +246,22 @@ function Band({
   });
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
-  useEffect(() => () => bandTexture.dispose(), [bandTexture]);
-  useEffect(
-    () => () => {
-      cardTexture.dispose();
-      cardMaterial.dispose();
-    },
-    [cardMaterial, cardTexture]
-  );
+  const resourcesMounted = useRef(false);
+
+  useEffect(() => {
+    resourcesMounted.current = true;
+
+    return () => {
+      resourcesMounted.current = false;
+      window.setTimeout(() => {
+        if (resourcesMounted.current) return;
+        bandTexture.dispose();
+        cardTexture.dispose();
+        cardMaterial.dispose();
+        metalMaterial.dispose();
+      }, 0);
+    };
+  }, [bandTexture, cardMaterial, cardTexture, metalMaterial]);
 
   useEffect(() => {
     document.body.style.cursor = dragged
@@ -252,19 +291,35 @@ function Band({
   useFrame((state, delta) => {
     const frameDelta = Math.min(delta, 1 / 30);
     anchor.set(horizontalOffset, 6.3, 0);
+    const restingX = horizontalOffset + CARD_RESTING_X_OFFSET;
+    const mobileHorizontalLimit = Math.max(
+      1.35,
+      state.viewport.width / 2 - MOBILE_VIEWPORT_EDGE_MARGIN
+    );
 
-    if (dragged && typeof dragged !== "boolean") {
+    if (!active) {
+      cardPosition.set(restingX, CARD_RESTING_Y, 0);
+      cardVelocity.set(0, 0, 0);
+      previousDragPosition.copy(cardPosition);
+      entranceProgress.current = 0;
+    } else {
+      entranceProgress.current = Math.min(
+        1,
+        entranceProgress.current + frameDelta / CARD_ENTRANCE_DURATION
+      );
+    }
+
+    if (active && dragged && typeof dragged !== "boolean") {
       raycaster.setFromCamera(state.pointer, state.camera);
       if (raycaster.ray.intersectPlane(dragPlane, dragPoint)) {
         nextPosition.copy(dragPoint).sub(dragged);
 
         if (isMobile) {
-          const restingX = horizontalOffset + 0.65;
           nextPosition.set(
             THREE.MathUtils.clamp(
               nextPosition.x,
-              restingX - MOBILE_HORIZONTAL_DRAG_RANGE,
-              restingX + MOBILE_HORIZONTAL_DRAG_RANGE
+              -mobileHorizontalLimit,
+              mobileHorizontalLimit
             ),
             dragStartPosition.y,
             dragStartPosition.z
@@ -280,7 +335,7 @@ function Band({
         cardPosition.copy(nextPosition);
         previousDragPosition.copy(nextPosition);
       }
-    } else {
+    } else if (active) {
       // Keep the card gently alive when idle, so it does not look frozen.
       const time = state.clock.getElapsedTime();
       const idleSway =
@@ -348,8 +403,42 @@ function Band({
       }
     }
 
+    if (active && isMobile && !dragged) {
+      const guardedX = THREE.MathUtils.clamp(
+        cardPosition.x,
+        -mobileHorizontalLimit,
+        mobileHorizontalLimit
+      );
+      const edgeOverflow = cardPosition.x - guardedX;
+
+      if (Math.abs(edgeOverflow) > 0.001) {
+        cardVelocity.setX(cardVelocity.x - edgeOverflow * 28 * frameDelta);
+        cardPosition.setX(
+          THREE.MathUtils.lerp(
+            cardPosition.x,
+            guardedX,
+            1 - Math.exp(-9 * frameDelta)
+          )
+        );
+      }
+    }
+
+    const entranceEase = 1 - Math.pow(1 - entranceProgress.current, 3);
+    if (cardFace.current) {
+      cardFace.current.material.opacity = active ? entranceEase : 0;
+    }
+    if (cardClip.current) {
+      cardClip.current.material.opacity = active ? entranceEase : 0;
+    }
+    if (cardClamp.current) {
+      cardClamp.current.material.opacity = active ? entranceEase : 0;
+    }
+
     if (card.current) {
       card.current.position.copy(cardPosition);
+      card.current.position.y += (1 - entranceEase) * 0.32;
+      card.current.scale.setScalar(0.86 + entranceEase * 0.14);
+      card.current.visible = active;
       card.current.rotation.z = THREE.MathUtils.lerp(
         card.current.rotation.z,
         THREE.MathUtils.clamp(-cardVelocity.x * 0.055, -0.6, 0.6),
@@ -363,6 +452,8 @@ function Band({
     }
 
     if (band.current) {
+      band.current.visible = active;
+      band.current.material.opacity = active ? entranceEase : 0;
       attachment.copy(cardPosition);
       attachment.set(
         attachment.x,
@@ -421,7 +512,7 @@ function Band({
             drag(false);
           }}
           onPointerDown={(e: ThreeEvent<PointerEvent>) => {
-            if (e.button !== 0) return;
+            if (!active || e.button !== 0) return;
 
             const nativeTarget = e.nativeEvent.target;
             if (
@@ -446,16 +537,25 @@ function Band({
           }}
         >
           <mesh
+            ref={cardFace}
+            dispose={null}
             geometry={nodes.card.geometry}
             material={cardMaterial}
             scale={[CARD_WIDTH_SCALE, 1, 1]}
           />
           <mesh
+            ref={cardClip}
+            dispose={null}
             geometry={nodes.clip.geometry}
-            material={materials.metal}
+            material={metalMaterial}
             material-roughness={0.3}
           />
-          <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
+          <mesh
+            ref={cardClamp}
+            dispose={null}
+            geometry={nodes.clamp.geometry}
+            material={metalMaterial}
+          />
         </group>
       </group>
       <mesh ref={band}>
@@ -464,11 +564,13 @@ function Band({
           args={[{ resolution: new THREE.Vector2(1000, 1000) }]}
           color="white"
           depthTest={false}
+          opacity={0}
           map={bandTexture}
           resolution={isMobile ? [1000, 2000] : [1000, 1000]}
           useMap={1}
           repeat={[-4, 1]}
           lineWidth={lanyardWidth * 0.22}
+          transparent
         />
       </mesh>
     </>

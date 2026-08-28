@@ -20,7 +20,7 @@ function getDesktopSnapshot(): boolean {
   return window.matchMedia(DESKTOP_QUERY).matches;
 }
 
-export function HeroLanyard(): ReactNode {
+export function HeroLanyard({ active }: { active: boolean }): ReactNode {
   const isDesktop = useSyncExternalStore(
     subscribeToDesktop,
     getDesktopSnapshot,
@@ -33,6 +33,7 @@ export function HeroLanyard(): ReactNode {
       className="pointer-events-none absolute inset-0 z-10 translate-y-7 overflow-visible"
     >
       <Lanyard
+        active={active}
         position={isDesktop ? [0, 0, 24] : [0, 0, 22]}
         horizontalOffset={3.15}
         gravity={isDesktop ? [0, -36, 0] : [0, -30, 0]}
