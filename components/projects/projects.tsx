@@ -44,6 +44,12 @@ export type ProjectImage = {
   alt: string;
 };
 
+export type ProjectTech = {
+  label: string;
+  slug: string;
+  invertInDark?: boolean;
+};
+
 export type Project = {
   id: string;
   icon: ComponentType<{ className?: string }>;
@@ -55,6 +61,7 @@ export type Project = {
   highlights: string[];
   images: ProjectImage[];
   imageRatio: number;
+  techStack: ProjectTech[];
 };
 
 const PROJECTS: Project[] = [
@@ -65,7 +72,13 @@ const PROJECTS: Project[] = [
     title: "Sistem Informasi SDM (Human Resource Information System)",
     description:
       "Aplikasi web HRIS dengan 4 role pengguna (Super Admin, Admin Staff, Staff, Pelamar) yang mengotomatisasi seluruh proses HR dari rekrutmen, onboarding, pengelolaan surat, hingga offboarding.",
-    meta: "Full Stack Developer, 2025 - 2026",
+    meta: "Date Project : 2025 - 2026",
+    techStack: [
+      { label: "Laravel", slug: "laravel" },
+      { label: "React", slug: "react" },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS", slug: "tailwindcss" },
+    ],
     overview:
       "Sistem HRIS yang dibangun untuk perusahaan LDP yang mengelola proses kepegawaian dari rekrutmen hingga offboarding secara digital. Aplikasi ini dilengkapi fitur lengkap: dashboard statistik real-time, modul rekrutmen dengan kalender visual untuk penjadwalan interview, sistem disposisi surat digital, pengelolaan pengaduan karyawan, dan proses offboarding terstruktur. Dilengkapi notifikasi real-time menggunakan Laravel Reverb (WebSocket) untuk memastikan semua stakeholder mendapat update langsung. Setiap role memiliki akses dan fitur yang disesuaikan dengan kebutuhan operasional mereka.",
     highlights: [
@@ -152,7 +165,13 @@ const PROJECTS: Project[] = [
     title: "E-Learning SMPN 2 Merapi Barat",
     description:
       "Platform pembelajaran daring berbasis web dengan 3 role pengguna (Admin, Guru, Siswa) yang memfasilitasi pembelajaran interaktif, pengelolaan materi, kuis dengan AI, dan manajemen data master sekolah.",
-    meta: "Full Stack Developer, 2025 - 2026",
+    meta: "Date Project : 2025 - 2026",
+    techStack: [
+      { label: "Laravel", slug: "laravel" },
+      { label: "React", slug: "react" },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS", slug: "tailwindcss" },
+    ],
     overview:
       "Platform e-learning komprehensif untuk SMPN 2 Merapi Barat yang memungkinkan digitalisasi penuh proses pembelajaran. Admin mengelola data master (guru, siswa, kelas, mata pelajaran) dengan fitur import/export Excel untuk efisiensi. Guru dapat mengupload berbagai format materi (PDF, Word, PowerPoint, Video) dan membuat kuis interaktif dengan AI serta pengaturan timer otomatis. Siswa mengakses materi dengan sistem pencarian yang intuitif, mengerjakan kuis dengan timer countdown, dan melihat statistik performa mereka per mata pelajaran. Dashboard setiap role menampilkan informasi relevan dan statistik real-time untuk monitoring progres pembelajaran.",
     highlights: [
@@ -252,7 +271,13 @@ const PROJECTS: Project[] = [
     title: "HRIS - Human Resource Information System Berbasis AI",
     description:
       "Sistem manajemen SDM berbasis web dengan AI-powered CV screening menggunakan Groq LLM. Pengembangan lanjutan dari proyek Internship dengan tech stack modern (Go, Next.js) dan fitur tambahan seperti AI screening, audit log, dan template surat.",
-    meta: "Full Stack Developer, 2026",
+    meta: "Date Project : 2026",
+    techStack: [
+      { label: "Go", slug: "go" },
+      { label: "Next.js", slug: "nextdotjs", invertInDark: true },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Vercel", slug: "vercel", invertInDark: true },
+    ],
     overview:
       "Proyek ini merupakan pengembangan lanjutan dari proyek Internship dengan perubahan signifikan pada tech stack dan penambahan fitur berbasis AI. Dibangun dengan Go (Golang) + Gin Framework untuk backend dan Next.js + TypeScript untuk frontend, sistem ini mengelola seluruh siklus kepegawaian dari rekrutmen hingga offboarding. Fitur unggulan adalah AI CV Screening otomatis menggunakan Groq API yang dapat melakukan scoring dan auto-shortlist pelamar berdasarkan kriteria yang ditentukan. Sistem juga dilengkapi dengan Audit Log untuk tracking seluruh aktivitas, template surat dengan preview PDF, pipeline rekrutmen visual (Applied → Screening → Interview → Offering → Hired/Rejected), serta autentikasi ganda melalui email/password dan Google OAuth 2.0. Bug-bug dari proyek sebelumnya telah diperbaiki dan performa ditingkatkan dengan Redis caching.",
     highlights: [
@@ -581,9 +606,41 @@ function ProjectCard({
         </p>
       </div>
 
-      <p className="text-foreground/50 mt-auto px-1 pb-2 text-[12px] tracking-tight">
-        {project.meta}
-      </p>
+      <div className="mt-auto px-1 pb-2">
+        <div className="border-foreground/8 flex items-center justify-between gap-3 border-t pt-3">
+          <span className="text-foreground/45 text-[11px] font-medium tracking-wide uppercase">
+            Tech stack
+          </span>
+          <ul
+            className="flex items-center gap-1.5"
+            aria-label={`${project.title} technology stack`}
+          >
+            {project.techStack.map((tech) => (
+              <li
+                key={tech.label}
+                title={tech.label}
+                aria-label={tech.label}
+                className="border-foreground/10 bg-background hover:border-foreground/20 hover:bg-foreground/5 flex h-8 w-8 items-center justify-center rounded-lg border transition-[background-color,border-color,transform] duration-200 hover:-translate-y-0.5"
+              >
+                <Image
+                  src={`/icons/${tech.slug}.svg`}
+                  alt=""
+                  width={16}
+                  height={16}
+                  aria-hidden="true"
+                  className={`h-4 w-4 object-contain ${
+                    tech.invertInDark ? "dark:invert" : ""
+                  }`}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-foreground/50 mt-3 text-[12px] tracking-tight">
+          {project.meta}
+        </p>
+      </div>
     </article>
   );
 }
