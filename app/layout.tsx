@@ -1,6 +1,7 @@
 import { Nav } from "@/components/layout/nav";
 import { PageBackdrop } from "@/components/layout/page-backdrop";
 import { Providers } from "@/components/layout/providers";
+import { ScrollAnimations } from "@/components/layout/scroll-animations";
 import { SkipToContent } from "@/components/layout/skip-to-content";
 import { SplashScreen } from "@/components/splash-screen";
 import { baseMetadata } from "@/lib/metadata";
@@ -88,6 +89,7 @@ export default function RootLayout({
           <PageBackdrop />
           <Nav />
           {children}
+          <ScrollAnimations />
         </Providers>
       </body>
     </html>

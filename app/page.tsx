@@ -6,7 +6,6 @@ import { Skills } from "@/components/about/skills";
 import { Stack } from "@/components/about/stack";
 import { ContactCard } from "@/components/contact/contact-card";
 import { Hero } from "@/components/hero/hero";
-import { ScrollAnimations } from "@/components/layout/scroll-animations";
 import { Projects } from "@/components/projects/projects";
 import { createMetadata, siteConfig } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -25,7 +24,6 @@ export default function HomePage(): ReactNode {
       className="flex flex-1 flex-col gap-16 sm:gap-24 lg:gap-28"
     >
       <Hero />
-      <ScrollAnimations />
       <AnimatedSection className="mx-auto w-full max-w-160 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:px-10">
         <Bio />
       </AnimatedSection>

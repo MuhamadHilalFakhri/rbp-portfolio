@@ -1,8 +1,13 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLayoutEffect, type ReactNode } from "react";
 
 type GsapInstance = (typeof import("gsap"))["gsap"];
+
+const REVEAL_DURATION = 1.5;
+const REVEAL_STAGGER = 0.24;
+const REVEAL_OFFSET = 40;
 
 let gsapPromise: Promise<GsapInstance> | null = null;
 
@@ -16,7 +21,13 @@ function getTargets(section: HTMLElement): HTMLElement[] {
 
   const items = Array.from(
     section.querySelectorAll<HTMLElement>("[data-scroll-reveal-item]")
-  );
+  ).sort((first, second) => {
+    const firstRect = first.getBoundingClientRect();
+    const secondRect = second.getBoundingClientRect();
+    return (
+      firstRect.top - secondRect.top || firstRect.left - secondRect.left
+    );
+  });
   return items.length > 0 ? items : [section];
 }
 
@@ -29,6 +40,8 @@ function showImmediately(targets: HTMLElement[]): void {
 }
 
 export function ScrollAnimations(): ReactNode {
+  const pathname = usePathname();
+
   useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -47,7 +60,7 @@ export function ScrollAnimations(): ReactNode {
 
       for (const target of targets) {
         target.style.opacity = "0";
-        target.style.transform = "translate3d(0, 24px, 0)";
+        target.style.transform = `translate3d(0, ${REVEAL_OFFSET}px, 0) rotateX(3deg)`;
         target.style.willChange = "transform, opacity";
       }
     }
@@ -71,8 +84,11 @@ export function ScrollAnimations(): ReactNode {
               const tween = gsap.to(targets, {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.72,
-                stagger: section.hasAttribute("data-scroll-stagger") ? 0.09 : 0,
+                rotationX: 0,
+                duration: REVEAL_DURATION,
+                stagger: section.hasAttribute("data-scroll-stagger")
+                  ? REVEAL_STAGGER
+                  : 0,
                 ease: "power3.out",
                 clearProps: "opacity,transform,visibility,willChange",
                 overwrite: "auto",
@@ -96,7 +112,7 @@ export function ScrollAnimations(): ReactNode {
       for (const tween of activeTweens) tween.kill();
       for (const targets of targetsBySection.values()) showImmediately(targets);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
