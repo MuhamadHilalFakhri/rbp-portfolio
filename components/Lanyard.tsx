@@ -21,6 +21,7 @@ const CARD_WIDTH_SCALE = CARD_IMAGE_ASPECT / CARD_MODEL_ASPECT;
 const CARD_TEXTURE_VERTICAL_OFFSET = -0.015;
 const ATTACHMENT_HEIGHT = 1.72;
 const ROPE_LENGTH = 4.45;
+const MOBILE_HORIZONTAL_DRAG_RANGE = 0.9;
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -52,9 +53,11 @@ export default function Lanyard({
   eventSource,
   className = "",
 }: LanyardProps) {
+  const interactionRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState<boolean>(
     () => typeof window !== "undefined" && window.innerWidth < 768
   );
+  const interactionSource = eventSource ?? interactionRef;
 
   useEffect(() => {
     const handleResize = (): void => setIsMobile(window.innerWidth < 768);
@@ -64,24 +67,19 @@ export default function Lanyard({
 
   return (
     <div
-      className={`relative z-0 flex h-full w-full items-center justify-center select-none ${className}`}
-      style={{ touchAction: "pan-y" }}
+      className={`pointer-events-none relative z-0 flex h-full w-full items-center justify-center select-none ${className}`}
     >
       <Canvas
         camera={{ position, fov }}
         dpr={[1, 2]}
-        {...(eventSource
-          ? { eventSource: eventSource as RefObject<HTMLElement> }
-          : {})}
+        eventSource={interactionSource as RefObject<HTMLElement>}
         events={(store) => {
           const eventManager = createPointerEvents(store);
 
           return {
             ...eventManager,
             compute: (event, state) => {
-              const bounds =
-                eventSource?.current?.getBoundingClientRect() ??
-                state.gl.domElement.getBoundingClientRect();
+              const bounds = state.gl.domElement.getBoundingClientRect();
               const x = event.clientX - bounds.left;
               const y = event.clientY - bounds.top;
 
@@ -98,7 +96,7 @@ export default function Lanyard({
           antialias: true,
           powerPreference: "high-performance",
         }}
-        style={{ touchAction: "pan-y" }}
+        style={{ touchAction: isMobile ? "pan-y" : "none" }}
         fallback={<div className="h-full w-full bg-transparent" />}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
@@ -115,6 +113,15 @@ export default function Lanyard({
           lanyardWidth={lanyardWidth}
         />
       </Canvas>
+      <div
+        ref={interactionRef}
+        aria-hidden="true"
+        data-lanyard-drag-area
+        className={`absolute top-[31%] left-[18%] z-10 h-[45%] w-[72%] cursor-grab select-none md:top-[28%] md:right-[3%] md:left-auto md:h-[48%] md:w-[36%] ${
+          eventSource ? "pointer-events-none" : "pointer-events-auto"
+        }`}
+        style={{ touchAction: isMobile ? "pan-y" : "none" }}
+      />
     </div>
   );
 }
@@ -150,6 +157,7 @@ function Band({
   );
   const [cardVelocity] = useState(() => new THREE.Vector3());
   const [previousDragPosition] = useState(() => cardPosition.clone());
+  const [dragStartPosition] = useState(() => cardPosition.clone());
   const [attachment] = useState(() => new THREE.Vector3());
   const [constraintDirection] = useState(() => new THREE.Vector3());
   const [nextPosition] = useState(() => new THREE.Vector3());
@@ -217,16 +225,29 @@ function Band({
   );
 
   useEffect(() => {
-    document.body.style.cursor = hovered
-      ? dragged
-        ? "grabbing"
-        : "grab"
-      : "auto";
+    document.body.style.cursor = dragged
+      ? "grabbing"
+      : hovered
+        ? "grab"
+        : "auto";
 
     return () => {
       document.body.style.cursor = "auto";
     };
   }, [hovered, dragged]);
+
+  useEffect(() => {
+    if (!dragged) return;
+
+    const stopDragging = (): void => drag(false);
+    window.addEventListener("pointerup", stopDragging, { once: true });
+    window.addEventListener("pointercancel", stopDragging, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerup", stopDragging);
+      window.removeEventListener("pointercancel", stopDragging);
+    };
+  }, [dragged]);
 
   useFrame((state, delta) => {
     const frameDelta = Math.min(delta, 1 / 30);
@@ -236,6 +257,20 @@ function Band({
       raycaster.setFromCamera(state.pointer, state.camera);
       if (raycaster.ray.intersectPlane(dragPlane, dragPoint)) {
         nextPosition.copy(dragPoint).sub(dragged);
+
+        if (isMobile) {
+          const restingX = horizontalOffset + 0.65;
+          nextPosition.set(
+            THREE.MathUtils.clamp(
+              nextPosition.x,
+              restingX - MOBILE_HORIZONTAL_DRAG_RANGE,
+              restingX + MOBILE_HORIZONTAL_DRAG_RANGE
+            ),
+            dragStartPosition.y,
+            dragStartPosition.z
+          );
+        }
+
         cardVelocity
           .copy(nextPosition)
           .sub(previousDragPosition)
@@ -246,6 +281,12 @@ function Band({
         previousDragPosition.copy(nextPosition);
       }
     } else {
+      // Keep the card gently alive when idle, so it does not look frozen.
+      const time = state.clock.getElapsedTime();
+      const idleSway =
+        Math.sin(time * 1.15) * 0.8 + Math.sin(time * 0.55 + 1.4) * 0.35;
+      cardVelocity.setX(cardVelocity.x + idleSway * frameDelta);
+
       // Apply gravity with realistic weight
       cardVelocity.set(
         cardVelocity.x,
@@ -359,16 +400,29 @@ function Band({
           onPointerOut={() => hover(false)}
           onPointerUp={(e: ThreeEvent<PointerEvent>) => {
             e.stopPropagation();
-            const captureTarget = e.nativeEvent.currentTarget;
-            if (
-              captureTarget instanceof Element &&
-              captureTarget.hasPointerCapture(e.pointerId)
-            ) {
+            const captureTarget = e.target as unknown as {
+              hasPointerCapture: (pointerId: number) => boolean;
+              releasePointerCapture: (pointerId: number) => void;
+            };
+            if (captureTarget.hasPointerCapture(e.pointerId)) {
+              captureTarget.releasePointerCapture(e.pointerId);
+            }
+            drag(false);
+          }}
+          onPointerCancel={(e: ThreeEvent<PointerEvent>) => {
+            e.stopPropagation();
+            const captureTarget = e.target as unknown as {
+              hasPointerCapture: (pointerId: number) => boolean;
+              releasePointerCapture: (pointerId: number) => void;
+            };
+            if (captureTarget.hasPointerCapture(e.pointerId)) {
               captureTarget.releasePointerCapture(e.pointerId);
             }
             drag(false);
           }}
           onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+            if (e.button !== 0) return;
+
             const nativeTarget = e.nativeEvent.target;
             if (
               nativeTarget instanceof Element &&
@@ -378,11 +432,15 @@ function Band({
             }
 
             e.stopPropagation();
-            const captureTarget = e.nativeEvent.currentTarget;
-            if (captureTarget instanceof Element) {
-              captureTarget.setPointerCapture(e.pointerId);
+            if (!isMobile && e.nativeEvent.cancelable) {
+              e.nativeEvent.preventDefault();
             }
+            const captureTarget = e.target as unknown as {
+              setPointerCapture: (pointerId: number) => void;
+            };
+            captureTarget.setPointerCapture(e.pointerId);
             dragPlane.set(new THREE.Vector3(0, 0, 1), -cardPosition.z);
+            dragStartPosition.copy(cardPosition);
             previousDragPosition.copy(cardPosition);
             drag(new THREE.Vector3().copy(e.point).sub(cardPosition));
           }}
