@@ -24,7 +24,7 @@ type Section = "experience" | "organization" | "certificate";
 const EXPERIENCE: Entry[] = [
   {
     company: "PT. Lintas Data Prima",
-    role: "Fullstack Developer",
+    role: "Internship",
     period: "Sep 2025 – Jan 2026",
     icon: "briefcase",
     brand: "#0066CC",
