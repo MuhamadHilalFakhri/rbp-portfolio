@@ -6,6 +6,7 @@ import { Skills } from "@/components/about/skills";
 import { Stack } from "@/components/about/stack";
 import { ContactCard } from "@/components/contact/contact-card";
 import { Hero } from "@/components/hero/hero";
+import { GitHubActivity } from "@/components/github/github-activity";
 import { Projects } from "@/components/projects/projects";
 import { createMetadata, siteConfig } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -40,6 +41,7 @@ export default function HomePage(): ReactNode {
         </div>
       </section>
       <Projects withHeadline viewMoreVisible />
+      <GitHubActivity />
       <ContactCard />
       <div className="h-12 sm:h-16" />
     </main>

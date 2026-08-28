@@ -1,4 +1,5 @@
 import { ContactCard } from "@/components/contact/contact-card";
+import { GitHubActivity } from "@/components/github/github-activity";
 import { Projects } from "@/components/projects/projects";
 import { createMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -35,6 +36,9 @@ export default function ProjectsPage(): ReactNode {
         </div>
       </section>
       <Projects />
+      <div className="h-16 sm:h-24 lg:h-28" />
+      <GitHubActivity />
+      <div className="h-16 sm:h-24 lg:h-28" />
       <ContactCard />
       <div className="h-12 sm:h-16" />
     </main>
