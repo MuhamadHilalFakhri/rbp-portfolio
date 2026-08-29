@@ -6,9 +6,7 @@ import type { ComponentProps, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-function Dialog(
-  props: ComponentProps<typeof DialogPrimitive.Root>
-): ReactNode {
+function Dialog(props: ComponentProps<typeof DialogPrimitive.Root>): ReactNode {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
@@ -80,7 +78,10 @@ function DialogContent({
   );
 }
 
-function DialogHeader({ className, ...props }: ComponentProps<"div">): ReactNode {
+function DialogHeader({
+  className,
+  ...props
+}: ComponentProps<"div">): ReactNode {
   return (
     <div
       data-slot="dialog-header"
@@ -90,11 +91,17 @@ function DialogHeader({ className, ...props }: ComponentProps<"div">): ReactNode
   );
 }
 
-function DialogFooter({ className, ...props }: ComponentProps<"div">): ReactNode {
+function DialogFooter({
+  className,
+  ...props
+}: ComponentProps<"div">): ReactNode {
   return (
     <div
       data-slot="dialog-footer"
-      className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className
+      )}
       {...props}
     />
   );

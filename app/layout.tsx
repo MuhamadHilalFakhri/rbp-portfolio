@@ -42,16 +42,10 @@ export default function RootLayout({
   children: ReactNode;
 }>): ReactNode {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-splash="pending" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${fraunces.variable} bg-background text-foreground min-h-screen font-sans antialiased`}
       >
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "(()=>{const d=document.documentElement,f=()=>{d.dataset.splash='done';try{sessionStorage.setItem('splash-shown','1')}catch{}};try{if(sessionStorage.getItem('splash-shown')==='1'){d.dataset.splash='skip';return}d.dataset.splash='pending'}catch{d.dataset.splash='pending'}if(matchMedia('(prefers-reduced-motion: reduce)').matches){f();return}const h=e=>{if(e.animationName==='splash-screen-exit'&&e.target.classList.contains('splash-screen')){document.removeEventListener('animationend',h);clearTimeout(t);f()}},t=setTimeout(()=>{document.removeEventListener('animationend',h);f()},5000);document.addEventListener('animationend',h)})()",
-          }}
-        />
         <SplashScreen />
         <Providers>
           <div className="site-frame site-frame--top" aria-hidden="true" />

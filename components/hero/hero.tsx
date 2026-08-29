@@ -26,7 +26,17 @@ function useSplashFinished(): boolean {
       attributeFilter: ["data-splash"],
     });
 
-    return () => observer.disconnect();
+    // Fail open if the splash controller is ever interrupted. The page content
+    // must remain usable even when a cosmetic transition cannot complete.
+    const fallbackTimer = window.setTimeout(() => {
+      root.dataset.splash = "done";
+      setFinished(true);
+    }, 4250);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(fallbackTimer);
+    };
   }, []);
 
   return finished;

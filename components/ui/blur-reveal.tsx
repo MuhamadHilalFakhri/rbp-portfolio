@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useInView } from "motion/react";
+import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,14 +20,14 @@ export function BlurReveal({
   duration = 1,
   enabled = true,
 }: BlurRevealProps) {
-  const spanRef = React.useRef<HTMLSpanElement | null>(null);
-  const isInView: boolean = useInView(spanRef, { once: true });
-
   return (
     <motion.span
-      ref={spanRef}
       initial={{ opacity: 0, filter: "blur(10px)", y: "20%" }}
-      animate={enabled && isInView ? { opacity: 1, filter: "blur(0px)", y: "0%" } : {}}
+      animate={
+        enabled
+          ? { opacity: 1, filter: "blur(0px)", y: "0%" }
+          : { opacity: 0, filter: "blur(10px)", y: "20%" }
+      }
       transition={{ duration: duration, delay: delay }}
       className={cn("inline-block", className)}
     >

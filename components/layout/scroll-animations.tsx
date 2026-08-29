@@ -24,9 +24,7 @@ function getTargets(section: HTMLElement): HTMLElement[] {
   ).sort((first, second) => {
     const firstRect = first.getBoundingClientRect();
     const secondRect = second.getBoundingClientRect();
-    return (
-      firstRect.top - secondRect.top || firstRect.left - secondRect.left
-    );
+    return firstRect.top - secondRect.top || firstRect.left - secondRect.left;
   });
   return items.length > 0 ? items : [section];
 }

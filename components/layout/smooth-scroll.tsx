@@ -15,11 +15,7 @@ const LENIS_OPTIONS = {
   touchMultiplier: 2,
 };
 
-export function SmoothScroll({
-  children,
-}: {
-  children: ReactNode;
-}): ReactNode {
+export function SmoothScroll({ children }: { children: ReactNode }): ReactNode {
   useEffect(() => {
     if (!features.smoothScroll) return;
 

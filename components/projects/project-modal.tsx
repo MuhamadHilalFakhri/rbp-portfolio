@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-  X,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -153,7 +148,7 @@ export function ProjectModal({
               >
                 <div
                   ref={setStageNode}
-                  className="group/stage bg-foreground/5 relative min-h-[9.5rem] max-h-[30dvh] w-full shrink-0 cursor-zoom-in overflow-hidden transition-[height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-h-[34dvh]"
+                  className="group/stage bg-foreground/5 relative max-h-[30dvh] min-h-[9.5rem] w-full shrink-0 cursor-zoom-in overflow-hidden transition-[height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-h-[34dvh]"
                   style={stageHeight ? { height: stageHeight } : undefined}
                 >
                   <motion.div
@@ -230,7 +225,7 @@ export function ProjectModal({
                     type="button"
                     onClick={() => setIsFullscreen(true)}
                     aria-label="View image fullscreen"
-                    className="focus-ring pointer-events-none absolute top-1/2 left-1/2 z-10 inline-flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur transition-all duration-300 group-hover/stage:pointer-events-auto group-hover/stage:opacity-100 hover:bg-black/65 group-focus-within/stage:pointer-events-auto group-focus-within/stage:opacity-100 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100"
+                    className="focus-ring pointer-events-none absolute top-1/2 left-1/2 z-10 inline-flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur transition-all duration-300 group-focus-within/stage:pointer-events-auto group-focus-within/stage:opacity-100 group-hover/stage:pointer-events-auto group-hover/stage:opacity-100 hover:bg-black/65 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100"
                   >
                     <Maximize2 className="h-5 w-5" aria-hidden="true" />
                   </button>
@@ -241,13 +236,16 @@ export function ProjectModal({
                     aria-label="Close project details"
                     className="focus-ring absolute top-2.5 right-2.5 z-20 inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/65 sm:top-3 sm:right-3 sm:h-10 sm:w-10"
                   >
-                    <X className="h-[18px] w-[18px] sm:h-5 sm:w-5" aria-hidden="true" />
+                    <X
+                      className="h-[18px] w-[18px] sm:h-5 sm:w-5"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
 
                 <div
                   data-lenis-prevent
-                  className="overscroll-contain flex min-h-0 flex-col gap-3.5 overflow-y-auto p-4 min-[360px]:gap-4 min-[360px]:p-5 sm:p-6"
+                  className="flex min-h-0 flex-col gap-3.5 overflow-y-auto overscroll-contain p-4 min-[360px]:gap-4 min-[360px]:p-5 sm:p-6"
                 >
                   <div className="flex items-center gap-2.5">
                     <span className="border-foreground/10 bg-background inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">

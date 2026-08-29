@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Renderer, Program, Mesh, Triangle, Transform, Texture } from "ogl";
@@ -126,7 +127,9 @@ export function PortraitMorph({
   const progressRef = useRef(0);
   const originRef = useRef<[number, number]>([0.5, 0.5]);
   const directionRef = useRef<[number, number]>([1, 0]);
-  const lastPointerRef = useRef<{ x: number; y: number; t: number } | null>(null);
+  const lastPointerRef = useRef<{ x: number; y: number; t: number } | null>(
+    null
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -190,10 +193,7 @@ export function PortraitMorph({
       renderer.setSize(w, h);
       canvas.style.width = "100%";
       canvas.style.height = "100%";
-      program.uniforms.uResolution.value = [
-        w * renderer.dpr,
-        h * renderer.dpr,
-      ];
+      program.uniforms.uResolution.value = [w * renderer.dpr, h * renderer.dpr];
     };
     const ro = new ResizeObserver(resize);
     ro.observe(container);
@@ -273,7 +273,11 @@ export function PortraitMorph({
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
       const last = lastPointerRef.current;
-      if (last && performance.now() - last.t < 80 && progressRef.current < 0.15) {
+      if (
+        last &&
+        performance.now() - last.t < 80 &&
+        progressRef.current < 0.15
+      ) {
         const vx = x - last.x;
         const vy = y - last.y;
         const mag = Math.hypot(vx, vy);
@@ -307,14 +311,22 @@ export function PortraitMorph({
       role="img"
       aria-label={alt}
       className={className}
-      style={{ position: "relative", width: "100%", height: "100%", filter: "grayscale(100%)" }}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        filter: "grayscale(100%)",
+      }}
     >
       {!ready ? (
-        <img
+        <NextImage
           src={srcA}
           alt={alt}
+          fill
+          unoptimized
+          sizes="100vw"
           draggable={false}
-          className="absolute inset-0 h-full w-full select-none object-cover"
+          className="absolute inset-0 h-full w-full object-cover select-none"
         />
       ) : null}
     </div>
