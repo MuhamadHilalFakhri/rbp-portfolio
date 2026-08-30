@@ -46,8 +46,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${fraunces.variable} bg-background text-foreground min-h-screen font-sans antialiased`}
       >
-        <SplashScreen />
         <Providers>
+          <SplashScreen />
           <div className="site-frame site-frame--top" aria-hidden="true" />
           <div className="site-frame site-frame--left" aria-hidden="true" />
           <div className="site-frame site-frame--right" aria-hidden="true" />
