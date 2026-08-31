@@ -42,7 +42,12 @@ export default function RootLayout({
   children: ReactNode;
 }>): ReactNode {
   return (
-    <html lang="en" data-splash="pending" suppressHydrationWarning>
+    <html
+      lang="en"
+      className="dark"
+      data-splash="pending"
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${fraunces.variable} bg-background text-foreground min-h-screen font-sans antialiased`}
       >
