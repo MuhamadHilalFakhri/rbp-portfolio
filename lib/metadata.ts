@@ -23,6 +23,8 @@ export const siteConfig = {
   ],
 } as const;
 
+const logoPath = "/Logo%20White.png";
+
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -55,17 +57,29 @@ export const baseMetadata: Metadata = {
     title: `${siteConfig.name} | Software Developer`,
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: logoPath,
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} logo`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} | Software Developer`,
     description: siteConfig.description,
     creator: siteConfig.creator,
+    images: [logoPath],
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-icon.png",
+    icon: [
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: "/icon-192.png",
+    apple: { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
   },
   manifest: "/site.webmanifest",
 };
@@ -93,10 +107,19 @@ export function createMetadata({
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,
       url,
+      images: [
+        {
+          url: logoPath,
+          width: 1200,
+          height: 630,
+          alt: `${siteConfig.name} logo`,
+        },
+      ],
     },
     twitter: {
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,
+      images: [logoPath],
     },
     ...(noIndex && {
       robots: {
