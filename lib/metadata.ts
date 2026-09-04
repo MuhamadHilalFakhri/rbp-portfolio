@@ -23,7 +23,8 @@ export const siteConfig = {
   ],
 } as const;
 
-const socialImagePath = "/opengraph-image.png";
+// Use the supplied hero render as the canonical social preview image.
+const socialImagePath = "/image.png";
 const socialImageAlt = `${siteConfig.name} portfolio homepage preview`;
 
 export const baseMetadata: Metadata = {
@@ -61,8 +62,8 @@ export const baseMetadata: Metadata = {
     images: [
       {
         url: socialImagePath,
-        width: 1200,
-        height: 630,
+        width: 1897,
+        height: 822,
         alt: socialImageAlt,
         type: "image/png",
       },
@@ -76,8 +77,8 @@ export const baseMetadata: Metadata = {
     images: [
       {
         url: socialImagePath,
-        width: 1200,
-        height: 630,
+        width: 1897,
+        height: 822,
         alt: socialImageAlt,
       },
     ],
@@ -119,8 +120,8 @@ export function createMetadata({
       images: [
         {
           url: socialImagePath,
-          width: 1200,
-          height: 630,
+          width: 1897,
+          height: 822,
           alt: socialImageAlt,
           type: "image/png",
         },
@@ -133,8 +134,8 @@ export function createMetadata({
       images: [
         {
           url: socialImagePath,
-          width: 1200,
-          height: 630,
+          width: 1897,
+          height: 822,
           alt: socialImageAlt,
         },
       ],
