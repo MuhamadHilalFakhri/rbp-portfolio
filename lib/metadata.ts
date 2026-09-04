@@ -23,7 +23,8 @@ export const siteConfig = {
   ],
 } as const;
 
-const logoPath = "/Logo%20White.png";
+const socialImagePath = "/opengraph-image.png";
+const socialImageAlt = `${siteConfig.name} portfolio homepage preview`;
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -59,10 +60,11 @@ export const baseMetadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: logoPath,
+        url: socialImagePath,
         width: 1200,
         height: 630,
-        alt: `${siteConfig.name} logo`,
+        alt: socialImageAlt,
+        type: "image/png",
       },
     ],
   },
@@ -71,7 +73,14 @@ export const baseMetadata: Metadata = {
     title: `${siteConfig.name} | Software Developer`,
     description: siteConfig.description,
     creator: siteConfig.creator,
-    images: [logoPath],
+    images: [
+      {
+        url: socialImagePath,
+        width: 1200,
+        height: 630,
+        alt: socialImageAlt,
+      },
+    ],
   },
   icons: {
     icon: [
@@ -109,17 +118,26 @@ export function createMetadata({
       url,
       images: [
         {
-          url: logoPath,
+          url: socialImagePath,
           width: 1200,
           height: 630,
-          alt: `${siteConfig.name} logo`,
+          alt: socialImageAlt,
+          type: "image/png",
         },
       ],
     },
     twitter: {
+      card: "summary_large_image",
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,
-      images: [logoPath],
+      images: [
+        {
+          url: socialImagePath,
+          width: 1200,
+          height: 630,
+          alt: socialImageAlt,
+        },
+      ],
     },
     ...(noIndex && {
       robots: {

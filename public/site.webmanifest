@@ -1,7 +1,7 @@
 {
-  "name": "Your Site Name",
-  "short_name": "Site",
-  "description": "A modern, accessible landing page template built with Next.js, Tailwind CSS, and TypeScript.",
+  "name": "Muhamad Hilal Fakhri | Software Developer",
+  "short_name": "Hilal Portfolio",
+  "description": "Portfolio of Muhamad Hilal Fakhri, a Software Developer & AI enthusiast focused on building structured, efficient, responsive, and user-centered applications.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
