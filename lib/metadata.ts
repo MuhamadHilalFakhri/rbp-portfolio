@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const siteConfig = {
   name: "Muhamad Hilal Fakhri",
   description:
-    "Portfolio of Muhamad Hilal Fakhri, a Software Developer & AI enthusiast focused on building structured, efficient, responsive, and user-centered applications.",
+    "Portfolio of Muhamad Hilal Fakhri, a Web Developer & AI enthusiast focused on building structured, efficient, responsive, and user-centered applications.",
   url: "https://www.muhamadhilalf.my.id",
   creator: "Muhamad Hilal Fakhri",
   authors: [
@@ -30,7 +30,7 @@ const socialImageAlt = `${siteConfig.name} portfolio homepage preview`;
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | Software Developer`,
+    default: `${siteConfig.name} | Web Developer`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -56,7 +56,7 @@ export const baseMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteConfig.url,
-    title: `${siteConfig.name} | Software Developer`,
+    title: `${siteConfig.name} | Web Developer`,
     description: siteConfig.description,
     siteName: siteConfig.name,
     images: [
@@ -71,7 +71,7 @@ export const baseMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Software Developer`,
+    title: `${siteConfig.name} | Web Developer`,
     description: siteConfig.description,
     creator: siteConfig.creator,
     images: [

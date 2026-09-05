@@ -53,7 +53,7 @@ export function Hero(): ReactNode {
             <h1 className="text-foreground text-[clamp(2.15rem,11vw,2.75rem)] leading-[1.05] font-medium tracking-tight md:text-[2.5rem] lg:text-[3.65rem]">
               <span className="block">
                 <BlurReveal delay={0} enabled={splashFinished}>
-                  Software&nbsp;
+                  Web&nbsp;
                 </BlurReveal>
                 <BlurReveal delay={0.1} enabled={splashFinished}>
                   Developer&nbsp;
@@ -71,7 +71,7 @@ export function Hero(): ReactNode {
 
             <p className="text-foreground/65 max-w-[34ch] text-[18px] leading-[1.45] tracking-tight sm:text-[20px] lg:text-[22px]">
               <BlurReveal delay={0.4} enabled={splashFinished}>
-                Software Developer focused on building structured, efficient,
+                Web Developer focused on building structured, efficient,
                 responsive, and user-centered applications.
               </BlurReveal>
             </p>
