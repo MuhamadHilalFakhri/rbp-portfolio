@@ -657,7 +657,7 @@ export function Projects({
           <div
             ref={mobileTrackRef}
             aria-label="Swipe through projects"
-            className="-mx-4 flex touch-pan-x snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 sm:hidden min-[360px]:-mx-6 min-[360px]:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 sm:hidden min-[360px]:-mx-6 min-[360px]:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {items.map((project) => (
               <div
