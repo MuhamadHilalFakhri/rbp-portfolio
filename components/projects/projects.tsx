@@ -5,6 +5,7 @@ import {
   Bot,
   ChevronLeft,
   ChevronRight,
+  Clapperboard,
   Compass,
   LineChart,
   Sparkles,
@@ -451,6 +452,57 @@ const PROJECTS: Project[] = [
       {
         src: "/project/ATWebp/X.png",
         alt: "Control Panel Desktop Terminal MT5",
+      },
+    ],
+    imageRatio: 16 / 9,
+  },
+  {
+    id: "streamfilm",
+    icon: Clapperboard,
+    iconLabel: "StreamFilm",
+    title: "StreamFilm - Katalog Film & Serial",
+    description:
+      "Platform katalog film dan serial berbasis TMDB untuk menemukan tontonan, melihat detail lengkap, menonton trailer, dan menyimpan watchlist secara lokal.",
+    meta: "Date Project : 2026",
+    techStack: [
+      { label: "Next.js", slug: "nextdotjs", invertInDark: true },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS", slug: "tailwindcss" },
+    ],
+    overview:
+      "StreamFilm adalah aplikasi katalog film dan serial berbasis Next.js App Router yang menggunakan TMDB API untuk menyediakan metadata, poster, rating, trailer, cast, season, dan episode. Pengguna dapat menjelajahi film serta serial populer, mencari judul, membuka halaman detail, dan menyimpan tontonan favorit ke watchlist yang tersimpan langsung di perangkat.",
+    highlights: [
+      "Katalog film dan serial dengan data populer, trending, rating tertinggi, dan rilisan terbaru dari TMDB",
+      "Pencarian dan filter berdasarkan genre, tahun rilis, popularitas, atau rating",
+      "Halaman detail dengan sinopsis, rating, trailer, cast, season, dan episode",
+      "Watchlist lokal yang tersimpan di perangkat tanpa memerlukan akun",
+      "Hero section dan media row responsif untuk pengalaman browsing yang sinematik",
+      "Tech Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, TMDB API",
+    ],
+    images: [
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233604-converted.webp",
+        alt: "Landing page StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233611-converted.webp",
+        alt: "Katalog film dan serial StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233621-converted.webp",
+        alt: "Daftar film populer StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233630-converted.webp",
+        alt: "Daftar serial populer StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233638-converted.webp",
+        alt: "Pencarian film dan serial StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233705-converted.webp",
+        alt: "Detail film StreamFilm",
       },
     ],
     imageRatio: 16 / 9,
