@@ -657,14 +657,14 @@ export function Projects({
           <div
             ref={mobileTrackRef}
             aria-label="Swipe through projects"
-            className="-mx-4 flex items-stretch touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 sm:hidden min-[360px]:-mx-6 min-[360px]:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 grid auto-cols-[100%] grid-flow-col items-stretch touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 sm:hidden min-[360px]:-mx-6 min-[360px]:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {items.map((project) => (
               <div
                 key={project.id}
                 data-card
                 data-scroll-reveal-item
-                className="flex h-full min-w-0 shrink-0 basis-full snap-start"
+                className="flex min-w-0 snap-start"
               >
                 <ProjectCard
                   project={project}
@@ -797,7 +797,7 @@ function ProjectCard({
           onSelect();
         }
       }}
-      className="project-card border-foreground/8 focus-ring bg-background flex h-full cursor-pointer flex-col gap-4 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5"
+      className="project-card border-foreground/8 focus-ring bg-background flex h-full min-h-full cursor-pointer flex-col gap-4 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5"
     >
       <header className="flex items-center gap-2.5 px-1 pt-2">
         <span className="border-foreground/10 bg-background inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border">
