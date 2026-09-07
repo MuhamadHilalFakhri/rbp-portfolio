@@ -38,7 +38,7 @@ export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
         <p>
           Saya memiliki ketertarikan untuk terus memperdalam kemampuan di bidang{" "}
           <strong className="text-foreground font-semibold">
-            software development
+            web developer
           </strong>
           , khususnya dalam membangun aplikasi web yang fungsional, responsif,
           dan dapat memberikan pengalaman pengguna yang baik. Saya juga terbiasa
