@@ -211,6 +211,16 @@ function Band({
     context.fillStyle = "#141618";
     context.fillRect(0, 0, 768, 1152);
 
+    // Use a clean monochrome gradient behind the portrait instead of letting
+    // compression/noise from the original navy backdrop show through.
+    const portraitBackground = context.createLinearGradient(0, 110, 0, 976);
+    portraitBackground.addColorStop(0, "#595959");
+    portraitBackground.addColorStop(0.38, "#858585");
+    portraitBackground.addColorStop(0.72, "#252525");
+    portraitBackground.addColorStop(1, "#080808");
+    context.fillStyle = portraitBackground;
+    context.fillRect(20, 110, 728, 866);
+
     // Key the portrait's uniform navy backdrop before converting to monochrome.
     // Keeping an alpha silhouette lets the outline follow hair and shoulders.
     const portrait = document.createElement("canvas");
@@ -223,7 +233,7 @@ function Band({
       const r = pixels.data[i]!;
       const g = pixels.data[i + 1]!;
       const b = pixels.data[i + 2]!;
-      const navy = THREE.MathUtils.smoothstep(b - Math.max(r, g), 8, 30);
+      const navy = THREE.MathUtils.smoothstep(b - Math.max(r, g), 8, 20);
       pixels.data[i + 3] = Math.round(pixels.data[i + 3]! * (1 - navy));
       const luminance = r * 0.2126 + g * 0.7152 + b * 0.0722;
       const gray = THREE.MathUtils.clamp((luminance - 110) * 1.32 + 112, 0, 255);
@@ -264,8 +274,12 @@ function Band({
     context.beginPath();
     context.rect(20, 110, 728, 866);
     context.clip();
-    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 4) {
-      context.drawImage(silhouette, 40 + Math.cos(angle) * 8, 20 + Math.sin(angle) * 8);
+    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 6) {
+      context.drawImage(
+        silhouette,
+        40 + Math.cos(angle) * 11,
+        20 + Math.sin(angle) * 11
+      );
     }
     context.drawImage(portrait, 40, 20);
     context.restore();
@@ -300,8 +314,8 @@ function Band({
     }
     context.beginPath();
     context.roundRect(12, 12, 744, 1128, 34);
-    context.strokeStyle = "rgba(255,255,255,0.3)";
-    context.lineWidth = 2;
+    context.strokeStyle = "rgba(255,255,255,0.42)";
+    context.lineWidth = 3.5;
     context.stroke();
 
     const texture = new THREE.CanvasTexture(canvas);
