@@ -241,11 +241,14 @@ function Band({
     }
     context.font = "600 64px monospace";
     context.fillStyle = "rgba(255,255,255,0.42)";
-    for (const [x, y, rotation] of [[66, 180, -0.18], [578, 280, 0.16]] as const) {
+    for (const [x, y, rotation, icon] of [
+      [66, 180, -0.18, "{}"],
+      [578, 280, 0.16, "</>"],
+    ] as const) {
       context.save();
       context.translate(x, y);
       context.rotate(rotation);
-      context.fillText("</>", 0, 0);
+      context.fillText(icon, 0, 0);
       context.restore();
     }
 
