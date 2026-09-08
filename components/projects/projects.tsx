@@ -309,7 +309,7 @@ const PROJECTS: Project[] = [
       "Proses offboarding terstruktur dengan checklist serah terima dan exit interview",
       "Pengelolaan pengaduan karyawan dengan opsi anonim dan tracking penyelesaian",
       "Notifikasi real-time menggunakan Laravel Reverb (WebSocket)",
-      "Tech Stack: Laravel 12, React 18, TypeScript, Tailwind CSS, Inertia.js, SQLite",
+      "Tech Stack: Laravel 12, React 18, TypeScript, Tailwind CSS, Inertia.js, MySQL",
     ],
     images: [
       {
