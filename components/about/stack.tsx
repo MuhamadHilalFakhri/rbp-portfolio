@@ -134,6 +134,9 @@ export function Stack(): ReactNode {
         const mouseElement = mouse.element;
         const internalMouse = mouse as typeof mouse & {
           mousewheel: ((event: Event) => void) | null;
+          mousemove: EventListener;
+          mousedown: EventListener;
+          mouseup: EventListener;
         };
 
         if (internalMouse.mousewheel) {
@@ -153,17 +156,31 @@ export function Stack(): ReactNode {
         });
         World.add(world, mouseConstraint);
 
+        let releaseTouchDrag: (() => void) | undefined;
+        let cleanupTouchListeners: (() => void) | undefined;
+        const releaseDrag = (): void => {
+          // Matter detaches the mouse constraint on the next physics update.
+          mouse.button = -1;
+          releaseTouchDrag?.();
+          container.style.cursor = "grab";
+        };
+        const handleMouseMove = (event: MouseEvent): void => {
+          if ((event.buttons & 1) === 0) releaseDrag();
+        };
+        const handleVisibilityChange = (): void => {
+          if (document.hidden) releaseDrag();
+        };
+        window.addEventListener("mouseup", releaseDrag, true);
+        window.addEventListener("pointercancel", releaseDrag, true);
+        window.addEventListener("blur", releaseDrag);
+        window.addEventListener("mousemove", handleMouseMove, true);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
         const isMobile =
           typeof window !== "undefined" &&
           window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
         if (isMobile) {
-          const internalMouse = mouse as typeof mouse & {
-            mousemove: EventListener;
-            mousedown: EventListener;
-            mouseup: EventListener;
-          };
-
           mouseElement.removeEventListener(
             "touchmove",
             internalMouse.mousemove
@@ -253,6 +270,7 @@ export function Stack(): ReactNode {
             gestureDecided = false;
             gestureIsVertical = false;
           };
+          releaseTouchDrag = handleTouchEnd;
 
           container.addEventListener("touchstart", handleTouchStart, {
             passive: true,
@@ -260,12 +278,14 @@ export function Stack(): ReactNode {
           container.addEventListener("touchmove", handleTouchMove, {
             passive: true,
           });
-          container.addEventListener("touchend", handleTouchEnd, {
-            passive: true,
-          });
-          container.addEventListener("touchcancel", handleTouchEnd, {
-            passive: true,
-          });
+          window.addEventListener("touchend", releaseDrag, true);
+          window.addEventListener("touchcancel", releaseDrag, true);
+          cleanupTouchListeners = () => {
+            container.removeEventListener("touchstart", handleTouchStart);
+            container.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("touchend", releaseDrag, true);
+            window.removeEventListener("touchcancel", releaseDrag, true);
+          };
         }
 
         Events.on(mouseConstraint, "startdrag", () => {
@@ -315,6 +335,20 @@ export function Stack(): ReactNode {
         ro.observe(container);
 
         cleanup = () => {
+          releaseDrag();
+          cleanupTouchListeners?.();
+          window.removeEventListener("mouseup", releaseDrag, true);
+          window.removeEventListener("pointercancel", releaseDrag, true);
+          window.removeEventListener("blur", releaseDrag);
+          window.removeEventListener("mousemove", handleMouseMove, true);
+          document.removeEventListener("visibilitychange", handleVisibilityChange);
+          mouseElement.removeEventListener("mousemove", internalMouse.mousemove);
+          mouseElement.removeEventListener("mousedown", internalMouse.mousedown);
+          mouseElement.removeEventListener("mouseup", internalMouse.mouseup);
+          mouseElement.removeEventListener("touchmove", internalMouse.mousemove);
+          mouseElement.removeEventListener("touchstart", internalMouse.mousedown);
+          mouseElement.removeEventListener("touchend", internalMouse.mouseup);
+          Mouse.clearSourceEvents(mouse);
           cancelAnimationFrame(raf);
           ro.disconnect();
           Runner.stop(runner);
