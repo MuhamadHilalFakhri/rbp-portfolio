@@ -157,13 +157,24 @@ test("API rejects malformed year and avoids caching upstream failures", async ()
 
 const { getStructuredData } = loadModule("lib/structured-data.ts");
 
-test("structured data describes the portfolio owner and canonical website", () => {
+test("site-wide structured data describes the owner without a route-specific profile page", () => {
   const data = getStructuredData();
   assert.equal(data["@context"], "https://schema.org");
   assert.deepEqual(
     data["@graph"].map((entry) => entry["@type"]),
-    ["WebSite", "Person", "ProfilePage"]
+    ["WebSite", "Person"]
   );
   assert.equal(data["@graph"][1].name, "Muhamad Hilal Fakhri");
-  assert.equal(data["@graph"][2].mainEntity["@id"], "https://www.muhamadhilalf.my.id/#person");
+});
+
+test("homepage structured data adds the profile page for the homepage route", () => {
+  const data = getStructuredData({ includeProfilePage: true });
+  assert.deepEqual(
+    data["@graph"].map((entry) => entry["@type"]),
+    ["WebSite", "Person", "ProfilePage"]
+  );
+  assert.equal(
+    data["@graph"][2].mainEntity["@id"],
+    "https://www.muhamadhilalf.my.id/#person"
+  );
 });

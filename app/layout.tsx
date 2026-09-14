@@ -5,7 +5,6 @@ import { SkipToContent } from "@/components/layout/skip-to-content";
 import { SiteDecorations } from "@/components/layout/site-decorations";
 import { SplashScreen } from "@/components/splash-screen";
 import { baseMetadata } from "@/lib/metadata";
-import { getStructuredData } from "@/lib/structured-data";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import type { ReactNode } from "react";
@@ -26,7 +25,6 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = baseMetadata;
-const structuredData = getStructuredData();
 
 export const viewport: Viewport = {
   themeColor: "#0a0a0a",
@@ -58,10 +56,6 @@ export default function RootLayout({
           {children}
           <ScrollAnimations />
         </Providers>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
       </body>
     </html>
   );
