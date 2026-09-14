@@ -111,7 +111,7 @@ test("unavailable UI has retry and no fabricated zero total or calendar", () => 
   assert.match(html, /Could not load activity/);
   assert.match(html, /Try again/);
   assert.doesNotMatch(html, /0 contributions in/);
-  assert.doesNotMatch(html, /role="grid"/);
+  assert.doesNotMatch(html, /<figure/);
 });
 
 test("valid zero contributions still renders the actual calendar", () => {
@@ -123,7 +123,11 @@ test("valid zero contributions still renders the actual calendar", () => {
     })
   );
   assert.match(html, /0 contributions in 2024/);
-  assert.match(html, /role="grid"/);
+  assert.match(html, /<figure/);
+  assert.match(html, /role="img"/);
+  assert.match(html, /GitHub contribution heatmap with 0 total contributions/);
+  assert.doesNotMatch(html, /View daily contributions|<details|<table/);
+  assert.doesNotMatch(html, /role="grid(cell)?"/);
   assert.doesNotMatch(html, /Try again/);
 });
 

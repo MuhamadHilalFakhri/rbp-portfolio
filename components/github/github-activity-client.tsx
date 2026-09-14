@@ -245,12 +245,13 @@ export function GitHubActivityClient({
               </p>
             )}
             {activity && calendar && (
-              <div
-                className="overflow-x-auto pb-3 [scrollbar-color:color-mix(in_srgb,var(--foreground)_20%,transparent)_transparent] [scrollbar-width:thin]"
-                aria-label={`${activity.year} GitHub contribution calendar`}
-                role="grid"
+              <figure
+                className="focus-ring overflow-x-auto pb-3 [scrollbar-color:color-mix(in_srgb,var(--foreground)_20%,transparent)_transparent] [scrollbar-width:thin]"
+                aria-label={`${activity.year} GitHub contribution heatmap with ${activity.total.toLocaleString("en-US")} total contributions. Darker squares indicate more activity.`}
+                role="img"
+                tabIndex={0}
               >
-                <div className="w-max min-w-full">
+                <div className="w-max min-w-full" aria-hidden="true">
                   <div
                     className="ml-8 grid h-6 gap-1 sm:ml-10"
                     style={{
@@ -298,7 +299,6 @@ export function GitHubActivityClient({
                               key={day.date}
                               aria-label={formatDayLabel(day)}
                               className={`h-3 w-3 rounded-[3px] transition-transform duration-200 hover:scale-125 ${LEVEL_CLASSES[day.level] ?? LEVEL_CLASSES[0]}`}
-                              role="gridcell"
                               title={formatDayLabel(day)}
                             />
                           ) : (
@@ -325,7 +325,7 @@ export function GitHubActivityClient({
                     <span>More</span>
                   </div>
                 </div>
-              </div>
+              </figure>
             )}
           </div>
 

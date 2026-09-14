@@ -50,7 +50,7 @@ export const baseMetadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "/",
+    canonical: new URL("/", siteConfig.url).href,
   },
   openGraph: {
     type: "website",
@@ -73,7 +73,6 @@ export const baseMetadata: Metadata = {
     card: "summary_large_image",
     title: `${siteConfig.name} | Web Developer`,
     description: siteConfig.description,
-    creator: siteConfig.creator,
     images: [
       {
         url: socialImagePath,
@@ -105,15 +104,18 @@ export function createMetadata({
   path?: string;
   noIndex?: boolean;
 }): Metadata {
-  const url = `${siteConfig.url}${path}`;
+  const url = new URL(path, siteConfig.url).href;
 
   return {
     title,
     description,
     alternates: {
-      canonical: path,
+      canonical: url,
     },
     openGraph: {
+      type: "website",
+      locale: "en_US",
+      siteName: siteConfig.name,
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,
       url,

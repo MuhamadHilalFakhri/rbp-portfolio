@@ -4,12 +4,9 @@ import { siteConfig } from "@/lib/metadata";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
 
-  return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-  ];
+  return ["/", "/about", "/projects"].map((path) => ({
+    url: new URL(path, baseUrl).href,
+    changeFrequency: path === "/about" ? "monthly" : "weekly",
+    priority: path === "/" ? 1 : 0.8,
+  }));
 }
