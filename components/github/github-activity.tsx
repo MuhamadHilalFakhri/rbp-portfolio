@@ -1,25 +1,21 @@
 import { GitHubActivityClient } from "@/components/github/github-activity-client";
 import {
-  createEmptyGitHubActivity,
   getGitHubActivity,
+  type GitHubActivityData,
 } from "@/lib/github-activity";
 import type { ReactNode } from "react";
 
 export async function GitHubActivity(): Promise<ReactNode> {
   const currentYear = new Date().getUTCFullYear();
-  let activity = createEmptyGitHubActivity(currentYear);
-  let initiallyUnavailable = false;
+  let activity: GitHubActivityData | null = null;
 
   try {
     activity = await getGitHubActivity(currentYear);
   } catch {
-    initiallyUnavailable = true;
+    activity = null;
   }
 
   return (
-    <GitHubActivityClient
-      initialData={activity}
-      initiallyUnavailable={initiallyUnavailable}
-    />
+    <GitHubActivityClient initialData={activity} initialYear={currentYear} />
   );
 }

@@ -10,12 +10,12 @@ export async function GET(
   request: NextRequest
 ): Promise<NextResponse<GitHubActivityData | { error: string }>> {
   const currentYear = new Date().getUTCFullYear();
-  const requestedYear = Number.parseInt(
-    request.nextUrl.searchParams.get("year") ?? `${currentYear}`,
-    10
-  );
+  const yearParam =
+    request.nextUrl.searchParams.get("year") ?? `${currentYear}`;
+  const requestedYear = Number(yearParam);
 
   if (
+    !/^\d{4}$/.test(yearParam) ||
     !Number.isInteger(requestedYear) ||
     requestedYear < currentYear - 3 ||
     requestedYear > currentYear
@@ -36,7 +36,7 @@ export async function GET(
   } catch {
     return NextResponse.json(
       { error: "GitHub activity is temporarily unavailable." },
-      { status: 502 }
+      { status: 502, headers: { "Cache-Control": "no-store" } }
     );
   }
 }

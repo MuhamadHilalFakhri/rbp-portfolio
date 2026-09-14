@@ -1,11 +1,13 @@
 "use client";
 
-import type {
-  GitHubActivityData,
-  GitHubContributionDay,
-} from "@/lib/github-activity";
+import {
+  GITHUB_USERNAME,
+  isGitHubActivityData,
+  type GitHubActivityData,
+  type GitHubContributionDay,
+} from "@/lib/github-activity-data";
 import { ExternalLink, Github, LoaderCircle } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 const DAY_IN_MILLISECONDS = 86_400_000;
 const MONTHS = [
@@ -65,9 +67,7 @@ function buildCalendar(data: GitHubActivityData): CalendarData {
 
     if (!weeks[weekIndex]) weeks[weekIndex] = [];
     weeks[weekIndex]!.push(
-      date.getUTCFullYear() === data.year
-        ? (dayMap.get(dateKey) ?? { count: 0, date: dateKey, level: 0 })
-        : null
+      date.getUTCFullYear() === data.year ? (dayMap.get(dateKey) ?? null) : null
     );
   }
 
@@ -96,32 +96,56 @@ function formatDayLabel(day: GitHubContributionDay): string {
 
 export function GitHubActivityClient({
   initialData,
-  initiallyUnavailable = false,
+  initialYear,
 }: {
-  initialData: GitHubActivityData;
-  initiallyUnavailable?: boolean;
+  initialData: GitHubActivityData | null;
+  initialYear: number;
 }): ReactNode {
-  const currentYear = new Date().getUTCFullYear();
+  const currentYear = initialYear;
   const years = Array.from({ length: 4 }, (_, index) => currentYear - index);
   const [activity, setActivity] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [pendingYear, setPendingYear] = useState<number | null>(null);
-  const [isUnavailable, setIsUnavailable] = useState(initiallyUnavailable);
-  const calendar = useMemo(() => buildCalendar(activity), [activity]);
+  const [selectedYear, setSelectedYear] = useState(initialYear);
+  const [failedYear, setFailedYear] = useState<number | null>(
+    initialData ? null : initialYear
+  );
+  const requestRef = useRef<AbortController | null>(null);
+  const calendar = useMemo(
+    () => (activity ? buildCalendar(activity) : null),
+    [activity]
+  );
 
-  async function selectYear(year: number): Promise<void> {
-    if (year === activity.year || isLoading) return;
+  useEffect(() => () => requestRef.current?.abort(), []);
 
+  async function selectYear(year: number, retry = false): Promise<void> {
+    if (requestRef.current) return;
+    setSelectedYear(year);
+    if (year === activity?.year && !retry) {
+      setFailedYear(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    requestRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 12_000);
     setIsLoading(true);
     setPendingYear(year);
-    setIsUnavailable(false);
+    setFailedYear(null);
     try {
-      const response = await fetch(`/api/github-activity?year=${year}`);
+      const response = await fetch(`/api/github-activity?year=${year}`, {
+        signal: controller.signal,
+      });
       if (!response.ok) throw new Error("Unable to load GitHub activity.");
-      setActivity((await response.json()) as GitHubActivityData);
+      const data: unknown = await response.json();
+      if (!isGitHubActivityData(data, year))
+        throw new Error("Invalid GitHub activity.");
+      setActivity(data);
     } catch {
-      setIsUnavailable(true);
+      setFailedYear(year);
     } finally {
+      window.clearTimeout(timeout);
+      requestRef.current = null;
       setIsLoading(false);
       setPendingYear(null);
     }
@@ -162,117 +186,152 @@ export function GitHubActivityClient({
             </div>
             <div className="min-w-0">
               <p className="text-foreground text-base font-medium tracking-tight sm:text-lg">
-                {activity.total.toLocaleString("en-US")} contributions in{" "}
-                {activity.year}
+                {activity
+                  ? `${activity.total.toLocaleString("en-US")} contributions in ${activity.year}`
+                  : `GitHub activity for ${selectedYear}`}
               </p>
-              <p className="text-foreground/50 mt-0.5 flex items-center gap-1.5 text-xs sm:text-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#39d353]" />
-                {isUnavailable
-                  ? "Live data temporarily unavailable"
-                  : "Synced from GitHub"}
+              <p
+                role="status"
+                className="text-foreground/50 mt-0.5 flex items-center gap-1.5 text-xs sm:text-sm"
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${failedYear !== null ? "bg-amber-500" : isLoading ? "bg-foreground/40" : "bg-[#39d353]"}`}
+                />
+                {isLoading
+                  ? `Loading ${pendingYear} activity…`
+                  : failedYear !== null
+                    ? "Live data temporarily unavailable"
+                    : "Synced from GitHub"}
               </p>
             </div>
           </div>
 
           <a
-            href={`https://github.com/${activity.username}`}
+            href={`https://github.com/${GITHUB_USERNAME}`}
             target="_blank"
             rel="noreferrer"
             className="focus-ring text-foreground/60 hover:text-foreground inline-flex w-fit items-center gap-1.5 text-sm font-medium transition-colors"
           >
-            @{activity.username}
+            @{GITHUB_USERNAME}
             <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
           </a>
         </div>
 
-        <div className="flex flex-col gap-5 p-4 sm:p-6 lg:flex-row lg:gap-8 lg:p-8">
+        <div
+          aria-busy={isLoading}
+          className="flex flex-col gap-5 p-4 sm:p-6 lg:flex-row lg:gap-8 lg:p-8"
+        >
           <div className="min-w-0 flex-1">
-            <div
-              className="overflow-x-auto pb-3 [scrollbar-color:color-mix(in_srgb,var(--foreground)_20%,transparent)_transparent] [scrollbar-width:thin]"
-              aria-label={`${activity.year} GitHub contribution calendar`}
-              role="grid"
-            >
-              <div className="w-max min-w-full">
-                <div
-                  className="ml-8 grid h-6 gap-1 sm:ml-10"
-                  style={{
-                    gridTemplateColumns: `repeat(${calendar.weeks.length}, 0.75rem)`,
-                  }}
+            {failedYear !== null && (
+              <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+                <p className="text-foreground/65">
+                  Could not load activity for {failedYear}.
+                  {activity
+                    ? ` Showing the last successful data for ${activity.year}.`
+                    : " Please try again."}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => selectYear(failedYear, true)}
+                  className="focus-ring border-foreground/15 hover:bg-foreground/5 rounded-lg border px-3 py-2 font-medium"
                 >
-                  {calendar.monthMarkers.map((month) => (
-                    <span
-                      key={month.label}
-                      className="text-foreground/55 text-xs"
-                      style={{
-                        gridColumn: `${month.week + 1} / span 4`,
-                        gridRow: 1,
-                      }}
-                    >
-                      {month.label}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex gap-2 sm:gap-3">
+                  Try again
+                </button>
+              </div>
+            )}
+            {!activity && isLoading && (
+              <p className="text-foreground/65 py-8 text-sm">
+                Loading contribution calendar…
+              </p>
+            )}
+            {activity && calendar && (
+              <div
+                className="overflow-x-auto pb-3 [scrollbar-color:color-mix(in_srgb,var(--foreground)_20%,transparent)_transparent] [scrollbar-width:thin]"
+                aria-label={`${activity.year} GitHub contribution calendar`}
+                role="grid"
+              >
+                <div className="w-max min-w-full">
                   <div
-                    className="text-foreground/50 grid w-6 shrink-0 grid-rows-7 gap-1 text-[11px] sm:w-7"
-                    aria-hidden="true"
-                  >
-                    <span />
-                    <span>Mon</span>
-                    <span />
-                    <span>Wed</span>
-                    <span />
-                    <span>Fri</span>
-                    <span />
-                  </div>
-
-                  <div
-                    className="grid grid-flow-col grid-rows-7 gap-1"
+                    className="ml-8 grid h-6 gap-1 sm:ml-10"
                     style={{
                       gridTemplateColumns: `repeat(${calendar.weeks.length}, 0.75rem)`,
                     }}
                   >
-                    {calendar.weeks.flatMap((week, weekIndex) =>
-                      week.map((day, dayIndex) =>
-                        day ? (
-                          <span
-                            key={day.date}
-                            aria-label={formatDayLabel(day)}
-                            className={`h-3 w-3 rounded-[3px] transition-transform duration-200 hover:scale-125 ${LEVEL_CLASSES[day.level] ?? LEVEL_CLASSES[0]}`}
-                            role="gridcell"
-                            title={formatDayLabel(day)}
-                          />
-                        ) : (
-                          <span
-                            key={`empty-${weekIndex}-${dayIndex}`}
-                            aria-hidden="true"
-                            className="h-3 w-3"
-                          />
+                    {calendar.monthMarkers.map((month) => (
+                      <span
+                        key={month.label}
+                        className="text-foreground/55 text-xs"
+                        style={{
+                          gridColumn: `${month.week + 1} / span 4`,
+                          gridRow: 1,
+                        }}
+                      >
+                        {month.label}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-2 sm:gap-3">
+                    <div
+                      className="text-foreground/50 grid w-6 shrink-0 grid-rows-7 gap-1 text-[11px] sm:w-7"
+                      aria-hidden="true"
+                    >
+                      <span />
+                      <span>Mon</span>
+                      <span />
+                      <span>Wed</span>
+                      <span />
+                      <span>Fri</span>
+                      <span />
+                    </div>
+
+                    <div
+                      className="grid grid-flow-col grid-rows-7 gap-1"
+                      style={{
+                        gridTemplateColumns: `repeat(${calendar.weeks.length}, 0.75rem)`,
+                      }}
+                    >
+                      {calendar.weeks.flatMap((week, weekIndex) =>
+                        week.map((day, dayIndex) =>
+                          day ? (
+                            <span
+                              key={day.date}
+                              aria-label={formatDayLabel(day)}
+                              className={`h-3 w-3 rounded-[3px] transition-transform duration-200 hover:scale-125 ${LEVEL_CLASSES[day.level] ?? LEVEL_CLASSES[0]}`}
+                              role="gridcell"
+                              title={formatDayLabel(day)}
+                            />
+                          ) : (
+                            <span
+                              key={`empty-${weekIndex}-${dayIndex}`}
+                              aria-hidden="true"
+                              className="h-3 w-3"
+                            />
+                          )
                         )
-                      )
-                    )}
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-foreground/50 mt-4 flex items-center justify-end gap-1.5 text-xs">
+                    <span>Less</span>
+                    {LEVEL_CLASSES.map((levelClass, index) => (
+                      <span
+                        key={levelClass}
+                        className={`h-3 w-3 rounded-[3px] ${levelClass}`}
+                        aria-label={`Contribution level ${index}`}
+                      />
+                    ))}
+                    <span>More</span>
                   </div>
                 </div>
-
-                <div className="text-foreground/50 mt-4 flex items-center justify-end gap-1.5 text-xs">
-                  <span>Less</span>
-                  {LEVEL_CLASSES.map((levelClass, index) => (
-                    <span
-                      key={levelClass}
-                      className={`h-3 w-3 rounded-[3px] ${levelClass}`}
-                      aria-label={`Contribution level ${index}`}
-                    />
-                  ))}
-                  <span>More</span>
-                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-1 lg:w-24 lg:shrink-0 lg:flex-col lg:overflow-visible lg:pb-0">
             {years.map((year) => {
-              const isActive = year === activity.year;
+              const isActive = year === selectedYear;
               return (
                 <button
                   key={year}

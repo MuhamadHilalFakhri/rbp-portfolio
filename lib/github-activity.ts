@@ -1,70 +1,79 @@
-export const GITHUB_USERNAME = "MuhamadHilalFakhri";
-
-export type GitHubContributionDay = {
-  count: number;
-  date: string;
-  level: number;
-};
-
-export type GitHubActivityData = {
-  days: GitHubContributionDay[];
-  fetchedAt: string;
-  total: number;
-  username: string;
-  year: number;
-};
+import {
+  GITHUB_USERNAME,
+  isGitHubActivityData,
+  type GitHubActivityData,
+  type GitHubContributionDay,
+} from "./github-activity-data";
+export type {
+  GitHubActivityData,
+  GitHubContributionDay,
+} from "./github-activity-data";
 
 const GITHUB_ACTIVITY_REVALIDATE_SECONDS = 300;
 
 function parseContributionCount(label: string): number {
-  const match = label.match(/([\d,]+)\s+contributions?/i);
-  return match ? Number.parseInt(match[1]!.replaceAll(",", ""), 10) : 0;
+  const text = label.replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#160;/g, " ");
+  if (/\bNo\s+contributions?\b/i.test(text)) return 0;
+  const match = text.match(
+    /(?:^|\s)(\d+|\d{1,3}(?:,\d{3})+)\s+contributions?\b/i
+  );
+  if (!match)
+    throw new Error("GitHub returned an unrecognized contribution count.");
+  return Number.parseInt(match[1]!.replaceAll(",", ""), 10);
 }
 
-function parseGitHubActivity(html: string, year: number): GitHubActivityData {
-  const heading = html.match(
-    /<h2[^>]*id="js-contribution-activity-description"[^>]*>([\s\S]*?)<\/h2>/i
+function attributes(tag: string): Map<string, string> {
+  return new Map(
+    [...tag.matchAll(/([\w-]+)\s*=\s*(["'])([\s\S]*?)\2/g)].map((match) => [
+      match[1]!.toLowerCase(),
+      match[3]!,
+    ])
   );
-  const headingText = heading?.[1]?.replace(/<[^>]+>/g, " ") ?? "";
+}
+
+export function parseGitHubActivity(
+  html: string,
+  year: number,
+  fetchedAt = new Date().toISOString()
+): GitHubActivityData {
+  const labels = new Map<string, string>();
+  for (const match of html.matchAll(
+    /<tool-tip\b([^>]*)>([\s\S]*?)<\/tool-tip>/gi
+  )) {
+    const target = attributes(match[1]!).get("for");
+    if (target) labels.set(target, match[2]!);
+  }
   const days: GitHubContributionDay[] = [];
-  const dayPattern =
-    /<td\b(?=[^>]*\bdata-date="([^"]+)")(?=[^>]*\bdata-level="([0-4])")[^>]*><\/td>\s*<tool-tip\b[^>]*>([\s\S]*?)<\/tool-tip>/gi;
-
-  for (const match of html.matchAll(dayPattern)) {
-    const date = match[1]!;
-    if (!date.startsWith(`${year}-`)) continue;
-
+  for (const match of html.matchAll(/<td\b([^>]*)>/gi)) {
+    const attrs = attributes(match[1]!);
+    const date = attrs.get("data-date");
+    if (!date?.startsWith(`${year}-`)) continue;
+    const label = labels.get(attrs.get("id") ?? "") ?? attrs.get("aria-label");
+    const level = attrs.get("data-level");
+    if (!label || !level || !/^[0-4]$/.test(level)) {
+      throw new Error("GitHub returned an incomplete contribution day.");
+    }
     days.push({
-      count: parseContributionCount(match[3]!.replace(/<[^>]+>/g, " ")),
       date,
-      level: Number.parseInt(match[2]!, 10),
+      count: parseContributionCount(label),
+      level: Number(level),
     });
   }
 
-  if (days.length === 0) {
-    throw new Error("GitHub returned an empty contribution calendar.");
-  }
-
   days.sort((first, second) => first.date.localeCompare(second.date));
-  const headingTotal = parseContributionCount(headingText);
-
-  return {
+  const activity = {
     days,
-    fetchedAt: new Date().toISOString(),
-    total: headingTotal || days.reduce((total, day) => total + day.count, 0),
+    fetchedAt,
+    total: days.reduce((total, day) => total + day.count, 0),
     username: GITHUB_USERNAME,
     year,
   };
-}
-
-export function createEmptyGitHubActivity(year: number): GitHubActivityData {
-  return {
-    days: [],
-    fetchedAt: new Date().toISOString(),
-    total: 0,
-    username: GITHUB_USERNAME,
-    year,
-  };
+  if (!isGitHubActivityData(activity, year)) {
+    throw new Error(
+      "GitHub returned an invalid or incomplete contribution calendar."
+    );
+  }
+  return activity;
 }
 
 export async function getGitHubActivity(
@@ -85,6 +94,7 @@ export async function getGitHubActivity(
       "User-Agent": "rbp-portfolio",
     },
     next: { revalidate: GITHUB_ACTIVITY_REVALIDATE_SECONDS },
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!response.ok) {
