@@ -181,6 +181,10 @@ function Band({
   const [previousDragPosition] = useState(() => cardPosition.clone());
   const [dragStartPosition] = useState(() => cardPosition.clone());
   const [attachment] = useState(() => new THREE.Vector3());
+  const [attachmentLocal] = useState(
+    () => new THREE.Vector3(0, ATTACHMENT_HEIGHT, -0.05)
+  );
+  const [attachmentOffset] = useState(() => new THREE.Vector3());
   const [constraintDirection] = useState(() => new THREE.Vector3());
   const [nextPosition] = useState(() => new THREE.Vector3());
   const [curvePointOne] = useState(() => new THREE.Vector3());
@@ -471,12 +475,11 @@ function Band({
 
       cardPosition.addScaledVector(cardVelocity, frameDelta);
 
-      attachment.copy(cardPosition);
-      attachment.set(
-        attachment.x,
-        attachment.y + ATTACHMENT_HEIGHT,
-        attachment.z
-      );
+      attachmentOffset
+        .copy(attachmentLocal)
+        .multiply(card.current.scale)
+        .applyQuaternion(card.current.quaternion);
+      attachment.copy(cardPosition).add(attachmentOffset);
       constraintDirection.copy(attachment).sub(anchor);
       const distance = constraintDirection.length();
 
@@ -487,12 +490,8 @@ function Band({
         // Calculate the constrained position (reuse nextPosition as temp)
         nextPosition
           .copy(anchor)
-          .addScaledVector(constraintDirection, ROPE_LENGTH);
-        nextPosition.set(
-          nextPosition.x,
-          nextPosition.y - ATTACHMENT_HEIGHT,
-          nextPosition.z
-        );
+          .addScaledVector(constraintDirection, ROPE_LENGTH)
+          .sub(attachmentOffset);
 
         // Smooth spring correction — speed scales with how far past the rope
         // Small excess → gentle pull, large excess → stronger pull, never instant
@@ -575,12 +574,8 @@ function Band({
     if (band.current) {
       band.current.visible = active;
       band.current.material.opacity = active ? entranceEase : 0;
-      attachment.copy(cardPosition);
-      attachment.set(
-        attachment.x,
-        attachment.y + ATTACHMENT_HEIGHT,
-        attachment.z
-      );
+      // Resolve the connector after this frame's rotation, scale and entrance motion.
+      card.current.localToWorld(attachment.copy(attachmentLocal));
       curvePointOne.copy(attachment).lerp(anchor, 0.33);
       curvePointTwo.copy(attachment).lerp(anchor, 0.66);
       const slack = Math.max(0, ROPE_LENGTH - attachment.distanceTo(anchor));
