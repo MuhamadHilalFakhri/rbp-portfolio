@@ -10,8 +10,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = createMetadata({
-  title: "About",
-  description: "About me, background, and how to get in touch.",
+  title: "Tentang Saya",
+  description:
+    "Profil, pendidikan, pengalaman, keahlian, dan latar belakang Muhamad Hilal Fakhri sebagai Web Developer.",
   path: "/about",
 });
 

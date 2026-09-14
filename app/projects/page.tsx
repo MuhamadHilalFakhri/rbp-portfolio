@@ -6,8 +6,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = createMetadata({
-  title: "Projects",
-  description: "Selected work and case studies.",
+  title: "Proyek Web & AI",
+  description:
+    "Kumpulan proyek web dan AI Muhamad Hilal Fakhri, termasuk HRIS, e-learning, automation trading, dan aplikasi katalog film.",
   path: "/projects",
 });
 

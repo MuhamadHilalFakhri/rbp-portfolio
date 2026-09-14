@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const siteConfig = {
   name: "Muhamad Hilal Fakhri",
   description:
-    "Portfolio of Muhamad Hilal Fakhri, a Web Developer & AI enthusiast focused on building structured, efficient, responsive, and user-centered applications.",
+    "Portofolio Muhamad Hilal Fakhri, Web Developer dan AI enthusiast yang membangun aplikasi web terstruktur, efisien, responsif, dan berorientasi pada pengguna.",
   url: "https://www.muhamadhilalf.my.id",
   creator: "Muhamad Hilal Fakhri",
   authors: [
@@ -14,7 +14,9 @@ export const siteConfig = {
   ],
   keywords: [
     "portfolio",
-    "personal site",
+    "portofolio web developer",
+    "web developer Indonesia",
+    "AI enthusiast",
     "Muhamad Hilal Fakhri",
     "Next.js",
     "React",
@@ -30,14 +32,23 @@ const socialImageAlt = `${siteConfig.name} portfolio homepage preview`;
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | Web Developer`,
+    default: `${siteConfig.name} | Web Developer & AI Enthusiast`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  applicationName: siteConfig.name,
   keywords: [...siteConfig.keywords],
   authors: [...siteConfig.authors],
   creator: siteConfig.creator,
   publisher: siteConfig.name,
+  category: "technology",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    telephone: false,
+  },
+  alternates: {
+    canonical: new URL("/", siteConfig.url).href,
+  },
   robots: {
     index: true,
     follow: true,
@@ -49,14 +60,11 @@ export const baseMetadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: new URL("/", siteConfig.url).href,
-  },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "id_ID",
     url: siteConfig.url,
-    title: `${siteConfig.name} | Web Developer`,
+    title: `${siteConfig.name} | Web Developer & AI Enthusiast`,
     description: siteConfig.description,
     siteName: siteConfig.name,
     images: [
@@ -71,7 +79,7 @@ export const baseMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Web Developer`,
+    title: `${siteConfig.name} | Web Developer & AI Enthusiast`,
     description: siteConfig.description,
     images: [
       {
@@ -91,6 +99,9 @@ export const baseMetadata: Metadata = {
     apple: { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
   },
   manifest: "/site.webmanifest",
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export function createMetadata({
@@ -114,7 +125,7 @@ export function createMetadata({
     },
     openGraph: {
       type: "website",
-      locale: "en_US",
+      locale: "id_ID",
       siteName: siteConfig.name,
       title: title ?? siteConfig.name,
       description: description ?? siteConfig.description,

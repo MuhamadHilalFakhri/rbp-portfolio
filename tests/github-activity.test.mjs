@@ -154,3 +154,16 @@ test("API rejects malformed year and avoids caching upstream failures", async ()
   assert.equal(response.headers.get("Cache-Control"), "no-store");
   assert.doesNotMatch(JSON.stringify(await response.json()), /total|days/);
 });
+
+const { getStructuredData } = loadModule("lib/structured-data.ts");
+
+test("structured data describes the portfolio owner and canonical website", () => {
+  const data = getStructuredData();
+  assert.equal(data["@context"], "https://schema.org");
+  assert.deepEqual(
+    data["@graph"].map((entry) => entry["@type"]),
+    ["WebSite", "Person", "ProfilePage"]
+  );
+  assert.equal(data["@graph"][1].name, "Muhamad Hilal Fakhri");
+  assert.equal(data["@graph"][2].mainEntity["@id"], "https://www.muhamadhilalf.my.id/#person");
+});
