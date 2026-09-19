@@ -20,7 +20,7 @@ export default function AboutPage(): ReactNode {
   return (
     <main id="main-content" className="flex flex-1 flex-col">
       <section
-        className="mx-auto w-full max-w-312 pt-32 sm:pt-48 lg:pt-56"
+        className="hidden mx-auto w-full max-w-312 pt-32 sm:pt-48 lg:pt-56"
         data-scroll-reveal
       >
         <PolaroidStrip />
