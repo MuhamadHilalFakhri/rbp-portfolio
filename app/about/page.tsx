@@ -27,7 +27,7 @@ export default function AboutPage(): ReactNode {
       </section>
 
       <section
-        className="mx-auto w-full max-w-160 px-4 pt-14 pb-12 min-[360px]:px-6 sm:px-10 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24"
+        className="mx-auto w-full max-w-160 px-4 pt-20 pb-12 min-[360px]:px-6 sm:px-10 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24"
         data-scroll-reveal
       >
         <Bio heading="h1" />
