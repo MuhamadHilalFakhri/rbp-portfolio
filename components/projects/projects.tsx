@@ -68,6 +68,134 @@ export type Project = {
 
 const PROJECTS: Project[] = [
   {
+    id: "streamfilm",
+    icon: Clapperboard,
+    iconLabel: "StreamFilm",
+    title: "StreamFilm - Katalog Film & Serial",
+    description:
+      "Platform katalog film dan serial berbasis TMDB untuk menemukan tontonan, melihat detail lengkap, menonton trailer, dan menyimpan watchlist secara lokal.",
+    meta: "Date Project : 2026",
+    techStack: [
+      { label: "Next.js", slug: "nextdotjs", invertInDark: true },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS", slug: "tailwindcss" },
+    ],
+    overview:
+      "StreamFilm adalah aplikasi katalog film dan serial berbasis Next.js App Router yang menggunakan TMDB API untuk menyediakan metadata, poster, rating, trailer, cast, season, dan episode. Pengguna dapat menjelajahi film serta serial populer, mencari judul, membuka halaman detail, dan menyimpan tontonan favorit ke watchlist yang tersimpan langsung di perangkat.",
+    highlights: [
+      "Katalog film dan serial dengan data populer, trending, rating tertinggi, dan rilisan terbaru dari TMDB",
+      "Pencarian dan filter berdasarkan genre, tahun rilis, popularitas, atau rating",
+      "Halaman detail dengan sinopsis, rating, trailer, cast, season, dan episode",
+      "Watchlist lokal yang tersimpan di perangkat tanpa memerlukan akun",
+      "Hero section dan media row responsif untuk pengalaman browsing yang sinematik",
+      "Tech Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, TMDB API",
+    ],
+    images: [
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233604-converted.webp",
+        alt: "Landing page StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233611-converted.webp",
+        alt: "Katalog film dan serial StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233621-converted.webp",
+        alt: "Daftar film populer StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233630-converted.webp",
+        alt: "Daftar serial populer StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233638-converted.webp",
+        alt: "Pencarian film dan serial StreamFilm",
+      },
+      {
+        src: "/project/SFWebp/Screenshot 2026-09-05 233705-converted.webp",
+        alt: "Detail film StreamFilm",
+      },
+    ],
+    imageRatio: 16 / 9,
+  },
+  {
+    id: "automation-trading",
+    icon: Bot,
+    iconLabel: "Trading Bot",
+    title: "Automation Trading Suite - AI Bot MT5 & Web Journal",
+    description:
+      "Ekosistem trading otomatis terintegrasi yang menggabungkan AI Bot untuk MetaTrader 5 (analisis strategi SMC/ICT dengan LLM, risk guard, dan eksekusi otomatis) dengan Web Trading Journal berbasis Next.js untuk monitoring performa, kalender PnL, dan analitik secara real-time.",
+    meta: "Date Project : 2026",
+    techStack: [
+      { label: "Python", slug: "python" },
+      { label: "Next.js", slug: "nextdotjs", invertInDark: true },
+      { label: "React", slug: "react" },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS", slug: "tailwindcss" },
+    ],
+    overview:
+      "Automation Trading Suite adalah sistem trading otomatis pribadi yang mengintegrasikan bot trading AI berbasis Python untuk MetaTrader 5 dengan aplikasi web jurnal trading modern berbasis Next.js. Bot AI memindai pergerakan market di berbagai timeframe, menganalisis struktur market menggunakan model AI (LLM OpenAI-compatible) dengan kerangka strategi SMC (Smart Money Concepts), ICT, dan Supply & Demand, memvalidasi parameter risiko melalui Risk Guard (RR minimum, spread filter, daily-loss halt), serta mengeksekusi order secara presisi di MT5 dengan trailing stop dan partial TP. Semua aktivitas trading, posisi terbuka, sinyal AI, dan performa PnL disinkronkan secara otomatis dan dapat dipantau langsung melalui web dashboard jurnal serta remote control melalui Telegram Bot.",
+    highlights: [
+      "Bot Trading AI MetaTrader 5 dengan scan paralel multi-pair & multi-timeframe (M5, M15, H1, H4)",
+      "Integrasi AI LLM dengan strategi SMC (Order Block, FVG, Liquidity Sweep), ICT, dan Supply & Demand",
+      "Risk Guard otomatis: validasi Risk:Reward (RR), spread filter, daily-loss limit, dan dynamic lot sizing",
+      "Manajemen posisi otomatis: Break-Even (BE), Trailing Stop dinamis, dan Partial Take Profit (TP)",
+      "Web Trading Journal modern dengan Next.js 16, React 19, Tailwind CSS, SQLite, dan Drizzle ORM",
+      "Interactive Market Charts bertenaga TradingView & Lightweight Charts untuk visualisasi level entry/exit",
+      "Analitik performa komprehensif: Kalender PnL harian, Win Rate, Profit Factor, dan breakdown per pair & strategi",
+      "Live stream terminal aktivitas bot (scan, keputusan AI, eksekusi order, risk block) secara real-time",
+      "Remote control & notifikasi real-time via Telegram Bot untuk pantau PnL dan ubah pair dari HP",
+      "Desktop GUI control panel mandiri berbasis Python & PyInstaller untuk konfigurasi parameter tanpa coding",
+    ],
+    images: [
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230752-converted.webp",
+        alt: "Landing Page Automation Trading Suite",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230811-converted.webp",
+        alt: "Dashboard Performa Trading & Ringkasan PnL",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230821-converted.webp",
+        alt: "Market Chart TradingView & Analisis Pair",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230841-converted.webp",
+        alt: "Chart Eksekusi Entry MT5 Real-time",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230847-converted.webp",
+        alt: "Terminal Live Stream Aktivitas Bot Trading",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230855-converted.webp",
+        alt: "Riwayat Transaksi & Posisi Terbuka",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 230931-converted.webp",
+        alt: "Kalender Rekap PnL Harian",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 231014-converted.webp",
+        alt: "Analitik Performa Win Rate & Profit Factor",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 231023-converted.webp",
+        alt: "Log Sinyal AI & Jejak Keputusan",
+      },
+      {
+        src: "/project/ATWebp/Screenshot 2026-09-05 231031-converted.webp",
+        alt: "Pengaturan & Status Sinkronisasi MT5",
+      },
+      {
+        src: "/project/ATWebp/X.png",
+        alt: "Control Panel Desktop Terminal MT5",
+      },
+    ],
+    imageRatio: 16 / 9,
+  },
+  {
     id: "skripsi",
     icon: LineChart,
     iconLabel: "Skripsi",
@@ -79,7 +207,6 @@ const PROJECTS: Project[] = [
       { label: "Go", slug: "go" },
       { label: "Next.js", slug: "nextdotjs", invertInDark: true },
       { label: "TypeScript", slug: "typescript" },
-      { label: "Vercel", slug: "vercel", invertInDark: true },
     ],
     overview:
       "Proyek ini merupakan pengembangan lanjutan dari proyek Internship dengan perubahan signifikan pada tech stack dan penambahan fitur berbasis AI. Dibangun dengan Go (Golang) + Gin Framework untuk backend dan Next.js + TypeScript untuk frontend, sistem ini mengelola seluruh siklus kepegawaian dari rekrutmen hingga offboarding. Fitur unggulan adalah AI CV Screening otomatis menggunakan Groq API yang dapat melakukan scoring dan auto-shortlist pelamar berdasarkan kriteria yang ditentukan. Sistem juga dilengkapi dengan Audit Log untuk tracking seluruh aktivitas, template surat dengan preview PDF, pipeline rekrutmen visual (Applied → Screening → Interview → Offering → Hired/Rejected), serta autentikasi ganda melalui email/password dan Google OAuth 2.0. Bug-bug dari proyek sebelumnya telah diperbaiki dan performa ditingkatkan dengan Redis caching.",
@@ -375,134 +502,6 @@ const PROJECTS: Project[] = [
       {
         src: "/project/InternshipWebp/Screenshot 2026-08-24 195454-converted.webp",
         alt: "Landing Page Lowongan Kerja",
-      },
-    ],
-    imageRatio: 16 / 9,
-  },
-  {
-    id: "automation-trading",
-    icon: Bot,
-    iconLabel: "Trading Bot",
-    title: "Automation Trading Suite - AI Bot MT5 & Web Journal",
-    description:
-      "Ekosistem trading otomatis terintegrasi yang menggabungkan AI Bot untuk MetaTrader 5 (analisis strategi SMC/ICT dengan LLM, risk guard, dan eksekusi otomatis) dengan Web Trading Journal berbasis Next.js untuk monitoring performa, kalender PnL, dan analitik secara real-time.",
-    meta: "Date Project : 2026",
-    techStack: [
-      { label: "Python", slug: "python" },
-      { label: "Next.js", slug: "nextdotjs", invertInDark: true },
-      { label: "React", slug: "react" },
-      { label: "TypeScript", slug: "typescript" },
-      { label: "Tailwind CSS", slug: "tailwindcss" },
-    ],
-    overview:
-      "Automation Trading Suite adalah sistem trading otomatis pribadi yang mengintegrasikan bot trading AI berbasis Python untuk MetaTrader 5 dengan aplikasi web jurnal trading modern berbasis Next.js. Bot AI memindai pergerakan market di berbagai timeframe, menganalisis struktur market menggunakan model AI (LLM OpenAI-compatible) dengan kerangka strategi SMC (Smart Money Concepts), ICT, dan Supply & Demand, memvalidasi parameter risiko melalui Risk Guard (RR minimum, spread filter, daily-loss halt), serta mengeksekusi order secara presisi di MT5 dengan trailing stop dan partial TP. Semua aktivitas trading, posisi terbuka, sinyal AI, dan performa PnL disinkronkan secara otomatis dan dapat dipantau langsung melalui web dashboard jurnal serta remote control melalui Telegram Bot.",
-    highlights: [
-      "Bot Trading AI MetaTrader 5 dengan scan paralel multi-pair & multi-timeframe (M5, M15, H1, H4)",
-      "Integrasi AI LLM dengan strategi SMC (Order Block, FVG, Liquidity Sweep), ICT, dan Supply & Demand",
-      "Risk Guard otomatis: validasi Risk:Reward (RR), spread filter, daily-loss limit, dan dynamic lot sizing",
-      "Manajemen posisi otomatis: Break-Even (BE), Trailing Stop dinamis, dan Partial Take Profit (TP)",
-      "Web Trading Journal modern dengan Next.js 16, React 19, Tailwind CSS, SQLite, dan Drizzle ORM",
-      "Interactive Market Charts bertenaga TradingView & Lightweight Charts untuk visualisasi level entry/exit",
-      "Analitik performa komprehensif: Kalender PnL harian, Win Rate, Profit Factor, dan breakdown per pair & strategi",
-      "Live stream terminal aktivitas bot (scan, keputusan AI, eksekusi order, risk block) secara real-time",
-      "Remote control & notifikasi real-time via Telegram Bot untuk pantau PnL dan ubah pair dari HP",
-      "Desktop GUI control panel mandiri berbasis Python & PyInstaller untuk konfigurasi parameter tanpa coding",
-    ],
-    images: [
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230752-converted.webp",
-        alt: "Landing Page Automation Trading Suite",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230811-converted.webp",
-        alt: "Dashboard Performa Trading & Ringkasan PnL",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230821-converted.webp",
-        alt: "Market Chart TradingView & Analisis Pair",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230841-converted.webp",
-        alt: "Chart Eksekusi Entry MT5 Real-time",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230847-converted.webp",
-        alt: "Terminal Live Stream Aktivitas Bot Trading",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230855-converted.webp",
-        alt: "Riwayat Transaksi & Posisi Terbuka",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230931-converted.webp",
-        alt: "Kalender Rekap PnL Harian",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 231014-converted.webp",
-        alt: "Analitik Performa Win Rate & Profit Factor",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 231023-converted.webp",
-        alt: "Log Sinyal AI & Jejak Keputusan",
-      },
-      {
-        src: "/project/ATWebp/Screenshot 2026-09-05 231031-converted.webp",
-        alt: "Pengaturan & Status Sinkronisasi MT5",
-      },
-      {
-        src: "/project/ATWebp/X.png",
-        alt: "Control Panel Desktop Terminal MT5",
-      },
-    ],
-    imageRatio: 16 / 9,
-  },
-  {
-    id: "streamfilm",
-    icon: Clapperboard,
-    iconLabel: "StreamFilm",
-    title: "StreamFilm - Katalog Film & Serial",
-    description:
-      "Platform katalog film dan serial berbasis TMDB untuk menemukan tontonan, melihat detail lengkap, menonton trailer, dan menyimpan watchlist secara lokal.",
-    meta: "Date Project : 2026",
-    techStack: [
-      { label: "Next.js", slug: "nextdotjs", invertInDark: true },
-      { label: "TypeScript", slug: "typescript" },
-      { label: "Tailwind CSS", slug: "tailwindcss" },
-    ],
-    overview:
-      "StreamFilm adalah aplikasi katalog film dan serial berbasis Next.js App Router yang menggunakan TMDB API untuk menyediakan metadata, poster, rating, trailer, cast, season, dan episode. Pengguna dapat menjelajahi film serta serial populer, mencari judul, membuka halaman detail, dan menyimpan tontonan favorit ke watchlist yang tersimpan langsung di perangkat.",
-    highlights: [
-      "Katalog film dan serial dengan data populer, trending, rating tertinggi, dan rilisan terbaru dari TMDB",
-      "Pencarian dan filter berdasarkan genre, tahun rilis, popularitas, atau rating",
-      "Halaman detail dengan sinopsis, rating, trailer, cast, season, dan episode",
-      "Watchlist lokal yang tersimpan di perangkat tanpa memerlukan akun",
-      "Hero section dan media row responsif untuk pengalaman browsing yang sinematik",
-      "Tech Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, TMDB API",
-    ],
-    images: [
-      {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233604-converted.webp",
-        alt: "Landing page StreamFilm",
-      },
-      {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233611-converted.webp",
-        alt: "Katalog film dan serial StreamFilm",
-      },
-      {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233621-converted.webp",
-        alt: "Daftar film populer StreamFilm",
-      },
-      {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233630-converted.webp",
-        alt: "Daftar serial populer StreamFilm",
-      },
-      {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233638-converted.webp",
-        alt: "Pencarian film dan serial StreamFilm",
-      },
-      {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233705-converted.webp",
-        alt: "Detail film StreamFilm",
       },
     ],
     imageRatio: 16 / 9,
