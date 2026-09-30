@@ -1,0 +1,12 @@
+export const CARD_MODEL_URL = "/lanyard/card-optimized.glb";
+export const CARD_TEXTURE_URL = "/hilal-navy.webp";
+export const CARD_IMAGE_ASPECT = 2 / 3;
+export const CARD_MODEL_ASPECT = 0.7164179;
+export const CARD_WIDTH_SCALE = CARD_IMAGE_ASPECT / CARD_MODEL_ASPECT;
+export const CARD_TEXTURE_VERTICAL_OFFSET = -0.015;
+export const ATTACHMENT_HEIGHT = 1.72;
+export const ROPE_LENGTH = 4.45;
+export const CARD_RESTING_Y = 0.15;
+export const CARD_RESTING_X_OFFSET = 0.65;
+export const MOBILE_VIEWPORT_EDGE_MARGIN = 0.18;
+export const CARD_ENTRANCE_DURATION = 0.75;
