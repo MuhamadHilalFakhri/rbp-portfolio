@@ -1,4 +1,4 @@
-import { GraduationCap, School } from "lucide-react";
+import { GraduationCap, School } from "meya-icons/react/outline";
 import type { ReactNode } from "react";
 
 type Entry = {

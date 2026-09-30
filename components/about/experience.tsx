@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  Award,
-  BriefcaseBusiness,
-  ChevronDown,
-  FileText,
-  UsersRound,
-} from "lucide-react";
+  ArrowDown,
+  DocumentFile,
+  EducationCertificate,
+  UserRole,
+  Users,
+} from "meya-icons/react/outline";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState, type ReactNode } from "react";
 
@@ -270,7 +270,7 @@ function ExperienceEntry({
             <span className="text-foreground/40 hidden text-[12px] tracking-tight opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block">
               Klik untuk melihat sertifikat
             </span>
-            <FileText
+            <DocumentFile
               className="text-foreground/50 h-4 w-4 shrink-0"
               aria-hidden="true"
             />
@@ -300,7 +300,7 @@ function ExperienceEntry({
               }
               className="inline-flex shrink-0"
             >
-              <ChevronDown
+              <ArrowDown
                 className="text-foreground/50 h-4 w-4"
                 aria-hidden="true"
               />
@@ -380,10 +380,10 @@ function EntryCopy({ entry }: { entry: Entry }): ReactNode {
 function CompanyLogo({ entry }: { entry: Entry }): ReactNode {
   const Icon =
     entry.icon === "briefcase"
-      ? BriefcaseBusiness
+      ? UserRole
       : entry.icon === "organization"
-        ? UsersRound
-        : Award;
+        ? Users
+        : EducationCertificate;
   return (
     <span
       className="border-foreground/15 inline-flex h-10 w-10 shrink-0 items-center justify-center border sm:h-12 sm:w-12"

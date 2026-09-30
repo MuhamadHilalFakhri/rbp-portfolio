@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 const SKILLS = [
   "Frontend Development",
   "Backend Development",
-  "PHP & Laravel",
   "REST API Development",
   "SQL & Database Management",
   "System Analysis & Design",
