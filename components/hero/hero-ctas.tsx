@@ -12,7 +12,7 @@ export function HeroCtas(): ReactNode {
 
       <div>
         <a
-          href="/CV%20-%20Muhamad%20Hilal%20Fakhri.pdf"
+          href="/Muhamad%20Hilal%20Fakhri%20-%20Resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
           className="focus-ring group border-foreground/5 bg-background text-foreground hover:bg-foreground/4 inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-3 text-sm font-medium shadow-2xl transition-colors sm:py-2.5"
