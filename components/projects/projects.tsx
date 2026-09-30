@@ -661,7 +661,15 @@ export function Projects({
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startScrollLeft: number;
+    active: boolean;
+  } | null>(null);
 
   const updateArrows = useCallback(() => {
     const track = trackRef.current;
@@ -693,6 +701,73 @@ export function Projects({
       behavior: "smooth",
     });
   };
+
+  const handleTrackPointerDown = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      if (
+        event.target instanceof Element &&
+        event.target.closest("a, button")
+      ) {
+        return;
+      }
+      event.currentTarget.style.scrollBehavior = "auto";
+      dragRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        startScrollLeft: event.currentTarget.scrollLeft,
+        active: false,
+      };
+    },
+    []
+  );
+
+  const handleTrackPointerMove = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const drag = dragRef.current;
+      if (!drag || drag.pointerId !== event.pointerId) return;
+
+      const deltaX = event.clientX - drag.startX;
+      const deltaY = event.clientY - drag.startY;
+      if (!drag.active) {
+        if (Math.abs(deltaY) > 8 && Math.abs(deltaY) > Math.abs(deltaX)) {
+          dragRef.current = null;
+          event.currentTarget.style.scrollBehavior = "";
+          return;
+        }
+        if (Math.abs(deltaX) < 8) return;
+        drag.active = true;
+        event.currentTarget.setPointerCapture(event.pointerId);
+        setIsDragging(true);
+      }
+
+      event.preventDefault();
+      event.currentTarget.scrollLeft = drag.startScrollLeft - deltaX;
+    },
+    []
+  );
+
+  const handleTrackPointerEnd = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const drag = dragRef.current;
+      if (!drag || drag.pointerId !== event.pointerId) return;
+      dragRef.current = null;
+      event.currentTarget.style.scrollBehavior = "";
+      if (drag.active) setIsDragging(false);
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    },
+    []
+  );
+
+  const handleTrackPointerLeave = useCallback(() => {
+    if (dragRef.current && !dragRef.current.active) {
+      dragRef.current = null;
+      if (trackRef.current) trackRef.current.style.scrollBehavior = "";
+    }
+  }, []);
 
   return (
     <section
@@ -768,7 +843,14 @@ export function Projects({
           <div
             ref={trackRef}
             aria-label="Browse projects"
-            className="-mx-4 flex touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 min-[360px]:-mx-6 min-[360px]:px-6 sm:-mx-10 sm:gap-6 sm:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            onPointerDown={handleTrackPointerDown}
+            onPointerMove={handleTrackPointerMove}
+            onPointerUp={handleTrackPointerEnd}
+            onPointerCancel={handleTrackPointerEnd}
+            onLostPointerCapture={handleTrackPointerEnd}
+            onPointerLeave={handleTrackPointerLeave}
+            onDragStart={(event) => event.preventDefault()}
+            className={`-mx-4 flex touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 min-[360px]:-mx-6 min-[360px]:px-6 sm:-mx-10 sm:gap-6 sm:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing select-none" : "sm:cursor-grab"}`}
           >
             {items.map((project) => (
               <div
