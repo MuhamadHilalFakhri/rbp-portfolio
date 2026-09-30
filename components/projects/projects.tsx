@@ -111,7 +111,7 @@ const PROJECTS: Project[] = [
         alt: "Preview landing page Rencana.",
       },
     },
-    imageRatio: 1887 / 907,
+    imageRatio: 16 / 9,
   },
   {
     id: "sawala",
@@ -184,7 +184,7 @@ const PROJECTS: Project[] = [
         alt: "Landing page Sawala",
       },
     },
-    imageRatio: 16 / 10,
+    imageRatio: 16 / 9,
   },
   {
     id: "streamfilm",
