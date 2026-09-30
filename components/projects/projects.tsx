@@ -658,19 +658,10 @@ export function Projects({
   viewMoreVisible = false,
 }: ProjectsProps): ReactNode {
   const items = PROJECTS;
-  const mobileTrackRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
-  const [mobileCanPrev, setMobileCanPrev] = useState(false);
-  const [mobileCanNext, setMobileCanNext] = useState(true);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
-
-  const CHUNK_SIZE = 6;
-  const pages: Project[][] = [];
-  for (let i = 0; i < items.length; i += CHUNK_SIZE) {
-    pages.push(items.slice(i, i + CHUNK_SIZE));
-  }
 
   const updateArrows = useCallback(() => {
     const track = trackRef.current;
@@ -679,15 +670,7 @@ export function Projects({
     setCanNext(track.scrollLeft < track.scrollWidth - track.clientWidth - 8);
   }, []);
 
-  const updateMobileArrows = useCallback(() => {
-    const track = mobileTrackRef.current;
-    if (!track) return;
-    setMobileCanPrev(track.scrollLeft > 8);
-    setMobileCanNext(track.scrollLeft < track.scrollWidth - track.clientWidth - 8);
-  }, []);
-
   useEffect(() => {
-    if (items.length <= 6) return;
     updateArrows();
     const track = trackRef.current;
     if (!track) return;
@@ -699,23 +682,12 @@ export function Projects({
     };
   }, [updateArrows, items.length]);
 
-  useEffect(() => {
-    updateMobileArrows();
-    const track = mobileTrackRef.current;
+  const scrollProjects = (direction: 1 | -1): void => {
+    const track = trackRef.current;
     if (!track) return;
-    track.addEventListener("scroll", updateMobileArrows, { passive: true });
-    window.addEventListener("resize", updateMobileArrows);
-    return () => {
-      track.removeEventListener("scroll", updateMobileArrows);
-      window.removeEventListener("resize", updateMobileArrows);
-    };
-  }, [updateMobileArrows, items.length]);
-
-  const scrollToPage = (direction: 1 | -1): void => {
-    const track = trackRef.current ?? mobileTrackRef.current;
-    if (!track) return;
-    const page = track.querySelector<HTMLElement>("[data-page]");
-    const distance = page ? page.offsetWidth + 24 : track.clientWidth;
+    const card = track.querySelector<HTMLElement>("[data-card]");
+    const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0;
+    const distance = card ? card.offsetWidth + gap : track.clientWidth;
     track.scrollBy({
       left: direction * distance,
       behavior: "smooth",
@@ -749,11 +721,11 @@ export function Projects({
             <span className="text-foreground/50 text-sm font-medium tracking-tight">
               {items.length} projects
             </span>
-            {items.length > 6 ? (
+            {items.length > 1 ? (
               <div className="hidden gap-2 sm:flex">
                 <button
                   type="button"
-                  onClick={() => scrollToPage(-1)}
+                  onClick={() => scrollProjects(-1)}
                   disabled={!canPrev}
                   aria-label="Previous projects"
                   className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:h-9 sm:w-9"
@@ -762,7 +734,7 @@ export function Projects({
                 </button>
                 <button
                   type="button"
-                  onClick={() => scrollToPage(1)}
+                  onClick={() => scrollProjects(1)}
                   disabled={!canNext}
                   aria-label="Next projects"
                   className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:h-9 sm:w-9"
@@ -774,8 +746,8 @@ export function Projects({
             <div className="flex gap-2 sm:hidden">
               <button
                 type="button"
-                onClick={() => scrollToPage(-1)}
-                disabled={!mobileCanPrev}
+                onClick={() => scrollProjects(-1)}
+                disabled={!canPrev}
                 aria-label="Previous project"
                 className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30"
               >
@@ -783,8 +755,8 @@ export function Projects({
               </button>
               <button
                 type="button"
-                onClick={() => scrollToPage(1)}
-                disabled={!mobileCanNext}
+                onClick={() => scrollProjects(1)}
+                disabled={!canNext}
                 aria-label="Next project"
                 className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30"
               >
@@ -794,16 +766,16 @@ export function Projects({
           </div>
 
           <div
-            ref={mobileTrackRef}
-            aria-label="Swipe through projects"
-            className="-mx-4 grid auto-cols-[100%] grid-flow-col items-stretch touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 sm:hidden min-[360px]:-mx-6 min-[360px]:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            ref={trackRef}
+            aria-label="Browse projects"
+            className="-mx-4 flex touch-auto snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 min-[360px]:-mx-6 min-[360px]:px-6 sm:-mx-10 sm:gap-6 sm:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {items.map((project) => (
               <div
                 key={project.id}
                 data-card
                 data-scroll-reveal-item
-                className="flex min-w-0 snap-start"
+                className="flex w-full min-w-0 shrink-0 snap-start sm:w-[calc(50%_-_0.75rem)] lg:w-[calc(33.333333%_-_1rem)]"
               >
                 <ProjectCard
                   project={project}
@@ -811,53 +783,6 @@ export function Projects({
                 />
               </div>
             ))}
-          </div>
-
-          <div className="hidden sm:block">
-            {items.length <= 6 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((project) => (
-                  <div
-                    key={project.id}
-                    data-card
-                    data-scroll-reveal-item
-                    className="h-full"
-                  >
-                    <ProjectCard
-                      project={project}
-                      onSelect={() => setActiveProject(project)}
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div
-                ref={trackRef}
-                className="-mx-4 flex touch-auto snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:px-6 sm:-mx-10 sm:px-10 [&::-webkit-scrollbar]:hidden"
-              >
-                {pages.map((page, pageIndex) => (
-                  <div
-                    key={pageIndex}
-                    data-page
-                    className="grid w-full shrink-0 snap-start grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-                  >
-                    {page.map((project) => (
-                      <div
-                        key={project.id}
-                        data-card
-                        data-scroll-reveal-item
-                        className="h-full"
-                      >
-                        <ProjectCard
-                          project={project}
-                          onSelect={() => setActiveProject(project)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
