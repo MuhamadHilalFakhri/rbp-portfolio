@@ -1,6 +1,11 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Maximize,
+  X,
+} from "meya-icons/react/outline";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -36,7 +41,10 @@ export function ProjectModal({
   const [stageNode, setStageNode] = useState<HTMLDivElement | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const isFullscreenRef = useRef(false);
-  const total = project?.images.length ?? 0;
+  const imageOffset = project?.video ? 1 : 0;
+  const imageSlide = slide - imageOffset;
+  const isVideoSlide = Boolean(project?.video && slide === 0);
+  const total = (project?.images.length ?? 0) + imageOffset;
 
   useEffect(() => {
     isFullscreenRef.current = isFullscreen;
@@ -57,7 +65,7 @@ export function ProjectModal({
     onClose();
   }, [onClose]);
 
-  const ratio = ratios[slide] ?? FALLBACK_RATIO;
+  const ratio = ratios[slide] ?? (isVideoSlide ? 16 / 9 : FALLBACK_RATIO);
   const stageHeight =
     stageWidth > 0
       ? Math.min(
@@ -97,6 +105,24 @@ export function ProjectModal({
     setSlide((current) => (current + 1) % total);
   }, [total]);
 
+  const goToPrevImage = useCallback(() => {
+    const imageCount = project?.images.length ?? 0;
+    if (imageCount < 1) return;
+    setSlide(
+      (current) =>
+        imageOffset + ((current - imageOffset - 1 + imageCount) % imageCount)
+    );
+  }, [imageOffset, project?.images.length]);
+
+  const goToNextImage = useCallback(() => {
+    const imageCount = project?.images.length ?? 0;
+    if (imageCount < 1) return;
+    setSlide(
+      (current) =>
+        imageOffset + ((current - imageOffset + 1) % imageCount)
+    );
+  }, [imageOffset, project?.images.length]);
+
   useEffect(() => {
     if (!project) return;
     pauseSmoothScroll();
@@ -106,12 +132,24 @@ export function ProjectModal({
   useEffect(() => {
     if (!project || total < 2) return;
     const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === "ArrowLeft") goToPrev();
-      if (event.key === "ArrowRight") goToNext();
+      if (event.key === "ArrowLeft") {
+        isFullscreen ? goToPrevImage() : goToPrev();
+      }
+      if (event.key === "ArrowRight") {
+        isFullscreen ? goToNextImage() : goToNext();
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [project, total, goToPrev, goToNext]);
+  }, [
+    project,
+    total,
+    isFullscreen,
+    goToPrev,
+    goToNext,
+    goToPrevImage,
+    goToNextImage,
+  ]);
 
   return (
     <Dialog
@@ -148,37 +186,53 @@ export function ProjectModal({
               >
                 <div
                   ref={setStageNode}
-                  className="group/stage bg-foreground/5 relative max-h-[30dvh] min-h-[9.5rem] w-full shrink-0 cursor-zoom-in overflow-hidden transition-[height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-h-[34dvh]"
+                  className={`group/stage bg-foreground/5 relative max-h-[30dvh] min-h-[9.5rem] w-full shrink-0 ${isVideoSlide ? "cursor-default" : "cursor-zoom-in"} overflow-hidden transition-[height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-h-[34dvh]`}
                   style={stageHeight ? { height: stageHeight } : undefined}
                 >
-                  <motion.div
-                    className="absolute inset-0 flex"
-                    animate={{ x: `-${slide * 100}%` }}
-                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    {project.images.map((image, index) => (
-                      <div
-                        key={`${image.src}-${index}`}
-                        className="relative h-full w-full shrink-0"
-                      >
-                        <Image
-                          src={image.src}
-                          alt={image.alt}
-                          fill
-                          sizes="(min-width: 640px) 576px, 100vw"
-                          onLoad={(event) => handleImageLoad(index, event)}
-                          className="object-contain"
-                        />
-                      </div>
-                    ))}
-                  </motion.div>
+                  {isVideoSlide && project.video ? (
+                    <video
+                      controls
+                      playsInline
+                      preload="metadata"
+                      poster={project.video.poster.src}
+                      aria-label={`Video ${project.title}`}
+                      className="absolute inset-0 h-full w-full bg-black object-contain"
+                    >
+                      <source src={project.video.src} type="video/mp4" />
+                      Browser Anda tidak mendukung pemutaran video.
+                    </video>
+                  ) : (
+                    <motion.div
+                      className="absolute inset-0 flex"
+                      animate={{ x: `-${imageSlide * 100}%` }}
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      {project.images.map((image, index) => (
+                        <div
+                          key={`${image.src}-${index}`}
+                          className="relative h-full w-full shrink-0"
+                        >
+                          <Image
+                            src={image.src}
+                            alt={image.alt}
+                            fill
+                            sizes="(min-width: 640px) 576px, 100vw"
+                            onLoad={(event) =>
+                              handleImageLoad(index + imageOffset, event)
+                            }
+                            className="object-contain"
+                          />
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
 
                   {total > 1 ? (
                     <>
                       <button
                         type="button"
                         onClick={goToPrev}
-                        aria-label="Previous image"
+                        aria-label="Previous media"
                         className="focus-ring absolute top-1/2 left-2 z-10 inline-flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/65 sm:left-3 sm:h-10 sm:w-10"
                       >
                         <ChevronLeft
@@ -189,7 +243,7 @@ export function ProjectModal({
                       <button
                         type="button"
                         onClick={goToNext}
-                        aria-label="Next image"
+                        aria-label="Next media"
                         className="focus-ring absolute top-1/2 right-2 z-10 inline-flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/65 sm:right-3 sm:h-10 sm:w-10"
                       >
                         <ChevronRight
@@ -199,15 +253,29 @@ export function ProjectModal({
                       </button>
 
                       <div className="pointer-events-none absolute bottom-2.5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 sm:bottom-3">
+                        {project.video ? (
+                          <button
+                            key="video-dot"
+                            type="button"
+                            onClick={() => setSlide(0)}
+                            aria-label="Go to project video"
+                            aria-current={isVideoSlide}
+                            className={`pointer-events-auto h-1.5 cursor-pointer rounded-full transition-all duration-300 ${
+                              isVideoSlide
+                                ? "w-5 bg-white"
+                                : "w-1.5 bg-white/50 hover:bg-white/80"
+                            }`}
+                          />
+                        ) : null}
                         {project.images.map((image, index) => (
                           <button
                             key={`${image.src}-dot-${index}`}
                             type="button"
-                            onClick={() => setSlide(index)}
+                            onClick={() => setSlide(index + imageOffset)}
                             aria-label={`Go to image ${index + 1}`}
-                            aria-current={index === slide}
+                            aria-current={index + imageOffset === slide}
                             className={`pointer-events-auto h-1.5 cursor-pointer rounded-full transition-all duration-300 ${
-                              index === slide
+                              index + imageOffset === slide
                                 ? "w-5 bg-white"
                                 : "w-1.5 bg-white/50 hover:bg-white/80"
                             }`}
@@ -221,14 +289,16 @@ export function ProjectModal({
                     </>
                   ) : null}
 
-                  <button
-                    type="button"
-                    onClick={() => setIsFullscreen(true)}
-                    aria-label="View image fullscreen"
-                    className="focus-ring pointer-events-none absolute top-1/2 left-1/2 z-10 inline-flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur transition-all duration-300 group-focus-within/stage:pointer-events-auto group-focus-within/stage:opacity-100 group-hover/stage:pointer-events-auto group-hover/stage:opacity-100 hover:bg-black/65 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100"
-                  >
-                    <Maximize2 className="h-5 w-5" aria-hidden="true" />
-                  </button>
+                  {!isVideoSlide ? (
+                    <button
+                      type="button"
+                      onClick={() => setIsFullscreen(true)}
+                      aria-label="View image fullscreen"
+                      className="focus-ring pointer-events-none absolute top-1/2 left-1/2 z-10 inline-flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur transition-all duration-300 group-focus-within/stage:pointer-events-auto group-focus-within/stage:opacity-100 group-hover/stage:pointer-events-auto group-hover/stage:opacity-100 hover:bg-black/65 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100"
+                    >
+                      <Maximize className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  ) : null}
 
                   <button
                     type="button"
@@ -294,7 +364,7 @@ export function ProjectModal({
       </AnimatePresence>
 
       <AnimatePresence>
-        {project && isFullscreen ? (
+        {project && isFullscreen && !isVideoSlide ? (
           <DialogPortal forceMount>
             <motion.div
               key="lightbox"
@@ -308,7 +378,7 @@ export function ProjectModal({
             >
               <motion.div
                 className="absolute inset-0 flex"
-                animate={{ x: `-${slide * 100}%` }}
+                animate={{ x: `-${imageSlide * 100}%` }}
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
                 {project.images.map((image, index) => (
@@ -321,7 +391,7 @@ export function ProjectModal({
                       alt={image.alt}
                       fill
                       sizes="100vw"
-                      priority={index === slide}
+                      priority={index === imageSlide}
                       className="object-contain"
                     />
                   </div>
@@ -340,14 +410,14 @@ export function ProjectModal({
               </button>
 
               <span className="absolute top-4 left-4 z-20 rounded-full border border-white/30 bg-black/70 px-2.5 py-1 text-[11px] font-medium text-white tabular-nums shadow-[0_4px_14px_rgba(0,0,0,0.65)] sm:top-5 sm:left-5">
-                {slide + 1} / {total}
+                {imageSlide + 1} / {project.images.length}
               </span>
 
-              {total > 1 ? (
+              {project.images.length > 1 ? (
                 <>
                   <button
                     type="button"
-                    onClick={goToPrev}
+                    onClick={goToPrevImage}
                     onPointerDown={(e) => e.stopPropagation()}
                     aria-label="Previous image"
                     className="focus-ring pointer-events-auto absolute top-1/2 left-2 z-20 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-black/70 text-white shadow-[0_4px_14px_rgba(0,0,0,0.65)] backdrop-blur transition-colors hover:bg-black/85 sm:left-4 sm:h-12 sm:w-12"
@@ -359,7 +429,7 @@ export function ProjectModal({
                   </button>
                   <button
                     type="button"
-                    onClick={goToNext}
+                    onClick={goToNextImage}
                     onPointerDown={(e) => e.stopPropagation()}
                     aria-label="Next image"
                     className="focus-ring pointer-events-auto absolute top-1/2 right-2 z-20 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-black/70 text-white shadow-[0_4px_14px_rgba(0,0,0,0.65)] backdrop-blur transition-colors hover:bg-black/85 sm:right-4 sm:h-12 sm:w-12"
@@ -375,12 +445,12 @@ export function ProjectModal({
                       <button
                         key={`${image.src}-fs-dot-${index}`}
                         type="button"
-                        onClick={() => setSlide(index)}
+                        onClick={() => setSlide(index + imageOffset)}
                         onPointerDown={(e) => e.stopPropagation()}
                         aria-label={`Go to image ${index + 1}`}
-                        aria-current={index === slide}
+                        aria-current={index === imageSlide}
                         className={`pointer-events-auto h-1.5 cursor-pointer rounded-full transition-all duration-300 ${
-                          index === slide
+                          index === imageSlide
                             ? "w-6 bg-white"
                             : "w-1.5 bg-white/40 hover:bg-white/70"
                         }`}

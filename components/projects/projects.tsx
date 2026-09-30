@@ -1,15 +1,19 @@
 "use client";
 
+import { Github } from "lucide-react";
 import {
   ArrowRight,
-  Bot,
   ChevronLeft,
   ChevronRight,
-  Clapperboard,
   Compass,
-  LineChart,
-  Sparkles,
-} from "lucide-react";
+  DocumentFile,
+  MoneyTransfer,
+  OnlineCourse,
+  School,
+  UserRole,
+  Users,
+  VideoCamera,
+} from "meya-icons/react/outline";
 import type {
   ComponentType,
   MouseEvent as ReactMouseEvent,
@@ -34,16 +38,18 @@ const ProjectModal = lazy(() =>
 );
 
 /**
- * Project imagery below is mockup-only. All visuals are sourced from
- * Dribbble and Unsplash and credit belongs to the original creators.
- * Replace these with your own work before shipping.
- * The first image in `images` is used as the card cover; the rest appear
- * in the modal slider.
+ * Project media is delivered from Cloudinary. The first image is used as the
+ * card cover; video plays in the project detail dialog.
  */
 
 export type ProjectImage = {
   src: string;
   alt: string;
+};
+
+export type ProjectVideo = {
+  src: string;
+  poster: ProjectImage;
 };
 
 export type ProjectTech = {
@@ -59,73 +65,197 @@ export type Project = {
   title: string;
   description: string;
   meta: string;
+  githubUrl?: string;
+  websiteUrl?: string;
+  githubPrivate?: boolean;
   overview: string;
   highlights: string[];
   images: ProjectImage[];
+  video?: ProjectVideo;
   imageRatio: number;
   techStack: ProjectTech[];
 };
 
 const PROJECTS: Project[] = [
   {
-    id: "streamfilm",
-    icon: Clapperboard,
-    iconLabel: "StreamFilm",
-    title: "StreamFilm - Katalog Film & Serial",
+    id: "rencana",
+    icon: DocumentFile,
+    iconLabel: "Rencana.",
+    title: "Rencana.",
     description:
-      "Platform katalog film dan serial berbasis TMDB untuk menemukan tontonan, melihat detail lengkap, menonton trailer, dan menyimpan watchlist secara lokal.",
+      "SaaS berbasis AI untuk mengubah ide produk menjadi PRD terstruktur, menyempurnakan dokumen, dan menyiapkannya untuk coding agent.",
     meta: "Date Project : 2026",
+    techStack: [
+      { label: "Next.js 16", slug: "nextdotjs", invertInDark: true },
+      { label: "React 19", slug: "react" },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS 4", slug: "tailwindcss" },
+    ],
+    overview:
+      "Rencana adalah SaaS yang membantu product builder mengubah ide menjadi PRD.md yang terstruktur. Wizard mengumpulkan konteks dan kebutuhan; AI dapat menyarankan tech stack atau menggunakan pilihan manual, lalu menyusun PRD menjadi delapan bagian. Dokumen dapat ditinjau dan direvisi melalui ruang kerja, tersimpan per versi, lalu diekspor sebagai Markdown atau prompt pembuka untuk coding agent.",
+    highlights: [
+      "Wizard untuk merangkum masalah, pengguna, kebutuhan, batasan, dan pilihan teknis produk",
+      "Generator PRD dengan delapan bagian: overview, requirements, core features, user flow, architecture, sequence diagram, database schema, dan tech stack",
+      "Rekomendasi tech stack berbasis AI atau pengaturan teknologi secara manual",
+      "Pratinjau terstruktur untuk dokumen dan bagian teknis sebelum dibawa ke tahap implementasi",
+      "Ruang kerja untuk meninjau serta merevisi PRD; setiap revisi yang tersimpan menjadi versi baru",
+      "Ekspor PRD.md dan prompt pembuka untuk digunakan bersama coding agent",
+      "Bahasa Indonesia dan English untuk konteks dan dokumen",
+      "Tech Stack: Next.js 16.3, React 19, TypeScript 5, Tailwind CSS 4, Supabase Auth, PostgreSQL dengan RLS, OpenAI-compatible API, Vercel Queues, dan Vercel",
+    ],
+    images: [],
+    video: {
+      src: "https://res.cloudinary.com/jaiq0dj6/video/upload/v1790716058/rencana-landscape.mp4",
+      poster: {
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790758477/rencana-homepage-thumbnail.png",
+        alt: "Preview landing page Rencana.",
+      },
+    },
+    imageRatio: 1887 / 907,
+  },
+  {
+    id: "sawala",
+    icon: OnlineCourse,
+    iconLabel: "Sawala",
+    title: "Sawala",
+    description:
+      "LMS interaktif untuk belajar Bahasa Sunda dan Aksara Sunda, lengkap dengan ruang belajar per modul, latihan, kuis, progres, dan tutor AI opsional.",
+    meta: "Date Project : 2026",
+    githubUrl: "https://github.com/MuhamadHilalFakhri/LMS-Sunda.git",
+    techStack: [
+      { label: "Laravel 13", slug: "laravel" },
+      { label: "PHP 8.3", slug: "php" },
+      { label: "React 19", slug: "react" },
+      { label: "TypeScript", slug: "typescript" },
+      { label: "Tailwind CSS 4", slug: "tailwindcss" },
+    ],
+    overview:
+      "Sawala adalah LMS web untuk belajar Bahasa Sunda dan Aksara Sunda. Kurikulum disusun sebagai kelas, modul, lalu materi; pelajar belajar di ruang khusus tiap modul, mengerjakan latihan dan kuis, serta memantau progres yang tersimpan. Admin mengelola konten dan aktivitas belajar. Tutor AI menyediakan tanya jawab, latihan percakapan, terjemahan, serta umpan balik tulisan saat penyedia AI dikonfigurasi.",
+    highlights: [
+      "Kelas Bahasa Sunda dan Aksara Sunda dengan alur belajar terstruktur dari kelas ke modul dan materi",
+      "Materi teks, kosakata, dialog, konteks pemakaian, ragam tutur, transliterasi, audio, dan tautan video",
+      "Galeri 72 karakter Unicode Aksara Sunda dengan pencarian, filter kelompok, dan fitur salin karakter",
+      "Latihan pilihan ganda, isian, mencocokkan, menyusun urutan, menulis aksara, dan menyimak audio",
+      "Kuis evaluasi dengan durasi, nilai kelulusan, dan batas percobaan yang dapat diatur admin; hasil dan penjelasan tersimpan",
+      "Target harian, streak, progres materi, riwayat latihan, ulasan jawaban, serta pengulangan terjadwal",
+      "Tutor AI opsional untuk tanya jawab berbasis materi, percakapan teks, terjemahan Indonesia–Sunda, dan umpan balik tulisan",
+      "Panel admin untuk mengelola kelas, modul, materi, latihan, kuis, audio, akun, dan progres pelajar",
+      "Tech Stack: Laravel 13, PHP 8.3+, Inertia 3, React 19, TypeScript 5, Vite 8, Tailwind CSS 4, MySQL 8+",
+    ],
+    images: [
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714086/sawal-00-landing-page.jpg", alt: "Landing page Sawala" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714133/sawal-01-login.jpg", alt: "Halaman masuk" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714129/sawal-02-daftar.jpg", alt: "Halaman pendaftaran" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714138/sawal-03-ringkasan-admin.jpg", alt: "Ringkasan admin" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714146/sawal-04-kelas-pelajaran-admin.jpg", alt: "Kelas dan pelajaran" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714150/sawal-05-kosakata-konteks-admin.jpg", alt: "Kosakata dan konteks" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714142/sawal-06-kumpulan-aksara-admin.jpg", alt: "Kumpulan aksara Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714154/sawal-07-latihan-soal-admin.jpg", alt: "Latihan dan soal" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714159/sawal-08-audio-media-admin.jpg", alt: "Audio dan media" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714164/sawal-09-pelajar-progres-admin.jpg", alt: "Pelajar dan progres" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714161/sawal-10-laporan-analitik-admin.jpg", alt: "Laporan dan analitik" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714167/sawal-11-pengaturan-tutor-ai-admin.jpg", alt: "Pengaturan Tutor AI" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714171/sawal-12-umpan-balik-admin.jpg", alt: "Umpan balik" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714175/sawal-13-profil-admin.jpg", alt: "Profil admin" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714184/sawal-14-keamanan-akun-admin.jpg", alt: "Keamanan akun admin" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714180/sawal-15-beranda-pengguna.jpg", alt: "Beranda pengguna" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714197/sawal-16-bahasa-sunda-pengguna.jpg", alt: "Kelas Bahasa Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714188/sawal-17-aksara-sunda-pengguna.jpg", alt: "Kelas Aksara Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714191/sawal-18-ruang-belajar-bahasa-sunda-pengguna.jpg", alt: "Ruang belajar Bahasa Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714195/sawal-19-ruang-belajar-aksara-sunda-pengguna.jpg", alt: "Ruang belajar Aksara Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714203/sawal-20-kumpulan-aksara-pengguna.jpg", alt: "Kumpulan Aksara Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714199/sawal-21-latihan-aksara-pengguna.jpg", alt: "Daftar latihan Aksara Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714207/sawal-22-kuis-pengguna.jpg", alt: "Kuis dan evaluasi" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714210/sawal-23-tutor-ai-pengguna.jpg", alt: "Tutor AI" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714215/sawal-24-progres-belajar-pengguna.jpg", alt: "Progres belajar" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714213/sawal-25-ulasan-jawaban-pengguna.jpg", alt: "Ulasan jawaban" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714222/sawal-26-ulangan-terjadwal-pengguna.jpg", alt: "Ulangan terjadwal" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714218/sawal-27-materi-tersimpan-pengguna.jpg", alt: "Materi tersimpan" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714220/sawal-28-umpan-balik-pengguna.jpg", alt: "Form umpan balik" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714224/sawal-29-profil-pengguna.jpg", alt: "Profil pengguna" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714229/sawal-30-keamanan-akun-pengguna.jpg", alt: "Keamanan akun pengguna" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714236/sawal-31-pengerjaan-latihan-pengguna.jpg", alt: "Pengerjaan latihan Aksara Sunda" },
+      { src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714232/sawal-32-kuis-dikerjakan-pengguna.jpg", alt: "Pengerjaan kuis" },
+    ],
+    video: {
+      src: "https://res.cloudinary.com/jaiq0dj6/video/upload/v1790759264/sawala-brand-intro.mp4",
+      poster: {
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790714086/sawal-00-landing-page.jpg",
+        alt: "Landing page Sawala",
+      },
+    },
+    imageRatio: 16 / 10,
+  },
+  {
+    id: "streamfilm",
+    icon: VideoCamera,
+    iconLabel: "StreamFilm",
+    title: "StreamFilm - Katalog Film, Serial & Anime",
+    description:
+      "Platform katalog film, serial, dan anime untuk menemukan tontonan, melihat detail lengkap, menonton trailer, dan menyimpan watchlist secara lokal.",
+    meta: "Date Project : 2026",
+    websiteUrl: "https://www.streamfilm.web.id/",
     techStack: [
       { label: "Next.js", slug: "nextdotjs", invertInDark: true },
       { label: "TypeScript", slug: "typescript" },
       { label: "Tailwind CSS", slug: "tailwindcss" },
     ],
     overview:
-      "StreamFilm adalah aplikasi katalog film dan serial berbasis Next.js App Router yang menggunakan TMDB API untuk menyediakan metadata, poster, rating, trailer, cast, season, dan episode. Pengguna dapat menjelajahi film serta serial populer, mencari judul, membuka halaman detail, dan menyimpan tontonan favorit ke watchlist yang tersimpan langsung di perangkat.",
+      "StreamFilm adalah aplikasi katalog hiburan berbasis Next.js App Router. Katalog film dan serial menggunakan TMDB API untuk metadata, poster, rating, trailer, pemeran, season, dan episode. Aplikasi juga menyediakan kategori Anime tersendiri dengan pencarian dan filter berdasarkan judul, genre, format, status tayang, musim, dan tahun. Pengguna dapat menjelajahi judul populer, membuka halaman detail, dan menyimpan pilihan ke watchlist lokal di perangkat.",
     highlights: [
+      "Katalog film, serial, dan anime melalui kategori yang terpisah",
       "Katalog film dan serial dengan data populer, trending, rating tertinggi, dan rilisan terbaru dari TMDB",
-      "Pencarian dan filter berdasarkan genre, tahun rilis, popularitas, atau rating",
-      "Halaman detail dengan sinopsis, rating, trailer, cast, season, dan episode",
+      "Kategori anime dengan filter judul, genre, format, status tayang, musim, dan tahun, serta urutan terpopuler",
+      "Pencarian dan filter film atau serial berdasarkan genre, tahun rilis, popularitas, atau rating",
+      "Halaman detail dengan sinopsis, rating, trailer, pemeran, season, dan episode untuk serial",
       "Watchlist lokal yang tersimpan di perangkat tanpa memerlukan akun",
       "Hero section dan media row responsif untuk pengalaman browsing yang sinematik",
       "Tech Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind CSS, shadcn/ui, TMDB API",
     ],
     images: [
       {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233604-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715271/streamfilm-2026-09-30-033341.jpg",
         alt: "Landing page StreamFilm",
       },
       {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233611-converted.webp",
-        alt: "Katalog film dan serial StreamFilm",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715275/streamfilm-2026-09-30-033352.jpg",
+        alt: "Beranda StreamFilm",
       },
       {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233621-converted.webp",
-        alt: "Daftar film populer StreamFilm",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715280/streamfilm-2026-09-30-033402.jpg",
+        alt: "Katalog film StreamFilm",
       },
       {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233630-converted.webp",
-        alt: "Daftar serial populer StreamFilm",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715285/streamfilm-2026-09-30-033411.jpg",
+        alt: "Katalog serial StreamFilm",
       },
       {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233638-converted.webp",
-        alt: "Pencarian film dan serial StreamFilm",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715290/streamfilm-2026-09-30-033424.jpg",
+        alt: "Katalog anime StreamFilm",
       },
       {
-        src: "/project/SFWebp/Screenshot 2026-09-05 233705-converted.webp",
-        alt: "Detail film StreamFilm",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715293/streamfilm-2026-09-30-033602.jpg",
+        alt: "Watchlist StreamFilm",
       },
     ],
+    video: {
+      src: "https://res.cloudinary.com/jaiq0dj6/video/upload/v1790759298/StreamFilm-16x9.mp4",
+      poster: {
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790715271/streamfilm-2026-09-30-033341.jpg",
+        alt: "Landing page StreamFilm",
+      },
+    },
     imageRatio: 16 / 9,
   },
   {
     id: "automation-trading",
-    icon: Bot,
+    icon: MoneyTransfer,
     iconLabel: "Trading Bot",
     title: "Automation Trading Suite - AI Bot MT5 & Web Journal",
     description:
       "Ekosistem trading otomatis terintegrasi yang menggabungkan AI Bot untuk MetaTrader 5 (analisis strategi SMC/ICT dengan LLM, risk guard, dan eksekusi otomatis) dengan Web Trading Journal berbasis Next.js untuk monitoring performa, kalender PnL, dan analitik secara real-time.",
     meta: "Date Project : 2026",
+    githubUrl: "https://github.com/MuhamadHilalFakhri/AutomationTrading.git",
     techStack: [
       { label: "Python", slug: "python" },
       { label: "Next.js", slug: "nextdotjs", invertInDark: true },
@@ -149,60 +279,68 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230752-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712942/screenshot-2026-09-05-230752-converted.webp",
         alt: "Landing Page Automation Trading Suite",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230811-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712949/screenshot-2026-09-05-230811-converted.webp",
         alt: "Dashboard Performa Trading & Ringkasan PnL",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230821-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712945/screenshot-2026-09-05-230821-converted.webp",
         alt: "Market Chart TradingView & Analisis Pair",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230841-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712954/screenshot-2026-09-05-230841-converted.webp",
         alt: "Chart Eksekusi Entry MT5 Real-time",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230847-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712965/screenshot-2026-09-05-230847-converted.webp",
         alt: "Terminal Live Stream Aktivitas Bot Trading",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230855-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712961/screenshot-2026-09-05-230855-converted.webp",
         alt: "Riwayat Transaksi & Posisi Terbuka",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 230931-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712956/screenshot-2026-09-05-230931-converted.webp",
         alt: "Kalender Rekap PnL Harian",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 231014-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712969/screenshot-2026-09-05-231014-converted.webp",
         alt: "Analitik Performa Win Rate & Profit Factor",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 231023-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712973/screenshot-2026-09-05-231023-converted.webp",
         alt: "Log Sinyal AI & Jejak Keputusan",
       },
       {
-        src: "/project/ATWebp/Screenshot 2026-09-05 231031-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712985/screenshot-2026-09-05-231031-converted.webp",
         alt: "Pengaturan & Status Sinkronisasi MT5",
       },
       {
-        src: "/project/ATWebp/X.png",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712981/x.png",
         alt: "Control Panel Desktop Terminal MT5",
       },
     ],
+    video: {
+      src: "https://res.cloudinary.com/jaiq0dj6/video/upload/v1790759237/automation-trading-horizontal.mp4",
+      poster: {
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712942/screenshot-2026-09-05-230752-converted.webp",
+        alt: "Landing Page Automation Trading Suite",
+      },
+    },
     imageRatio: 16 / 9,
   },
   {
     id: "skripsi",
-    icon: LineChart,
+    icon: Users,
     iconLabel: "Skripsi",
     title: "HRIS - Human Resource Information System Berbasis AI",
     description:
       "Sistem manajemen SDM berbasis web dengan AI-powered CV screening menggunakan Groq LLM. Pengembangan lanjutan dari proyek Internship dengan tech stack modern (Go, Next.js) dan fitur tambahan seperti AI screening, audit log, surat-menyurat digital, disposisi surat, serta template surat.",
     meta: "Date Project : 2026",
+    githubPrivate: true,
     techStack: [
       { label: "Go", slug: "go" },
       { label: "Next.js", slug: "nextdotjs", invertInDark: true },
@@ -225,83 +363,83 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193422-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713242/screenshot-2026-08-24-193422-converted.webp",
         alt: "Dashboard Super Admin HRIS",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193456-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713246/screenshot-2026-08-24-193456-converted.webp",
         alt: "AI CV Screening dengan Groq",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193510-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713272/screenshot-2026-08-24-193510-converted.webp",
         alt: "Pipeline Rekrutmen Visual",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193713-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713258/screenshot-2026-08-24-193713-converted.webp",
         alt: "Scoring dan Shortlist Pelamar",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193737-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713268/screenshot-2026-08-24-193737-converted.webp",
         alt: "Jadwal Interview Online/Offline",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193753-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713263/screenshot-2026-08-24-193753-converted.webp",
         alt: "Export Laporan Rekrutmen",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193809-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713278/screenshot-2026-08-24-193809-converted.webp",
         alt: "Kelola Template Surat",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193847-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713283/screenshot-2026-08-24-193847-converted.webp",
         alt: "Preview PDF Template Surat",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193857-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713274/screenshot-2026-08-24-193857-converted.webp",
         alt: "Disposisi Surat Digital",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193921-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713287/screenshot-2026-08-24-193921-converted.webp",
         alt: "Kelola Staff dan Divisi",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 193931-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713292/screenshot-2026-08-24-193931-converted.webp",
         alt: "Audit Log Tracking Aktivitas",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194256-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713300/screenshot-2026-08-24-194256-converted.webp",
         alt: "Dashboard Pelamar",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194311-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713296/screenshot-2026-08-24-194311-converted.webp",
         alt: "Profil Pelamar dengan Autocomplete",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194321-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713304/screenshot-2026-08-24-194321-converted.webp",
         alt: "Kirim Lamaran dengan Upload CV",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194330-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713310/screenshot-2026-08-24-194330-converted.webp",
         alt: "Tracking Status Lamaran",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194451-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713308/screenshot-2026-08-24-194451-converted.webp",
         alt: "Dashboard Staff Karyawan",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194500-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713316/screenshot-2026-08-24-194500-converted.webp",
         alt: "Pengaduan Karyawan Multi Kategori",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194537-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713313/screenshot-2026-08-24-194537-converted.webp",
         alt: "Pengajuan Resign Digital",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194550-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713325/screenshot-2026-08-24-194550-converted.webp",
         alt: "Google OAuth 2.0 Login",
       },
       {
-        src: "/project/SkripsiWebp/Screenshot 2026-08-24 194601-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713321/screenshot-2026-08-24-194601-converted.webp",
         alt: "Dark Mode Interface",
       },
     ],
@@ -309,12 +447,13 @@ const PROJECTS: Project[] = [
   },
   {
     id: "capstone",
-    icon: Compass,
+    icon: School,
     iconLabel: "Capstone",
     title: "E-Learning SMPN 2 Merapi Barat",
     description:
       "Platform pembelajaran daring berbasis web dengan 3 role pengguna (Admin, Guru, Siswa) yang memfasilitasi pembelajaran interaktif, pengelolaan materi, kuis dengan AI, dan manajemen data master sekolah.",
     meta: "Date Project : 2025 - 2026",
+    githubPrivate: true,
     techStack: [
       { label: "Laravel", slug: "laravel" },
       { label: "React", slug: "react" },
@@ -335,79 +474,79 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195811-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712982/screenshot-2026-08-24-195811-converted.webp",
         alt: "Dashboard Admin E-Learning",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195826-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712978/screenshot-2026-08-24-195826-converted.webp",
         alt: "Manajemen Data Guru",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195835-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712988/screenshot-2026-08-24-195835-converted.webp",
         alt: "Import/Export Data Excel",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195845-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712992/screenshot-2026-08-24-195845-converted.webp",
         alt: "Manajemen Data Siswa",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195856-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790712996/screenshot-2026-08-24-195856-converted.webp",
         alt: "Manajemen Kelas dan Wali Kelas",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195905-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713009/screenshot-2026-08-24-195905-converted.webp",
         alt: "Manajemen Mata Pelajaran",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 195914-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713006/screenshot-2026-08-24-195914-converted.webp",
         alt: "Dashboard Guru",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200251-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713001/screenshot-2026-08-24-200251-converted.webp",
         alt: "Upload dan Kelola Materi Pembelajaran",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200302-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713014/screenshot-2026-08-24-200302-converted.webp",
         alt: "Form Upload Materi Multi-Format",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200313-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713024/screenshot-2026-08-24-200313-converted.webp",
         alt: "Buat Kuis dengan AI Interaktif",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200322-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713012/screenshot-2026-08-24-200322-converted.webp",
         alt: "Pengaturan Timer dan Jadwal Kuis",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200336-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713020/screenshot-2026-08-24-200336-converted.webp",
         alt: "Statistik Materi dan Kuis Guru",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200439-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713016/screenshot-2026-08-24-200439-converted.webp",
         alt: "Dashboard Siswa dan Progres Belajar",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200449-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713029/screenshot-2026-08-24-200449-converted.webp",
         alt: "Akses Materi dengan Filter Pencarian",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200459-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713034/screenshot-2026-08-24-200459-converted.webp",
         alt: "Interface Kuis dengan Timer",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200508-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713038/screenshot-2026-08-24-200508-converted.webp",
         alt: "Hasil dan Riwayat Nilai Siswa",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200519-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713042/screenshot-2026-08-24-200519-converted.webp",
         alt: "Statistik Performa Per Mata Pelajaran",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200530-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713048/screenshot-2026-08-24-200530-converted.webp",
         alt: "Detail Progres Pembelajaran",
       },
       {
-        src: "/project/CapstoneWebp/Screenshot 2026-08-24 200538-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713056/screenshot-2026-08-24-200538-converted.webp",
         alt: "Profile dan Pengaturan Akun",
       },
     ],
@@ -415,12 +554,13 @@ const PROJECTS: Project[] = [
   },
   {
     id: "internship",
-    icon: Sparkles,
+    icon: UserRole,
     iconLabel: "Internship",
     title: "Sistem Informasi SDM (Human Resource Information System)",
     description:
       "Aplikasi web HRIS dengan 4 role pengguna (Super Admin, Admin Staff, Staff, Pelamar) yang mengotomatisasi seluruh proses HR dari rekrutmen, onboarding, pengelolaan surat, hingga offboarding.",
     meta: "Date Project : 2025 - 2026",
+    githubPrivate: true,
     techStack: [
       { label: "Laravel", slug: "laravel" },
       { label: "React", slug: "react" },
@@ -440,67 +580,67 @@ const PROJECTS: Project[] = [
     ],
     images: [
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194725-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713053/screenshot-2026-08-24-194725-converted.webp",
         alt: "Dashboard Super Admin HRIS",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194759-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713063/screenshot-2026-08-24-194759-converted.webp",
         alt: "Modul Rekrutmen",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194808-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713065/screenshot-2026-08-24-194808-converted.webp",
         alt: "Kalender Penjadwalan Interview",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194816-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713070/screenshot-2026-08-24-194816-converted.webp",
         alt: "Detail Proses Onboarding",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194825-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713061/screenshot-2026-08-24-194825-converted.webp",
         alt: "Kelola Divisi dan Lowongan",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194833-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713078/screenshot-2026-08-24-194833-converted.webp",
         alt: "Sistem Disposisi Surat",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194841-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713074/screenshot-2026-08-24-194841-converted.webp",
         alt: "Template dan Export Surat",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 194850-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713082/screenshot-2026-08-24-194850-converted.webp",
         alt: "Modul Offboarding",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195114-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713087/screenshot-2026-08-24-195114-converted.webp",
         alt: "Pengelolaan Pengaduan Karyawan",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195124-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713211/screenshot-2026-08-24-195124-converted.webp",
         alt: "Dashboard Pelamar",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195227-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713091/screenshot-2026-08-24-195227-converted.webp",
         alt: "Form Lamaran Kerja",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195237-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713216/screenshot-2026-08-24-195237-converted.webp",
         alt: "Profil dan CV Pelamar",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195244-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713218/screenshot-2026-08-24-195244-converted.webp",
         alt: "Status Tracking Lamaran",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195433-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713214/screenshot-2026-08-24-195433-converted.webp",
         alt: "Kelola Akun Pengguna",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195445-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713223/screenshot-2026-08-24-195445-converted.webp",
         alt: "Sistem Notifikasi Real-time",
       },
       {
-        src: "/project/InternshipWebp/Screenshot 2026-08-24 195454-converted.webp",
+        src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790713228/screenshot-2026-08-24-195454-converted.webp",
         alt: "Landing Page Lowongan Kerja",
       },
     ],
@@ -760,7 +900,8 @@ function ProjectCard({
   onSelect: () => void;
 }): ReactNode {
   const Icon = project.icon;
-  const cover = project.images[0];
+  const cover = project.images[0] ?? project.video?.poster;
+  const externalUrl = project.githubUrl ?? project.websiteUrl;
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const TAP_THRESHOLD = 8;
 
@@ -805,6 +946,58 @@ function ProjectCard({
         <span className="text-foreground text-sm font-medium tracking-tight">
           {project.iconLabel}
         </span>
+        {externalUrl ? (
+          <a
+            href={externalUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={
+              project.githubUrl
+                ? `View ${project.iconLabel} repository on GitHub`
+                : `Visit ${project.iconLabel} website`
+            }
+            aria-describedby={`repository-tooltip-${project.id}`}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+            className="group/repository focus-ring border-foreground/10 bg-background text-foreground/70 hover:border-foreground/20 hover:bg-foreground/5 hover:text-foreground relative ml-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors"
+          >
+            {project.githubUrl ? (
+              <Github className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <Compass className="h-4 w-4" aria-hidden="true" />
+            )}
+            <span
+              id={`repository-tooltip-${project.id}`}
+              role="tooltip"
+              className="bg-foreground text-background pointer-events-none absolute top-full right-0 z-30 mt-2 w-max rounded-md px-2.5 py-1.5 text-xs font-medium opacity-0 shadow-sm transition-opacity duration-150 group-hover/repository:opacity-100 group-focus-visible/repository:opacity-100"
+            >
+              {project.githubUrl
+                ? "View repository on GitHub"
+                : `Visit ${project.iconLabel} website`}
+            </span>
+          </a>
+        ) : project.githubPrivate ? (
+          <span
+            tabIndex={0}
+            role="img"
+            aria-label="Repositori GitHub privat"
+            aria-describedby={`repository-tooltip-${project.id}`}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+            className="group/repository focus-ring border-foreground/10 bg-background text-foreground/60 hover:border-foreground/20 hover:bg-foreground/5 hover:text-foreground relative ml-auto inline-flex h-8 w-8 shrink-0 cursor-default items-center justify-center rounded-lg border transition-colors"
+          >
+            <Github className="h-4 w-4" aria-hidden="true" />
+            <span
+              id={`repository-tooltip-${project.id}`}
+              role="tooltip"
+              className="bg-foreground text-background pointer-events-none absolute top-full right-0 z-30 mt-2 w-max rounded-md px-2.5 py-1.5 text-xs font-medium opacity-0 shadow-sm transition-opacity duration-150 group-hover/repository:opacity-100 group-focus-visible/repository:opacity-100"
+            >
+              Repository Private
+            </span>
+          </span>
+        ) : null}
       </header>
 
       {cover ? (
