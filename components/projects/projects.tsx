@@ -669,6 +669,9 @@ export function Projects({
     startX: number;
     startY: number;
     startScrollLeft: number;
+    lastX: number;
+    lastTime: number;
+    velocity: number;
     active: boolean;
   } | null>(null);
 
@@ -713,11 +716,15 @@ export function Projects({
         return;
       }
       event.currentTarget.style.scrollBehavior = "auto";
+      const now = performance.now();
       dragRef.current = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
         startScrollLeft: event.currentTarget.scrollLeft,
+        lastX: event.clientX,
+        lastTime: now,
+        velocity: 0,
         active: false,
       };
     },
@@ -731,6 +738,13 @@ export function Projects({
 
       const deltaX = event.clientX - drag.startX;
       const deltaY = event.clientY - drag.startY;
+      const now = performance.now();
+      const elapsed = Math.max(1, now - drag.lastTime);
+      const instantVelocity = (drag.lastX - event.clientX) / elapsed;
+      drag.velocity = drag.velocity * 0.65 + instantVelocity * 0.35;
+      drag.lastX = event.clientX;
+      drag.lastTime = now;
+
       if (!drag.active) {
         if (Math.abs(deltaY) > 8 && Math.abs(deltaY) > Math.abs(deltaX)) {
           dragRef.current = null;
@@ -739,6 +753,7 @@ export function Projects({
         }
         if (Math.abs(deltaX) < 8) return;
         drag.active = true;
+        event.currentTarget.style.scrollSnapType = "none";
         event.currentTarget.setPointerCapture(event.pointerId);
         setIsDragging(true);
       }
@@ -755,7 +770,41 @@ export function Projects({
       if (!drag || drag.pointerId !== event.pointerId) return;
       dragRef.current = null;
       event.currentTarget.style.scrollBehavior = "";
-      if (drag.active) setIsDragging(false);
+      event.currentTarget.style.scrollSnapType = "";
+      if (drag.active) {
+        setIsDragging(false);
+
+        const track = event.currentTarget;
+        const cards = Array.from(
+          track.querySelectorAll<HTMLElement>("[data-card]")
+        );
+        const trackLeft = track.getBoundingClientRect().left;
+        const firstCardLeft = cards[0]?.getBoundingClientRect().left;
+        if (cards.length > 0 && firstCardLeft !== undefined) {
+          const firstCardPosition =
+            track.scrollLeft + firstCardLeft - trackLeft;
+          const maxScrollLeft = track.scrollWidth - track.clientWidth;
+          const projectedPosition = Math.max(
+            0,
+            Math.min(maxScrollLeft, track.scrollLeft + drag.velocity * 260)
+          );
+          let target = 0;
+          let distance = Number.POSITIVE_INFINITY;
+
+          for (const card of cards) {
+            const cardLeft =
+              track.scrollLeft + card.getBoundingClientRect().left - trackLeft;
+            const position = Math.max(0, cardLeft - firstCardPosition);
+            const nextDistance = Math.abs(position - projectedPosition);
+            if (nextDistance < distance) {
+              target = position;
+              distance = nextDistance;
+            }
+          }
+
+          track.scrollTo({ left: target, behavior: "smooth" });
+        }
+      }
       if (event.currentTarget.hasPointerCapture(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
@@ -766,7 +815,10 @@ export function Projects({
   const handleTrackPointerLeave = useCallback(() => {
     if (dragRef.current && !dragRef.current.active) {
       dragRef.current = null;
-      if (trackRef.current) trackRef.current.style.scrollBehavior = "";
+      if (trackRef.current) {
+        trackRef.current.style.scrollBehavior = "";
+        trackRef.current.style.scrollSnapType = "";
+      }
     }
   }, []);
 
