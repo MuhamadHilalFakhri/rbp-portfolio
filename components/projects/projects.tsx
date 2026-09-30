@@ -85,6 +85,7 @@ const PROJECTS: Project[] = [
     description:
       "SaaS berbasis AI untuk mengubah ide produk menjadi PRD terstruktur, menyempurnakan dokumen, dan menyiapkannya untuk coding agent.",
     meta: "Date Project : 2026",
+    websiteUrl: "https://rencana.web.id/",
     techStack: [
       { label: "Next.js 16", slug: "nextdotjs", invertInDark: true },
       { label: "React 19", slug: "react" },
