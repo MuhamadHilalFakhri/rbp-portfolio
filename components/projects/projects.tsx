@@ -106,7 +106,7 @@ const PROJECTS: Project[] = [
     ],
     images: [],
     video: {
-      src: "https://res.cloudinary.com/jaiq0dj6/video/upload/v1790716058/rencana-landscape.mp4",
+      src: "https://res.cloudinary.com/jaiq0dj6/video/upload/v1790763083/rencana-landscape.mp4",
       poster: {
         src: "https://res.cloudinary.com/jaiq0dj6/image/upload/v1790758477/rencana-homepage-thumbnail.png",
         alt: "Preview landing page Rencana.",
