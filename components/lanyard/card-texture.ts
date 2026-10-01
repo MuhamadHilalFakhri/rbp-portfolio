@@ -21,7 +21,7 @@ export function createCardTexture(
   context.fillStyle = portraitBackground;
   context.fillRect(20, 110, 728, 866);
 
-  // Key the portrait's uniform navy backdrop before converting to monochrome.
+  // Remove the navy backdrop while preserving the portrait's original colors.
   // Keeping an alpha silhouette lets the outline follow hair and shoulders.
   const portrait = document.createElement("canvas");
   portrait.width = 688;
@@ -35,11 +35,6 @@ export function createCardTexture(
     const b = pixels.data[i + 2]!;
     const navy = THREE.MathUtils.smoothstep(b - Math.max(r, g), 8, 20);
     pixels.data[i + 3] = Math.round(pixels.data[i + 3]! * (1 - navy));
-    const luminance = r * 0.2126 + g * 0.7152 + b * 0.0722;
-    const gray = THREE.MathUtils.clamp((luminance - 110) * 1.32 + 112, 0, 255);
-    pixels.data[i] = gray;
-    pixels.data[i + 1] = gray;
-    pixels.data[i + 2] = gray;
   }
   photo.putImageData(pixels, 0, 0);
 
