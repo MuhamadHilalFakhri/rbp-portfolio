@@ -13,6 +13,8 @@ export function useProjectCarousel(itemCount: number) {
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [visibleRange, setVisibleRange] = useState({ start: 1, end: 1 });
   const dragRef = useRef<{
     pointerId: number;
     startX: number;
@@ -29,15 +31,34 @@ export function useProjectCarousel(itemCount: number) {
     if (!track) return;
     setCanPrev(track.scrollLeft > 8);
     setCanNext(track.scrollLeft < track.scrollWidth - track.clientWidth - 8);
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    setProgress(
+      maxScroll > 0 ? Math.max(0, Math.min(1, track.scrollLeft / maxScroll)) : 1
+    );
+    const bounds = track.getBoundingClientRect();
+    const cards = Array.from(
+      track.querySelectorAll<HTMLElement>("[data-card]")
+    );
+    const visible = cards.flatMap((card, index) => {
+      const rect = card.getBoundingClientRect();
+      return rect.right > bounds.left + 40 && rect.left < bounds.right - 40
+        ? [index + 1]
+        : [];
+    });
+    setVisibleRange({ start: visible[0] ?? 1, end: visible.at(-1) ?? 1 });
   }, []);
 
   useEffect(() => {
-    updateArrows();
     const track = trackRef.current;
     if (!track) return;
+    track.scrollTo({ left: 0, behavior: "instant" });
+    updateArrows();
+    const resizeObserver = new ResizeObserver(updateArrows);
+    resizeObserver.observe(track);
     track.addEventListener("scroll", updateArrows, { passive: true });
     window.addEventListener("resize", updateArrows);
     return () => {
+      resizeObserver.disconnect();
       track.removeEventListener("scroll", updateArrows);
       window.removeEventListener("resize", updateArrows);
     };
@@ -177,6 +198,8 @@ export function useProjectCarousel(itemCount: number) {
     canPrev,
     canNext,
     isDragging,
+    progress,
+    visibleRange,
     scrollProjects,
     handleTrackPointerDown,
     handleTrackPointerMove,

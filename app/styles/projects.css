@@ -8,6 +8,21 @@
   will-change: transform;
 }
 
+.project-carousel-item {
+  animation: project-filter-enter 320ms ease-out;
+}
+
+@keyframes project-filter-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .dark .project-card {
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
 }
@@ -15,7 +30,7 @@
 @media (hover: hover) and (pointer: fine) {
   .project-card:hover {
     transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--foreground) 14%, transparent);
+    border-color: color-mix(in srgb, var(--foreground) 32%, transparent);
     box-shadow:
       0 10px 20px -8px rgb(0 0 0 / 0.12),
       0 4px 8px -4px rgb(0 0 0 / 0.08);

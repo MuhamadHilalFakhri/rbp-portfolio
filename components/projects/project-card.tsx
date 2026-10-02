@@ -56,7 +56,7 @@ export function ProjectCard({
           onSelect();
         }
       }}
-      className="project-card border-foreground/8 focus-ring bg-background flex h-full min-h-full cursor-pointer flex-col gap-4 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5"
+      className="project-card border-foreground/20 focus-ring bg-background flex h-full min-h-full cursor-pointer flex-col gap-4 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5"
     >
       <header className="flex items-center gap-2.5 px-1 pt-2">
         <span className="border-foreground/10 bg-background inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border">

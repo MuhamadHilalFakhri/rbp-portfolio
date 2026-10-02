@@ -10,6 +10,11 @@ import Link from "next/link";
 import { PROJECTS } from "./project-data";
 import { ProjectCard } from "./project-card";
 import { useProjectCarousel } from "./use-project-carousel";
+import {
+  ProjectFilters,
+  matchesProjectFilter,
+  type ProjectFilter,
+} from "./project-filters";
 import type { Project } from "./project-types";
 export type {
   Project,
@@ -33,13 +38,18 @@ export function Projects({
   withHeadline = false,
   viewMoreVisible = false,
 }: ProjectsProps): ReactNode {
-  const items = PROJECTS;
+  const [filter, setFilter] = useState<ProjectFilter>("Semua");
+  const items = PROJECTS.filter((project) =>
+    matchesProjectFilter(project, filter)
+  );
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const {
     trackRef,
     canPrev,
     canNext,
     isDragging,
+    progress,
+    visibleRange,
     scrollProjects,
     handleTrackPointerDown,
     handleTrackPointerMove,
@@ -49,7 +59,8 @@ export function Projects({
 
   return (
     <section
-      className="relative w-full [contain-intrinsic-size:auto_48rem] [content-visibility:auto]"
+      id="projects"
+      className="relative w-full scroll-mt-24 [contain-intrinsic-size:auto_48rem] [content-visibility:auto]"
       data-scroll-reveal
       data-scroll-stagger
     >
@@ -70,6 +81,13 @@ export function Projects({
         ) : null}
 
         <div className="relative">
+          <ProjectFilters
+            value={filter}
+            onChange={(next) => {
+              setFilter(next);
+              trackRef.current?.scrollTo({ left: 0, behavior: "instant" });
+            }}
+          />
           <div className="flex items-center justify-between pb-4">
             <span className="text-foreground/50 text-sm font-medium tracking-tight">
               {items.length} projects
@@ -128,14 +146,14 @@ export function Projects({
             onLostPointerCapture={handleTrackPointerEnd}
             onPointerLeave={handleTrackPointerLeave}
             onDragStart={(event) => event.preventDefault()}
-            className={`-mx-4 flex touch-auto snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-2 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:scroll-px-6 min-[360px]:px-6 sm:-mx-10 sm:scroll-px-10 sm:gap-6 sm:px-10 [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing select-none" : "sm:cursor-grab"}`}
+            className={`-mx-4 flex touch-auto snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pt-2 pb-4 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:scroll-px-6 min-[360px]:px-6 sm:-mx-10 sm:scroll-px-10 sm:gap-6 sm:px-10 [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing select-none" : "sm:cursor-grab"}`}
           >
             {items.map((project) => (
               <div
-                key={project.id}
+                key={`${filter}-${project.id}`}
                 data-card
                 data-scroll-reveal-item
-                className="flex w-full min-w-0 shrink-0 snap-start sm:w-[calc(50%_-_0.75rem)] lg:w-[calc(33.333333%_-_1rem)]"
+                className="project-carousel-item flex w-full min-w-0 shrink-0 snap-start sm:w-[calc(50%_-_0.75rem)] lg:w-[calc(33.333333%_-_1rem)]"
               >
                 <ProjectCard
                   project={project}
@@ -143,6 +161,25 @@ export function Projects({
                 />
               </div>
             ))}
+          </div>
+          <div className="text-foreground/55 mt-3 flex items-center gap-4 text-xs">
+            <span className="shrink-0">
+              {visibleRange.start}–{visibleRange.end} / {items.length}
+            </span>
+            <div
+              role="progressbar"
+              aria-label="Posisi carousel proyek"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progress * 100)}
+              className="bg-foreground/10 h-1 flex-1 overflow-hidden rounded-full"
+            >
+              <div
+                className="bg-foreground/55 h-full rounded-full transition-[width] duration-200"
+                style={{ width: `${15 + progress * 85}%` }}
+              />
+            </div>
+            <span className="shrink-0">Geser untuk menjelajah</span>
           </div>
         </div>
 
