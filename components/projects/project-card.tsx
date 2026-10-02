@@ -124,13 +124,17 @@ export function ProjectCard({
           className="project-card__image ring-foreground/5 bg-foreground/5 relative w-full overflow-hidden rounded-2xl ring-1"
           style={{ aspectRatio: 16 / 9 }}
         >
-          <div className="project-card__image-inner">
+          <div
+            className="project-card__image-inner"
+            style={{ transformOrigin: project.thumbnailPosition ?? "center" }}
+          >
             <Image
               src={cover.src}
               alt={cover.alt}
               fill
               sizes="(min-width: 1024px) 400px, (min-width: 640px) 45vw, 100vw"
               className="object-cover"
+              style={{ objectPosition: project.thumbnailPosition ?? "center" }}
             />
           </div>
         </div>

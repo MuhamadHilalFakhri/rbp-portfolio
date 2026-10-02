@@ -3,6 +3,7 @@ import type { Project } from "../project-types";
 
 export const sawalaProject: Project = {
   id: "sawala",
+  thumbnailPosition: "top",
   icon: OnlineCourse,
   iconLabel: "Sawala",
   title: "Sawala",

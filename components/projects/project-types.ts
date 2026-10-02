@@ -31,5 +31,6 @@ export type Project = {
   images: ProjectImage[];
   video?: ProjectVideo;
   imageRatio: number;
+  thumbnailPosition?: "center" | "top";
   techStack: ProjectTech[];
 };
