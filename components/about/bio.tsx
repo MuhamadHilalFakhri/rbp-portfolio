@@ -8,7 +8,7 @@ export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
   const Heading = heading;
 
   return (
-    <div className="border-foreground/5 bg-foreground/1.5 dark:bg-foreground/3 rounded-3xl border p-5 min-[360px]:p-6 sm:rounded-4xl sm:p-12">
+    <div className="border-foreground/5 bg-[#fbfbfb] dark:bg-[#111111] rounded-3xl border p-5 min-[360px]:p-6 sm:rounded-4xl sm:p-12">
       <Heading className="text-foreground font-serif text-[1.6rem] font-medium tracking-tight min-[360px]:text-[1.75rem] sm:text-[2rem]">
         Hello! I&rsquo;m{" "}
         <span className="border-foreground/30 border-b pb-0.5">

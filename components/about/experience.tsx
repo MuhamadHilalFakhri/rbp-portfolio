@@ -89,7 +89,7 @@ export function Experience(): ReactNode {
             ? { duration: 0 }
             : { layout: { duration: 0.42, ease: SMOOTH_EASE } }
         }
-        className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative overflow-hidden rounded-3xl border p-2 sm:rounded-4xl sm:p-4"
+        className="border-foreground/5 bg-[#fafafa] dark:bg-[#161616] relative overflow-hidden rounded-3xl border p-2 sm:rounded-4xl sm:p-4"
       >
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.ul
