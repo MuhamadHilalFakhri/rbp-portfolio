@@ -90,6 +90,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .project-carousel-item {
+    animation: none;
+  }
   .project-carousel-item .project-card,
   .project-carousel-item .project-card:hover {
     transform: none;

@@ -6,7 +6,8 @@ import {
   Maximize,
   X,
 } from "meya-icons/react/outline";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
+import { useMediaSwipe } from "./use-media-swipe";
 import Image from "next/image";
 import type { Project } from "./project-types";
 import type { useProjectMedia } from "./use-project-media";
@@ -44,11 +45,21 @@ export function ProjectMediaStage({
   goToPrev,
   goToNext,
 }: ProjectMediaStageProps) {
+  const reducedMotion = useReducedMotion();
+  const swipe = useMediaSwipe({
+    enabled: !isVideoSlide && total > 1,
+    onPrevious: goToPrev,
+    onNext: goToNext,
+  });
   return (
     <div
       ref={setStageNode}
+      {...swipe}
       className={`group/stage bg-foreground/5 relative max-h-[30dvh] min-h-[9.5rem] w-full shrink-0 ${isVideoSlide ? "cursor-default" : "cursor-zoom-in"} overflow-hidden transition-[height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-h-[34dvh]`}
-      style={stageHeight ? { height: stageHeight } : undefined}
+      style={{
+        height: stageHeight ?? undefined,
+        touchAction: isVideoSlide ? "auto" : "pan-y pinch-zoom",
+      }}
     >
       {isVideoSlide && project.video ? (
         <video
@@ -66,7 +77,10 @@ export function ProjectMediaStage({
         <motion.div
           className="absolute inset-0 flex"
           animate={{ x: `-${imageSlide * 100}%` }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.45,
+            ease: [0.22, 1, 0.36, 1],
+          }}
         >
           {project.images.map((image, index) => (
             <div

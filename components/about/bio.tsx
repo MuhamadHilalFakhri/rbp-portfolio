@@ -1,5 +1,7 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { BioParagraphs } from "./bio-paragraphs";
 import { ChevronDown } from "lucide-react";
 import { useId, useState, type ReactNode } from "react";
 
@@ -12,6 +14,7 @@ export function Bio({
 }): ReactNode {
   const [expanded, setExpanded] = useState(false);
   const Heading = heading;
+  const reducedMotion = useReducedMotion();
   const detailId = useId();
 
   return (
@@ -23,48 +26,31 @@ export function Bio({
         </span>
         .
       </Heading>
-      {summary && !expanded && (
-        <p className="text-foreground/75 mt-6 text-justify text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:text-[18px]">
-          {summary}
-        </p>
-      )}
       <div
         id={detailId}
-        hidden={Boolean(summary) && !expanded}
-        className="text-foreground/75 mt-6 space-y-5 text-justify text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:space-y-6 sm:text-[18px]"
+        className="text-foreground/75 mt-6 text-justify text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:text-[18px]"
       >
-        <p>
-          Saya merupakan lulusan Program Studi S1 Teknologi Informasi
-          Universitas Muhammadiyah Yogyakarta dengan minat dan pengalaman di
-          bidang{" "}
-          pengembangan web, baik frontend maupun backend. Selama menempuh pendidikan, saya mempelajari dan mengembangkan
-          berbagai aplikasi berbasis web dengan menerapkan kemampuan dalam
-          perancangan antarmuka, pengembangan fitur, pengelolaan database,
-          hingga integrasi antara frontend dan backend. Saya memiliki kemampuan
-          dalam memahami kebutuhan pengguna, merancang struktur sistem, serta
-          mengimplementasikan solusi yang{" "}
-          terstruktur, efisien, dan mudah dikembangkan.
-        </p>
-        <p>
-          Saya memiliki ketertarikan untuk terus memperdalam kemampuan di bidang{" "}
-          web developer, khususnya dalam membangun aplikasi web yang fungsional, responsif,
-          dan dapat memberikan pengalaman pengguna yang baik. Saya juga terbiasa
-          mempelajari teknologi dan tools baru secara mandiri untuk meningkatkan
-          kemampuan teknis serta mengikuti perkembangan di bidang teknologi
-          informasi.
-        </p>
-        <div className={expanded ? "block" : "hidden sm:block"}>
-          <p>
-            Dalam bekerja, saya mampu bekerja secara mandiri maupun dalam tim,
-            memiliki kemampuan komunikasi yang baik, serta terbiasa
-            menyelesaikan tugas secara terstruktur dan bertanggung jawab. Saya
-            juga memiliki kemauan belajar yang tinggi, mampu beradaptasi dengan
-            lingkungan dan teknologi baru, serta berkomitmen untuk terus
-            mengembangkan kompetensi teknis dan profesional guna menghasilkan
-            solusi digital yang berkualitas dan memberikan nilai tambah bagi
-            pengguna maupun perusahaan.
-          </p>
-        </div>
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={summary && !expanded ? "summary" : "full"}
+            initial={{
+              height: reducedMotion ? "auto" : 0,
+              opacity: reducedMotion ? 1 : 0,
+            }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{
+              height: reducedMotion ? "auto" : 0,
+              opacity: reducedMotion ? 1 : 0,
+            }}
+            transition={{
+              duration: reducedMotion ? 0 : 0.3,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="overflow-hidden"
+          >
+            {summary && !expanded ? <p>{summary}</p> : <BioParagraphs />}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {(summary || !expanded) && (

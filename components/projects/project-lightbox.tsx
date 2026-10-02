@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, X } from "meya-icons/react/outline";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
+import { useMediaSwipe } from "./use-media-swipe";
 import Image from "next/image";
 import type { Project } from "./project-types";
 import type { useProjectMedia } from "./use-project-media";
@@ -25,12 +26,20 @@ export function ProjectLightbox({
   goToPrevImage,
   goToNextImage,
 }: ProjectLightboxProps) {
+  const reducedMotion = useReducedMotion();
+  const swipe = useMediaSwipe({
+    enabled: project.images.length > 1,
+    onPrevious: goToPrevImage,
+    onNext: goToNextImage,
+  });
   return (
     <motion.div
       key="lightbox"
       role="dialog"
       aria-label={`${project.iconLabel} fullscreen viewer`}
-      className="pointer-events-none fixed inset-0 z-[10002] bg-black"
+      className="fixed inset-0 z-[10002] touch-pan-y bg-black"
+      style={{ touchAction: "pan-y pinch-zoom" }}
+      {...swipe}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -39,7 +48,10 @@ export function ProjectLightbox({
       <motion.div
         className="absolute inset-0 flex"
         animate={{ x: `-${imageSlide * 100}%` }}
-        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        transition={{
+          duration: reducedMotion ? 0 : 0.45,
+          ease: [0.22, 1, 0.36, 1],
+        }}
       >
         {project.images.map((image, index) => (
           <div
