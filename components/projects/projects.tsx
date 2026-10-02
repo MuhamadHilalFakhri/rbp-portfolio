@@ -49,7 +49,7 @@ export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
     handleTrackPointerMove,
     handleTrackPointerEnd,
     handleTrackPointerLeave,
-  } = useProjectCarousel(items.length);
+  } = useProjectCarousel(items.length, filter);
 
   return (
     <section
@@ -77,10 +77,7 @@ export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
         <div className="relative">
           <ProjectFilters
             value={filter}
-            onChange={(next) => {
-              setFilter(next);
-              trackRef.current?.scrollTo({ left: 0, behavior: "instant" });
-            }}
+            onChange={setFilter}
           />
 
           <div

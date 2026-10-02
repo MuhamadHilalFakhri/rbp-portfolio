@@ -14,6 +14,10 @@
   animation: project-filter-enter 320ms ease-out;
 }
 
+.project-carousel-track {
+  overflow-anchor: none;
+}
+
 .project-carousel-item[data-active="true"] {
   --card-scale: 1;
 }

@@ -2,7 +2,7 @@
 
 import {
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
@@ -20,7 +20,7 @@ function getScrollPositions(track: HTMLDivElement) {
   }, []);
 }
 
-export function useProjectCarousel(itemCount: number) {
+export function useProjectCarousel(itemCount: number, resetKey: string) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -59,10 +59,19 @@ export function useProjectCarousel(itemCount: number) {
     setCanNext(closest < positions.length - 1);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    track.scrollTo({ left: 0, behavior: "instant" });
+    track.style.scrollSnapType = "none";
+    const resetFrame = requestAnimationFrame(() => {
+      track.scrollTo({
+        left: 0,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
+      if (track.scrollLeft < 1) track.style.scrollSnapType = "";
+    });
     updateArrows();
     const resizeObserver = new ResizeObserver(updateArrows);
     resizeObserver.observe(track);
@@ -80,12 +89,14 @@ export function useProjectCarousel(itemCount: number) {
     track.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", updateArrows);
     return () => {
+      cancelAnimationFrame(resetFrame);
+      track.style.scrollSnapType = "";
       resizeObserver.disconnect();
       window.clearTimeout(timer);
       track.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", updateArrows);
     };
-  }, [updateArrows, itemCount]);
+  }, [updateArrows, itemCount, resetKey]);
 
   const scrollToProject = (index: number): void => {
     const track = trackRef.current;
