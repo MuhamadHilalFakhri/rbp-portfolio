@@ -37,26 +37,17 @@ export function Bio({
           Saya merupakan lulusan Program Studi S1 Teknologi Informasi
           Universitas Muhammadiyah Yogyakarta dengan minat dan pengalaman di
           bidang{" "}
-          <strong className="text-foreground font-semibold">
-            pengembangan web, baik frontend maupun backend
-          </strong>
-          . Selama menempuh pendidikan, saya mempelajari dan mengembangkan
+          pengembangan web, baik frontend maupun backend. Selama menempuh pendidikan, saya mempelajari dan mengembangkan
           berbagai aplikasi berbasis web dengan menerapkan kemampuan dalam
           perancangan antarmuka, pengembangan fitur, pengelolaan database,
           hingga integrasi antara frontend dan backend. Saya memiliki kemampuan
           dalam memahami kebutuhan pengguna, merancang struktur sistem, serta
           mengimplementasikan solusi yang{" "}
-          <strong className="text-foreground font-semibold">
-            terstruktur, efisien, dan mudah dikembangkan
-          </strong>
-          .
+          terstruktur, efisien, dan mudah dikembangkan.
         </p>
         <p>
           Saya memiliki ketertarikan untuk terus memperdalam kemampuan di bidang{" "}
-          <strong className="text-foreground font-semibold">
-            web developer
-          </strong>
-          , khususnya dalam membangun aplikasi web yang fungsional, responsif,
+          web developer, khususnya dalam membangun aplikasi web yang fungsional, responsif,
           dan dapat memberikan pengalaman pengguna yang baik. Saya juga terbiasa
           mempelajari teknologi dan tools baru secara mandiri untuk meningkatkan
           kemampuan teknis serta mengikuti perkembangan di bidang teknologi
