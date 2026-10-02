@@ -1,14 +1,21 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 
-export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
+export function Bio({
+  heading = "h2",
+  summary,
+}: {
+  heading?: "h1" | "h2";
+  summary?: string;
+}): ReactNode {
   const [expanded, setExpanded] = useState(false);
   const Heading = heading;
+  const detailId = useId();
 
   return (
-    <div className="border-foreground/5 bg-[#fbfbfb] dark:bg-[#111111] rounded-3xl border p-5 min-[360px]:p-6 sm:rounded-4xl sm:p-12">
+    <div className="border-foreground/5 rounded-3xl border bg-[#fbfbfb] p-5 min-[360px]:p-6 sm:rounded-4xl sm:p-12 dark:bg-[#111111]">
       <Heading className="text-foreground font-serif text-[1.6rem] font-medium tracking-tight min-[360px]:text-[1.75rem] sm:text-[2rem]">
         Hello! I&rsquo;m{" "}
         <span className="border-foreground/30 border-b pb-0.5">
@@ -16,7 +23,16 @@ export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
         </span>
         .
       </Heading>
-      <div className="text-foreground/75 mt-6 space-y-5 text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:space-y-6 sm:text-[18px]">
+      {summary && !expanded && (
+        <p className="text-foreground/75 mt-6 text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:text-[18px]">
+          {summary}
+        </p>
+      )}
+      <div
+        id={detailId}
+        hidden={Boolean(summary) && !expanded}
+        className="text-foreground/75 mt-6 space-y-5 text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:space-y-6 sm:text-[18px]"
+      >
         <p>
           Saya merupakan lulusan Program Studi S1 Teknologi Informasi
           Universitas Muhammadiyah Yogyakarta dengan minat dan pengalaman di
@@ -60,15 +76,19 @@ export function Bio({ heading = "h2" }: { heading?: "h1" | "h2" }): ReactNode {
         </div>
       </div>
 
-      {!expanded && (
+      {(summary || !expanded) && (
         <button
           type="button"
-          onClick={() => setExpanded(true)}
-          aria-expanded={false}
-          className="focus-ring text-foreground/70 hover:text-foreground mt-6 inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium tracking-tight transition-colors sm:hidden"
+          onClick={() => setExpanded((value) => !value)}
+          aria-expanded={expanded}
+          aria-controls={detailId}
+          className={`focus-ring text-foreground/70 hover:text-foreground mt-6 inline-flex cursor-pointer items-center gap-1.5 rounded-md py-2 text-sm font-medium tracking-tight transition-colors ${summary ? "" : "sm:hidden"}`}
         >
-          Baca selengkapnya
-          <ChevronDown className="h-4 w-4" aria-hidden="true" />
+          {expanded ? "Tampilkan lebih sedikit" : "Baca selengkapnya"}
+          <ChevronDown
+            className={`h-4 w-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+            aria-hidden="true"
+          />
         </button>
       )}
     </div>
