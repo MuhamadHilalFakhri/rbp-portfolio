@@ -8,13 +8,27 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 
+function getScrollPositions(track: HTMLDivElement) {
+  const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-card]"));
+  const first = cards[0]?.offsetLeft ?? 0;
+  const max = Math.max(0, track.scrollWidth - track.clientWidth);
+  return cards.reduce<number[]>((positions, card) => {
+    const position = Math.max(0, Math.min(max, card.offsetLeft - first));
+    if (!positions.length || position - (positions.at(-1) ?? 0) > 8)
+      positions.push(position);
+    return positions;
+  }, []);
+}
+
 export function useProjectCarousel(itemCount: number) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [visibleRange, setVisibleRange] = useState({ start: 1, end: 1 });
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [pageCount, setPageCount] = useState(itemCount);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const dragRef = useRef<{
     pointerId: number;
     startX: number;
@@ -29,23 +43,20 @@ export function useProjectCarousel(itemCount: number) {
   const updateArrows = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    setCanPrev(track.scrollLeft > 8);
-    setCanNext(track.scrollLeft < track.scrollWidth - track.clientWidth - 8);
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    setProgress(
-      maxScroll > 0 ? Math.max(0, Math.min(1, track.scrollLeft / maxScroll)) : 1
-    );
-    const bounds = track.getBoundingClientRect();
-    const cards = Array.from(
-      track.querySelectorAll<HTMLElement>("[data-card]")
-    );
-    const visible = cards.flatMap((card, index) => {
-      const rect = card.getBoundingClientRect();
-      return rect.right > bounds.left + 40 && rect.left < bounds.right - 40
-        ? [index + 1]
-        : [];
+    const positions = getScrollPositions(track);
+    let closest = 0;
+    let distance = Infinity;
+    positions.forEach((position, index) => {
+      const next = Math.abs(position - track.scrollLeft);
+      if (next < distance) {
+        distance = next;
+        closest = index;
+      }
     });
-    setVisibleRange({ start: visible[0] ?? 1, end: visible.at(-1) ?? 1 });
+    setActiveIndex(closest);
+    setPageCount(positions.length);
+    setCanPrev(closest > 0);
+    setCanNext(closest < positions.length - 1);
   }, []);
 
   useEffect(() => {
@@ -55,27 +66,44 @@ export function useProjectCarousel(itemCount: number) {
     updateArrows();
     const resizeObserver = new ResizeObserver(updateArrows);
     resizeObserver.observe(track);
-    track.addEventListener("scroll", updateArrows, { passive: true });
+    let timer = 0;
+    const onScroll = () => {
+      updateArrows();
+      if (track.scrollLeft > 8) setHasInteracted(true);
+      setIsScrolling(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        setIsScrolling(false);
+        if (!dragRef.current?.active) track.style.scrollSnapType = "";
+      }, 160);
+    };
+    track.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", updateArrows);
     return () => {
       resizeObserver.disconnect();
-      track.removeEventListener("scroll", updateArrows);
+      window.clearTimeout(timer);
+      track.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", updateArrows);
     };
   }, [updateArrows, itemCount]);
 
-  const scrollProjects = (direction: 1 | -1): void => {
+  const scrollToProject = (index: number): void => {
     const track = trackRef.current;
     if (!track) return;
-    const card = track.querySelector<HTMLElement>("[data-card]");
-    const gap =
-      Number.parseFloat(window.getComputedStyle(track).columnGap) || 0;
-    const distance = card ? card.offsetWidth + gap : track.clientWidth;
-    track.scrollBy({
-      left: direction * distance,
-      behavior: "smooth",
+    const positions = getScrollPositions(track);
+    const position =
+      positions[Math.max(0, Math.min(positions.length - 1, index))];
+    if (position === undefined) return;
+    setHasInteracted(true);
+    track.scrollTo({
+      left: position,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
     });
   };
+  const scrollProjects = (direction: 1 | -1) =>
+    scrollToProject(activeIndex + direction);
 
   const handleTrackPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -140,41 +168,54 @@ export function useProjectCarousel(itemCount: number) {
       const drag = dragRef.current;
       if (!drag || drag.pointerId !== event.pointerId) return;
       dragRef.current = null;
-      event.currentTarget.style.scrollBehavior = "";
-      event.currentTarget.style.scrollSnapType = "";
+      const track = event.currentTarget;
+      track.style.scrollBehavior = "";
       if (drag.active) {
         setIsDragging(false);
-
-        const track = event.currentTarget;
-        const cards = Array.from(
-          track.querySelectorAll<HTMLElement>("[data-card]")
+        const positions = getScrollPositions(track);
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        const projected = Math.max(
+          0,
+          Math.min(maxScroll, track.scrollLeft + drag.velocity * 260)
         );
-        const trackLeft = track.getBoundingClientRect().left;
-        const firstCardLeft = cards[0]?.getBoundingClientRect().left;
-        if (cards.length > 0 && firstCardLeft !== undefined) {
-          const firstCardPosition =
-            track.scrollLeft + firstCardLeft - trackLeft;
-          const maxScrollLeft = track.scrollWidth - track.clientWidth;
-          const projectedPosition = Math.max(
-            0,
-            Math.min(maxScrollLeft, track.scrollLeft + drag.velocity * 260)
+        const nearestIndex = (value: number) =>
+          positions.reduce(
+            (closest, position, index) =>
+              Math.abs(position - value) <
+              Math.abs((positions[closest] ?? 0) - value)
+                ? index
+                : closest,
+            0
           );
-          let target = 0;
-          let distance = Number.POSITIVE_INFINITY;
-
-          for (const card of cards) {
-            const cardLeft =
-              track.scrollLeft + card.getBoundingClientRect().left - trackLeft;
-            const position = Math.max(0, cardLeft - firstCardPosition);
-            const nextDistance = Math.abs(position - projectedPosition);
-            if (nextDistance < distance) {
-              target = position;
-              distance = nextDistance;
-            }
-          }
-
-          track.scrollTo({ left: target, behavior: "smooth" });
+        const startIndex = nearestIndex(drag.startScrollLeft);
+        let targetIndex = nearestIndex(projected);
+        const movement = track.scrollLeft - drag.startScrollLeft;
+        const cardWidth =
+          track.querySelector<HTMLElement>("[data-card]")?.offsetWidth ??
+          track.clientWidth;
+        if (
+          targetIndex === startIndex &&
+          Math.abs(movement) > Math.max(32, cardWidth * 0.15)
+        ) {
+          targetIndex = Math.max(
+            0,
+            Math.min(positions.length - 1, startIndex + Math.sign(movement))
+          );
         }
+        const target = positions[targetIndex] ?? 0;
+        // Keep snap disabled until settling; restoring it before scrolling can
+        // send the track back to its previous snapped card.
+        if (Math.abs(track.scrollLeft - target) < 1)
+          track.style.scrollSnapType = "";
+        track.scrollTo({
+          left: target,
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "instant"
+            : "smooth",
+        });
+      } else {
+        track.style.scrollSnapType = "";
       }
       if (event.currentTarget.hasPointerCapture(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId);
@@ -198,8 +239,11 @@ export function useProjectCarousel(itemCount: number) {
     canPrev,
     canNext,
     isDragging,
-    progress,
-    visibleRange,
+    activeIndex,
+    pageCount,
+    hasInteracted,
+    isScrolling,
+    scrollToProject,
     scrollProjects,
     handleTrackPointerDown,
     handleTrackPointerMove,

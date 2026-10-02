@@ -56,7 +56,7 @@ export function ProjectCard({
           onSelect();
         }
       }}
-      className="project-card border-foreground/20 focus-ring bg-background flex h-full min-h-full cursor-pointer flex-col gap-4 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5"
+      className="project-card border-foreground/20 focus-ring bg-background flex h-full cursor-pointer flex-col gap-3 rounded-2xl border p-3 sm:rounded-3xl sm:p-3.5"
     >
       <header className="flex items-center gap-2.5 px-1 pt-2">
         <span className="border-foreground/10 bg-background inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border">
@@ -122,7 +122,7 @@ export function ProjectCard({
       {cover ? (
         <div
           className="project-card__image ring-foreground/5 bg-foreground/5 relative w-full overflow-hidden rounded-2xl ring-1"
-          style={{ aspectRatio: project.imageRatio }}
+          style={{ aspectRatio: 16 / 9 }}
         >
           <div className="project-card__image-inner">
             <Image
@@ -137,16 +137,16 @@ export function ProjectCard({
       ) : null}
 
       <div className="flex flex-col gap-2.5 px-1 pb-1">
-        <h3 className="text-foreground text-[18px] leading-[1.25] font-medium tracking-tight min-[360px]:text-[20px] sm:text-[22px]">
+        <h3 className="text-foreground line-clamp-2 min-h-[2.5em] text-[18px] leading-[1.25] font-medium tracking-tight min-[360px]:text-[20px] sm:text-[22px]">
           {project.title}
         </h3>
-        <p className="text-foreground/65 text-[14px] leading-normal tracking-tight sm:text-[15px]">
+        <p className="text-foreground/65 line-clamp-3 text-[14px] leading-normal tracking-tight sm:text-[15px]">
           {project.description}
         </p>
       </div>
 
-      <div className="mt-auto px-1 pb-2">
-        <div className="border-foreground/8 flex items-center justify-between gap-3 border-t pt-3">
+      <div className="mt-auto px-1 pt-1 pb-1">
+        <div className="border-foreground/8 flex flex-wrap items-center justify-between gap-3 border-t pt-3">
           <span className="text-foreground/45 text-[11px] font-medium tracking-wide uppercase">
             Tech stack
           </span>

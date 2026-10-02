@@ -1,5 +1,6 @@
 .project-card {
-  transform: translateY(0);
+  transform: translateY(0) scale(var(--card-scale, 1));
+  transform-origin: center center;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
   transition:
     transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -9,7 +10,44 @@
 }
 
 .project-carousel-item {
+  --card-scale: 0.96;
   animation: project-filter-enter 320ms ease-out;
+}
+
+.project-carousel-item[data-active="true"] {
+  --card-scale: 1;
+}
+
+.project-carousel-item[data-active="true"] .project-card {
+  border-color: color-mix(in srgb, var(--foreground) 38%, transparent);
+  box-shadow: 0 8px 24px -16px rgb(0 0 0 / 0.35);
+}
+
+.project-carousel-track[data-scrolling="true"] .project-carousel-item {
+  --card-scale: 0.95;
+}
+
+.project-carousel-track[data-scrolling="true"]
+  .project-carousel-item[data-active="true"] {
+  --card-scale: 0.985;
+}
+
+.project-carousel-track::after {
+  content: "";
+  flex-shrink: 0;
+  width: calc(14% - 1rem);
+}
+
+@media (min-width: 640px) {
+  .project-carousel-track::after {
+    width: max(0px, calc(4% - 1.5rem));
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-carousel-track::after {
+    width: max(0px, calc(16% - 1.5rem));
+  }
 }
 
 @keyframes project-filter-enter {
@@ -29,7 +67,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .project-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(var(--card-scale, 1));
     border-color: color-mix(in srgb, var(--foreground) 32%, transparent);
     box-shadow:
       0 10px 20px -8px rgb(0 0 0 / 0.12),
@@ -44,6 +82,16 @@
 
   .project-card:hover .project-card__image-inner {
     transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-carousel-item .project-card,
+  .project-carousel-item .project-card:hover {
+    transform: none;
+  }
+  .project-carousel-track {
+    scroll-behavior: auto;
   }
 }
 

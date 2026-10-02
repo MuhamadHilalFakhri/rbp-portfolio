@@ -1,14 +1,11 @@
 "use client";
 
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-} from "meya-icons/react/outline";
+import { ArrowRight } from "meya-icons/react/outline";
 import { lazy, Suspense, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { PROJECTS } from "./project-data";
 import { ProjectCard } from "./project-card";
+import { CarouselControls } from "./carousel-controls";
 import { useProjectCarousel } from "./use-project-carousel";
 import {
   ProjectFilters,
@@ -48,8 +45,11 @@ export function Projects({
     canPrev,
     canNext,
     isDragging,
-    progress,
-    visibleRange,
+    activeIndex,
+    pageCount,
+    hasInteracted,
+    isScrolling,
+    scrollToProject,
     scrollProjects,
     handleTrackPointerDown,
     handleTrackPointerMove,
@@ -88,53 +88,6 @@ export function Projects({
               trackRef.current?.scrollTo({ left: 0, behavior: "instant" });
             }}
           />
-          <div className="flex items-center justify-between pb-4">
-            <span className="text-foreground/50 text-sm font-medium tracking-tight">
-              {items.length} projects
-            </span>
-            {items.length > 1 ? (
-              <div className="hidden gap-2 sm:flex">
-                <button
-                  type="button"
-                  onClick={() => scrollProjects(-1)}
-                  disabled={!canPrev}
-                  aria-label="Previous projects"
-                  className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:h-9 sm:w-9"
-                >
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollProjects(1)}
-                  disabled={!canNext}
-                  aria-label="Next projects"
-                  className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:h-9 sm:w-9"
-                >
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-            ) : null}
-            <div className="flex gap-2 sm:hidden">
-              <button
-                type="button"
-                onClick={() => scrollProjects(-1)}
-                disabled={!canPrev}
-                aria-label="Previous project"
-                className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30"
-              >
-                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollProjects(1)}
-                disabled={!canNext}
-                aria-label="Next project"
-                className="focus-ring border-foreground/10 bg-background text-foreground hover:bg-foreground/5 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border transition-colors disabled:cursor-not-allowed disabled:opacity-30"
-              >
-                <ChevronRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
 
           <div
             ref={trackRef}
@@ -146,14 +99,16 @@ export function Projects({
             onLostPointerCapture={handleTrackPointerEnd}
             onPointerLeave={handleTrackPointerLeave}
             onDragStart={(event) => event.preventDefault()}
-            className={`-mx-4 flex touch-auto snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pt-2 pb-4 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:scroll-px-6 min-[360px]:px-6 sm:-mx-10 sm:scroll-px-10 sm:gap-6 sm:px-10 [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing select-none" : "sm:cursor-grab"}`}
+            data-scrolling={isDragging || isScrolling}
+            className={`project-carousel-track relative -mx-4 flex touch-auto snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pt-5 pb-5 [scrollbar-width:none] min-[360px]:-mx-6 min-[360px]:scroll-px-6 min-[360px]:px-6 sm:-mx-10 sm:scroll-px-10 sm:gap-6 sm:px-10 [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing select-none" : "sm:cursor-grab"}`}
           >
-            {items.map((project) => (
+            {items.map((project, index) => (
               <div
                 key={`${filter}-${project.id}`}
                 data-card
+                data-active={index === activeIndex}
                 data-scroll-reveal-item
-                className="project-carousel-item flex w-full min-w-0 shrink-0 snap-start sm:w-[calc(50%_-_0.75rem)] lg:w-[calc(33.333333%_-_1rem)]"
+                className="project-carousel-item flex w-[86%] min-w-0 shrink-0 snap-start sm:w-[48%] lg:w-[42%]"
               >
                 <ProjectCard
                   project={project}
@@ -162,25 +117,16 @@ export function Projects({
               </div>
             ))}
           </div>
-          <div className="text-foreground/55 mt-3 flex items-center gap-4 text-xs">
-            <span className="shrink-0">
-              {visibleRange.start}–{visibleRange.end} / {items.length}
-            </span>
-            <div
-              role="progressbar"
-              aria-label="Posisi carousel proyek"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={Math.round(progress * 100)}
-              className="bg-foreground/10 h-1 flex-1 overflow-hidden rounded-full"
-            >
-              <div
-                className="bg-foreground/55 h-full rounded-full transition-[width] duration-200"
-                style={{ width: `${15 + progress * 85}%` }}
-              />
-            </div>
-            <span className="shrink-0">Geser untuk menjelajah</span>
-          </div>
+          <CarouselControls
+            items={items.slice(0, pageCount)}
+            activeIndex={activeIndex}
+            canPrev={canPrev}
+            canNext={canNext}
+            hasInteracted={hasInteracted}
+            onPrevious={() => scrollProjects(-1)}
+            onNext={() => scrollProjects(1)}
+            onSelect={scrollToProject}
+          />
         </div>
 
         {viewMoreVisible ? (
