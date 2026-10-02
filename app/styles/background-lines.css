@@ -1,0 +1,42 @@
+.background-lines {
+  --line-x: 0px;
+  --line-y: 0px;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: rgb(255 255 255 / 12%);
+}
+
+.background-lines__drawing {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.background-lines__slow,
+.background-lines__fast {
+  transform-origin: center;
+  transition: transform 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.background-lines__slow {
+  transform: translate(var(--line-x), var(--line-y));
+}
+
+.background-lines__fast {
+  opacity: 0.65;
+  transform: translate(calc(var(--line-x) * -1.4), calc(var(--line-y) * -1.4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background-lines__slow,
+  .background-lines__fast {
+    transform: none;
+    transition: none;
+  }
+}

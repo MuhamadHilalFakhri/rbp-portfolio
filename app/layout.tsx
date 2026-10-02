@@ -3,12 +3,14 @@ import { Providers } from "@/components/layout/providers";
 import { ScrollAnimations } from "@/components/layout/scroll-animations";
 import { SkipToContent } from "@/components/layout/skip-to-content";
 import { SiteDecorations } from "@/components/layout/site-decorations";
+import { BackgroundLines } from "@/components/layout/background-lines";
 import { SplashScreen } from "@/components/splash-screen";
 import { baseMetadata } from "@/lib/metadata";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
+import "./styles/background-lines.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +51,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${fraunces.variable} bg-background text-foreground min-h-screen font-sans antialiased`}
       >
         <Providers>
+          <BackgroundLines />
           <SplashScreen />
           <SiteDecorations />
           <SkipToContent />
