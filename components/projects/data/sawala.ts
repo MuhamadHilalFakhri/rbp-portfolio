@@ -12,7 +12,6 @@ export const sawalaProject: Project = {
   githubUrl: "https://github.com/MuhamadHilalFakhri/LMS-Sunda.git",
   techStack: [
     { label: "Laravel 13", slug: "laravel" },
-    { label: "PHP 8.3", slug: "php" },
     { label: "React 19", slug: "react" },
     { label: "TypeScript", slug: "typescript" },
     { label: "Tailwind CSS 4", slug: "tailwindcss" },
