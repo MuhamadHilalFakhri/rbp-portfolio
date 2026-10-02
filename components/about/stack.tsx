@@ -5,7 +5,6 @@ import { useRef, useState, type ReactNode } from "react";
 import { CHIPS } from "./stack-data";
 import { ChipPill } from "./stack-chip";
 import { useStackPhysics } from "./use-stack-physics";
-import { StackDetails } from "./stack-details";
 
 export function Stack(): ReactNode {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -67,7 +66,6 @@ export function Stack(): ReactNode {
           ))}
         </div>
       </div>
-      <StackDetails />
     </div>
   );
 }
