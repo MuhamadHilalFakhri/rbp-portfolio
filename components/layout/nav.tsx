@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore, type ReactNode } from "react";
+import { useActiveSection } from "./use-active-section";
 
 type NavItem = {
   label: string;
@@ -105,6 +106,7 @@ function NavThemeToggle(): ReactNode {
 
 export function Nav(): ReactNode {
   const pathname = usePathname();
+  const activeSection = useActiveSection(pathname);
 
   const activeIndex = NAV_ITEMS.findIndex((item) =>
     item.href === "/"
@@ -120,7 +122,8 @@ export function Nav(): ReactNode {
       <div className="relative isolate flex w-full items-center gap-1 overflow-hidden rounded-full border border-white/70 bg-white/45 p-1 shadow-[0_10px_35px_rgba(15,23,42,0.14),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(255,255,255,0.28)] backdrop-blur-2xl backdrop-saturate-200 transition-all duration-500 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white before:to-transparent after:pointer-events-none after:absolute after:-top-8 after:-left-8 after:h-20 after:w-36 after:rounded-full after:bg-white/25 after:blur-2xl hover:bg-white/55 hover:shadow-[0_14px_42px_rgba(15,23,42,0.18),inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(255,255,255,0.32)] sm:p-1.5 dark:border-white/14 dark:bg-neutral-950/45 dark:shadow-[0_12px_40px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.16),inset_0_-1px_0_rgba(255,255,255,0.04)] dark:before:via-white/35 dark:after:bg-white/8 dark:hover:bg-neutral-950/55">
         <ul className="relative z-10 flex items-center gap-1">
           {NAV_ITEMS.map((item, index) => {
-            const isActive = index === activeIndex;
+            const isActive =
+              index === (pathname === "/" ? activeSection : activeIndex);
             return (
               <li key={item.href} className="relative">
                 {isActive && (
@@ -130,8 +133,19 @@ export function Nav(): ReactNode {
                   />
                 )}
                 <Link
-                  href={item.href}
-                  aria-current={isActive ? "page" : undefined}
+                  href={
+                    pathname === "/"
+                      ? (["#main-content", "#about", "#projects"][index] ??
+                        item.href)
+                      : item.href
+                  }
+                  aria-current={
+                    isActive
+                      ? pathname === "/"
+                        ? "location"
+                        : "page"
+                      : undefined
+                  }
                   className="focus-ring group relative inline-flex cursor-pointer items-center justify-center rounded-full px-2.5 py-2 text-[13px] font-medium transition-colors duration-300 min-[360px]:px-3 sm:px-4 sm:py-1.5 sm:text-sm"
                 >
                   <span

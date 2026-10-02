@@ -29,7 +29,10 @@ export default function HomePage(): ReactNode {
         className="flex flex-1 flex-col gap-16 sm:gap-24 lg:gap-28"
       >
         <Hero />
-        <AnimatedSection className="mx-auto w-full max-w-160 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:px-10">
+        <AnimatedSection
+          id="about"
+          className="mx-auto w-full max-w-160 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:px-10"
+        >
           <Bio />
         </AnimatedSection>
         <section
