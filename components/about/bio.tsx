@@ -24,14 +24,14 @@ export function Bio({
         .
       </Heading>
       {summary && !expanded && (
-        <p className="text-foreground/75 mt-6 text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:text-[18px]">
+        <p className="text-foreground/75 mt-6 text-justify text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:text-[18px]">
           {summary}
         </p>
       )}
       <div
         id={detailId}
         hidden={Boolean(summary) && !expanded}
-        className="text-foreground/75 mt-6 space-y-5 text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:space-y-6 sm:text-[18px]"
+        className="text-foreground/75 mt-6 space-y-5 text-justify text-[16px] leading-[1.7] tracking-tight sm:mt-8 sm:space-y-6 sm:text-[18px]"
       >
         <p>
           Saya merupakan lulusan Program Studi S1 Teknologi Informasi
