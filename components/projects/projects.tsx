@@ -1,8 +1,6 @@
 "use client";
 
-import { ArrowRight } from "meya-icons/react/outline";
 import { lazy, Suspense, useState, type ReactNode } from "react";
-import Link from "next/link";
 import { PROJECTS } from "./project-data";
 import { ProjectCard } from "./project-card";
 import { CarouselControls } from "./carousel-controls";
@@ -28,13 +26,9 @@ const ProjectModal = lazy(() =>
 
 export type ProjectsProps = {
   withHeadline?: boolean;
-  viewMoreVisible?: boolean;
 };
 
-export function Projects({
-  withHeadline = false,
-  viewMoreVisible = false,
-}: ProjectsProps): ReactNode {
+export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
   const [filter, setFilter] = useState<ProjectFilter>("Semua");
   const items = PROJECTS.filter((project) =>
     matchesProjectFilter(project, filter)
@@ -128,24 +122,6 @@ export function Projects({
             onSelect={scrollToProject}
           />
         </div>
-
-        {viewMoreVisible ? (
-          <div
-            className="mt-12 flex justify-center sm:mt-16"
-            data-scroll-reveal-item
-          >
-            <Link
-              href="/projects"
-              className="border-foreground/8 focus-ring group bg-background text-foreground hover:bg-foreground/5 inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition-colors"
-            >
-              View all projects
-              <ArrowRight
-                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-          </div>
-        ) : null}
       </div>
 
       {activeProject ? (

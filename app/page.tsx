@@ -1,5 +1,5 @@
 import { AnimatedSection } from "@/components/about/animated-section";
-import { Bio } from "@/components/about/bio";
+import { BioSummary } from "@/components/about/bio-summary";
 import { Education } from "@/components/about/education";
 import { Experience } from "@/components/about/experience";
 import { Skills } from "@/components/about/skills";
@@ -31,9 +31,9 @@ export default function HomePage(): ReactNode {
         <Hero />
         <AnimatedSection
           id="about"
-          className="mx-auto w-full max-w-160 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:px-10"
+          className="mx-auto w-full max-w-160 px-4 [contain-intrinsic-size:auto_20rem] [content-visibility:auto] min-[360px]:px-6 sm:px-10"
         >
-          <Bio />
+          <BioSummary />
         </AnimatedSection>
         <section
           className="mx-auto w-full max-w-[40rem] px-4 [contain-intrinsic-size:auto_88rem] [content-visibility:auto] min-[360px]:px-6 sm:px-10"
@@ -47,7 +47,7 @@ export default function HomePage(): ReactNode {
             <Stack />
           </div>
         </section>
-        <Projects withHeadline viewMoreVisible />
+        <Projects withHeadline />
         <GitHubActivity />
         <ContactCard />
         <div className="h-12 sm:h-16" />

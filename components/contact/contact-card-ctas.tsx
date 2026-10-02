@@ -13,7 +13,7 @@ export function ContactCardCtas(): ReactNode {
 
       <div>
         <Link
-          href="/projects"
+          href="/#projects"
           className="focus-ring group border-foreground/5 bg-background text-foreground inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-3 text-sm font-medium shadow-md/2 transition-colors sm:py-2.5"
         >
           See projects
