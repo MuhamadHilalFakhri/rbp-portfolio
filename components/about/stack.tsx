@@ -5,6 +5,7 @@ import { useRef, useState, type ReactNode } from "react";
 import { CHIPS } from "./stack-data";
 import { ChipPill } from "./stack-chip";
 import { useStackPhysics } from "./use-stack-physics";
+import { StackDetails } from "./stack-details";
 
 export function Stack(): ReactNode {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +23,7 @@ export function Stack(): ReactNode {
         </h3>
       </div>
 
-      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative h-80 overflow-hidden rounded-3xl border sm:h-72 sm:rounded-4xl">
+      <div className="border-foreground/5 relative h-80 overflow-hidden rounded-3xl border bg-[#fafafa] sm:h-72 sm:rounded-4xl dark:bg-[#161616]">
         <button
           type="button"
           onClick={() => setResetKey((k) => k + 1)}
@@ -66,6 +67,7 @@ export function Stack(): ReactNode {
           ))}
         </div>
       </div>
+      <StackDetails />
     </div>
   );
 }
