@@ -5,11 +5,6 @@ import { PROJECTS } from "./project-data";
 import { ProjectCard } from "./project-card";
 import { CarouselControls } from "./carousel-controls";
 import { useProjectCarousel } from "./use-project-carousel";
-import {
-  ProjectFilters,
-  matchesProjectFilter,
-  type ProjectFilter,
-} from "./project-filters";
 import type { Project } from "./project-types";
 export type {
   Project,
@@ -29,10 +24,7 @@ export type ProjectsProps = {
 };
 
 export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
-  const [filter, setFilter] = useState<ProjectFilter>("Semua");
-  const items = PROJECTS.filter((project) =>
-    matchesProjectFilter(project, filter)
-  );
+  const items = PROJECTS;
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const {
     trackRef,
@@ -49,7 +41,7 @@ export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
     handleTrackPointerMove,
     handleTrackPointerEnd,
     handleTrackPointerLeave,
-  } = useProjectCarousel(items.length, filter);
+  } = useProjectCarousel(items.length, "all");
 
   return (
     <section
@@ -75,11 +67,6 @@ export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
         ) : null}
 
         <div className="relative">
-          <ProjectFilters
-            value={filter}
-            onChange={setFilter}
-          />
-
           <div
             ref={trackRef}
             aria-label="Browse projects"
@@ -95,7 +82,7 @@ export function Projects({ withHeadline = false }: ProjectsProps): ReactNode {
           >
             {items.map((project, index) => (
               <div
-                key={`${filter}-${project.id}`}
+                key={project.id}
                 data-card
                 data-active={index === activeIndex}
                 data-scroll-reveal-item
