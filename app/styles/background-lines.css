@@ -10,7 +10,7 @@
 }
 
 html.light .background-lines {
-  color: rgb(0 0 0 / 12%);
+  color: rgb(0 0 0 / 20%);
 }
 
 .background-lines__drawing {
@@ -20,6 +20,23 @@ html.light .background-lines {
   height: 106%;
   stroke: currentColor;
   stroke-width: 1;
+}
+
+html.light [data-card-outline] {
+  border-color: rgb(0 0 0 / 20%);
+  border-width: 1.5px;
+}
+
+html.light .background-lines__drawing {
+  stroke-width: 1.35;
+}
+
+html.light .project-card {
+  border-color: rgb(0 0 0 / 20%);
+}
+
+html.light .project-card__image {
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 12%);
 }
 
 .background-lines__slow,

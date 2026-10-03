@@ -22,7 +22,10 @@ export function Stack(): ReactNode {
         </h3>
       </div>
 
-      <div className="border-foreground/5 relative h-80 overflow-hidden rounded-3xl border bg-[#fafafa] sm:h-72 sm:rounded-4xl dark:bg-[#161616]">
+      <div
+        data-card-outline
+        className="border-foreground/5 relative h-80 overflow-hidden rounded-3xl border bg-[#fafafa] sm:h-72 sm:rounded-4xl dark:bg-[#161616]"
+      >
         <button
           type="button"
           onClick={() => setResetKey((k) => k + 1)}

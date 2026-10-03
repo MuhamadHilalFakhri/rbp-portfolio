@@ -96,6 +96,7 @@ export function GitHubActivityClient({
       </div>
 
       <div
+        data-card-outline
         className="border-foreground/10 bg-background overflow-hidden rounded-2xl border shadow-[0_24px_70px_-45px_rgba(0,0,0,0.35)] sm:rounded-3xl"
         data-scroll-reveal-item
       >

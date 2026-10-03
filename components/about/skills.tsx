@@ -15,7 +15,10 @@ export function Skills(): ReactNode {
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         What I do
       </h3>
-      <div className="border-foreground/5 bg-[#fafafa] dark:bg-[#161616] rounded-3xl border p-2 sm:rounded-4xl sm:p-4">
+      <div
+        data-card-outline
+        className="border-foreground/5 rounded-3xl border bg-[#fafafa] p-2 sm:rounded-4xl sm:p-4 dark:bg-[#161616]"
+      >
         <div className="flex flex-wrap gap-2 sm:gap-3">
           {SKILLS.map((skill) => (
             <span

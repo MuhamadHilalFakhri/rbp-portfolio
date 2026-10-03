@@ -14,7 +14,10 @@ export function ContactCard(): ReactNode {
       className="mx-auto my-10 w-full max-w-275 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:my-20 sm:px-10"
       data-scroll-reveal
     >
-      <div className="border-foreground/8 bg-background relative w-full overflow-hidden rounded-3xl border p-1.5 shadow-sm sm:rounded-4xl">
+      <div
+        data-card-outline
+        className="border-foreground/8 bg-background relative w-full overflow-hidden rounded-3xl border p-1.5 shadow-sm sm:rounded-4xl"
+      >
         <div className="relative w-full overflow-hidden rounded-[1.25rem] sm:rounded-[1.6rem]">
           <div
             aria-hidden="true"
@@ -40,7 +43,10 @@ export function ContactCard(): ReactNode {
               <ContactCardCtas />
             </div>
 
-            <div className="border-foreground/8 bg-background flex min-w-0 flex-col items-center justify-center gap-6 rounded-[1.1rem] border p-5 sm:p-8">
+            <div
+              data-card-outline
+              className="border-foreground/8 bg-background flex min-w-0 flex-col items-center justify-center gap-6 rounded-[1.1rem] border p-5 sm:p-8"
+            >
               <div className="flex flex-wrap items-center justify-center gap-2.5 opacity-75 sm:gap-3">
                 <SocialIcon
                   href="mailto:muhamadhilal04@gmail.com"

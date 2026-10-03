@@ -31,11 +31,15 @@ export function Education(): ReactNode {
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         Education
       </h3>
-      <div className="border-foreground/5 bg-[#fafafa] dark:bg-[#161616] relative rounded-3xl border p-2 sm:rounded-4xl sm:p-4">
+      <div
+        data-card-outline
+        className="border-foreground/5 relative rounded-3xl border bg-[#fafafa] p-2 sm:rounded-4xl sm:p-4 dark:bg-[#161616]"
+      >
         <ul className="flex flex-col gap-2">
           {ENTRIES.map((entry) => (
             <li
               key={`${entry.school}-${entry.period}`}
+              data-card-outline
               className="border-foreground/5 bg-background flex items-center gap-3 rounded-2xl border p-2 sm:gap-4 sm:rounded-3xl"
               style={{ minHeight: ROW_HEIGHT }}
             >

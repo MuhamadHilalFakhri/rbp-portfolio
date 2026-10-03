@@ -48,6 +48,7 @@ export function ProjectModal({
             <DialogContent
               forceMount
               asChild
+              data-card-outline
               showCloseButton={false}
               aria-describedby={undefined}
               className="max-h-[calc(100dvh-1rem)] w-full max-w-xl rounded-2xl p-0 min-[360px]:rounded-3xl sm:max-h-[calc(100dvh-3rem)]"

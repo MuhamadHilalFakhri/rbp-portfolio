@@ -48,6 +48,7 @@ export function ExperienceEntry({
     >
       {entry.pdfUrl ? (
         <motion.a
+          data-card-outline
           href={entry.pdfUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -71,6 +72,7 @@ export function ExperienceEntry({
         </motion.a>
       ) : (
         <motion.button
+          data-card-outline
           type="button"
           aria-expanded={expanded}
           aria-controls={detailId}
@@ -121,6 +123,7 @@ export function ExperienceEntry({
             className="overflow-hidden"
           >
             <motion.div
+              data-card-outline
               initial={{ y: reducedMotion ? 0 : -8 }}
               animate={{ y: 0 }}
               exit={{ y: reducedMotion ? 0 : -6 }}
