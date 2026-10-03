@@ -27,9 +27,9 @@ export const LEVEL_CLASSES = [
   "bg-[#216e39] dark:bg-[#39d353]",
 ];
 
-type CalendarDay = GitHubContributionDay | null;
+export type CalendarDay = GitHubContributionDay | null;
 
-type CalendarData = {
+export type CalendarData = {
   monthMarkers: { label: string; week: number }[];
   weeks: CalendarDay[][];
 };
