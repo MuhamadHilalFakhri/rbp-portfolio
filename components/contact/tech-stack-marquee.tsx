@@ -7,7 +7,7 @@ const monochromeBrands = new Set(["nextdotjs", "shadcnui", "github", "vercel", "
 const brands: LogoMarqueeBrand[] = CHIPS.map((chip) => ({
   name: chip.label,
   icon: `/icons/${chip.slug}.svg`,
-  color: monochromeBrands.has(chip.slug) ? undefined : chip.bg,
+  ...(monochromeBrands.has(chip.slug) ? {} : { color: chip.bg }),
 }));
 
 export function TechStackMarquee() {
