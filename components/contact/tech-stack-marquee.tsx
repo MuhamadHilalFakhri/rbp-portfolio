@@ -11,12 +11,5 @@ const brands: LogoMarqueeBrand[] = CHIPS.map((chip) => ({
 }));
 
 export function TechStackMarquee() {
-  return (
-    <div
-      className="mx-auto w-full max-w-275 px-4 min-[360px]:px-6 sm:px-10"
-      data-scroll-reveal
-    >
-      <LogoMarquee brands={brands} tone="color" />
-    </div>
-  );
+  return <LogoMarquee brands={brands} tone="color" />;
 }

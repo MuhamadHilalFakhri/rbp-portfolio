@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Pause, Play } from "lucide-react";
 import styles from "./logo-marquee.module.css";
 
 export interface LogoMarqueeBrand {
@@ -57,8 +55,6 @@ export function LogoMarquee({
   brands = [],
   tone = "color",
 }: LogoMarqueeProps) {
-  const [paused, setPaused] = useState(false);
-
   return (
     <section className={styles.section} data-tone={tone} aria-label={title || "Technology stack"}>
       {title || description ? (
@@ -69,24 +65,10 @@ export function LogoMarquee({
       ) : null}
 
       <div className={styles.marquee} role="region" aria-label="Technology stack logos">
-        <div className={`${styles.track}${paused ? ` ${styles.paused}` : ""}`}>
+        <div className={styles.track}>
           <BrandList brands={brands} tone={tone} />
           <BrandList brands={brands} tone={tone} duplicate />
         </div>
-      </div>
-
-      <div className={styles.footer}>
-        <button
-          type="button"
-          className={styles.motionButton}
-          aria-label={paused ? "Resume technology logos" : "Pause technology logos"}
-          onClick={() => setPaused((value) => !value)}
-        >
-          {paused ? <><Play size={14} strokeWidth={1.75} aria-hidden="true" />Play</> : <><Pause size={14} strokeWidth={1.75} aria-hidden="true" />Pause</>}
-        </button>
-        <span className={styles.motionStatus} aria-live="polite">
-          {paused ? "Motion paused" : ""}
-        </span>
       </div>
     </section>
   );

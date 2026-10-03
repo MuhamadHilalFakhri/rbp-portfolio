@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { ContactCardCtas } from "./contact-card-ctas";
+import { TechStackMarquee } from "./tech-stack-marquee";
 
 const CARD_FADE_MASK =
   "radial-gradient(ellipse 90% 110% at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.4) 90%, rgba(0,0,0,0.15) 100%)";
@@ -11,7 +12,7 @@ const CARD_FADE_MASK =
 export function ContactCard(): ReactNode {
   return (
     <section
-      className="mx-auto mt-10 w-full max-w-275 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:mt-20 sm:px-10"
+      className="mx-auto my-10 w-full max-w-275 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:my-20 sm:px-10"
       data-scroll-reveal
     >
       <div
@@ -71,6 +72,7 @@ export function ContactCard(): ReactNode {
               </div>
             </div>
           </div>
+          <TechStackMarquee />
         </div>
       </div>
     </section>

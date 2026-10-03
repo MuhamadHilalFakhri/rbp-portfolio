@@ -3,9 +3,9 @@
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  background: var(--background);
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 0.875rem;
@@ -44,7 +44,6 @@
 .marquee {
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
   padding-block: 32px;
   mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
@@ -55,15 +54,6 @@
   width: max-content;
   animation: travel 39s linear infinite;
   will-change: transform;
-}
-
-.track.paused {
-  animation-play-state: paused;
-}
-
-/* Hovering the row holds it still, so a logo can be read. */
-@media (hover: hover) and (pointer: fine) {
-  .marquee:hover .track { animation-play-state: paused; }
 }
 
 .brandList {
@@ -110,40 +100,6 @@ img.brandMark { background: none; object-fit: contain; }
   letter-spacing: -0.01em;
 }
 
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 16px;
-  padding: 10px 16px;
-}
-
-.motionButton {
-  display: inline-flex;
-  min-height: 2.25rem;
-  align-items: center;
-  gap: 8px;
-  border: 0;
-  border-radius: 0.75rem;
-  padding: 0 8px;
-  background: transparent;
-  color: var(--muted-foreground);
-  font: inherit;
-  cursor: pointer;
-  transition: color 160ms ease, background-color 160ms ease;
-}
-
-.motionButton:hover { color: var(--foreground); background: color-mix(in srgb, var(--foreground) 8%, transparent); }
-.motionButton:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-.motionStatus {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
 @keyframes travel {
   to { transform: translateX(-50%); }
 }
@@ -161,7 +117,6 @@ img.brandMark { background: none; object-fit: contain; }
   .brandList { gap: 40px; padding-right: 40px; }
   .brandName { font-size: 1rem; }
   .brandMark { width: 20px; height: 20px; }
-  .footer { padding-inline: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -173,5 +128,4 @@ img.brandMark { background: none; object-fit: contain; }
   .track { width: auto; justify-content: center; }
   .brandList { flex-wrap: wrap; justify-content: center; row-gap: 20px; padding: 0 24px; }
   .brandList[aria-hidden="true"] { display: none; }
-  .footer { display: none; }
 }
