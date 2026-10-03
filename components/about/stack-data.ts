@@ -21,6 +21,8 @@ export const CHIPS: Chip[] = [
   { label: "PHP", slug: "php", bg: "#777BB4", fg: "#ffffff" },
   { label: "Laravel", slug: "laravel", bg: "#FF2D20", fg: "#ffffff" },
   { label: "Laragon", slug: "laragon", bg: "#0E83CD", fg: "#ffffff" },
+  { label: "Supabase", slug: "supabase", bg: "#3FCF8E", fg: "#063B2B" },
+  { label: "Resend", slug: "resend", bg: "#000000", fg: "#ffffff" },
 ];
 
 export const CHIP_RADIUS = 14;

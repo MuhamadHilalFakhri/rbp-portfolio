@@ -5,6 +5,7 @@ import { Experience } from "@/components/about/experience";
 import { Skills } from "@/components/about/skills";
 import { Stack } from "@/components/about/stack";
 import { ContactCard } from "@/components/contact/contact-card";
+import { TechStackMarquee } from "@/components/contact/tech-stack-marquee";
 import { Hero } from "@/components/hero/hero";
 import { GitHubActivity } from "@/components/github/github-activity";
 import { Projects } from "@/components/projects/projects";
@@ -49,7 +50,10 @@ export default function HomePage(): ReactNode {
         </section>
         <Projects withHeadline />
         <GitHubActivity />
-        <ContactCard />
+        <div className="flex w-full flex-col gap-5 sm:gap-6">
+          <ContactCard />
+          <TechStackMarquee />
+        </div>
         <div className="h-12 sm:h-16" />
       </main>
       <script

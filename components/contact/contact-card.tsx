@@ -11,7 +11,7 @@ const CARD_FADE_MASK =
 export function ContactCard(): ReactNode {
   return (
     <section
-      className="mx-auto my-10 w-full max-w-275 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:my-20 sm:px-10"
+      className="mx-auto mt-10 w-full max-w-275 px-4 [contain-intrinsic-size:auto_36rem] [content-visibility:auto] min-[360px]:px-6 sm:mt-20 sm:px-10"
       data-scroll-reveal
     >
       <div
